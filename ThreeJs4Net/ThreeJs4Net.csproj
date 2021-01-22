@@ -1,0 +1,364 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0A03130F-7C4F-45C3-B95C-6DEDC96509BA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ThreeJs4Net</RootNamespace>
+    <AssemblyName>ThreeJs4Net</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cameras\Camera.cs" />
+    <Compile Include="Cameras\CubeCamera.cs" />
+    <Compile Include="Cameras\OrthographicCamera.cs" />
+    <Compile Include="Cameras\PerspectiveCamera.cs" />
+    <Compile Include="Core\BaseGeometry.cs" />
+    <Compile Include="Core\BufferAttribute.cs" />
+    <Compile Include="Core\BufferGeometry.cs" />
+    <Compile Include="Core\EventDispatcher.cs" />
+    <Compile Include="Core\Face3.cs" />
+    <Compile Include="Core\Geometry.cs" />
+    <Compile Include="Core\GeometryGroup.cs" />
+    <Compile Include="Core\IBufferAttribute.cs" />
+    <Compile Include="Core\Object3D.cs" />
+    <Compile Include="Core\Projector.cs" />
+    <Compile Include="Core\Raycaster.cs" />
+    <Compile Include="Core\WebGlObject.cs" />
+    <Compile Include="Extras\FontUtils.cs" />
+    <Compile Include="Geometries\BoxGeometry.cs" />
+    <Compile Include="Geometries\WireframeGeometry.cs" />
+    <Compile Include="Geometries\TubeGeometry.cs" />
+    <Compile Include="Geometries\TorusKnotGeometry.cs" />
+    <Compile Include="Geometries\TetrahedronGeometry.cs" />
+    <Compile Include="Geometries\ShapeGeometry.cs" />
+    <Compile Include="Geometries\ParametricGeometry.cs" />
+    <Compile Include="Geometries\LatheGeometry.cs" />
+    <Compile Include="Geometries\EdgesGeometry.cs" />
+    <Compile Include="Geometries\DodecahedronGeometry.cs" />
+    <Compile Include="Geometries\CircleGeometry.cs" />
+    <Compile Include="Geometries\ConeGeometry.cs" />
+    <Compile Include="Geometries\CylinderGeometry.cs" />
+    <Compile Include="Geometries\ExtrudeGeometry.cs" />
+    <Compile Include="Geometries\IcosahedronGeometry.cs" />
+    <Compile Include="Geometries\OctahedronGeometry.cs" />
+    <Compile Include="Geometries\PlaneGeometry.cs" />
+    <Compile Include="Geometries\PolyhedronGeometry.cs" />
+    <Compile Include="Geometries\RingGeometry.cs" />
+    <Compile Include="Geometries\SphereGeometry.cs" />
+    <Compile Include="Geometries\TextGeometry.cs" />
+    <Compile Include="Geometries\TorusGeometry.cs" />
+    <Compile Include="Helpers\ArrowHelper.cs" />
+    <Compile Include="Helpers\GridHelper.cs" />
+    <Compile Include="Helpers\ListHelper.cs" />
+    <Compile Include="Extras\ImageUtils.cs" />
+    <Compile Include="Extras\Objects\ImmediateRenderObject.cs" />
+    <Compile Include="Extras\Objects\LensFlare.cs" />
+    <Compile Include="Extras\Objects\MorphBlendMesh.cs" />
+    <Compile Include="Extras\Objects\Sprite.cs" />
+    <Compile Include="Extras\PlaneBufferGeometry.cs" />
+    <Compile Include="Extras\Renderers\IPlugin.cs" />
+    <Compile Include="Lights\AmbientLight.cs" />
+    <Compile Include="Lights\AreaLight.cs" />
+    <Compile Include="Lights\DirectionalLight.cs" />
+    <Compile Include="Lights\HemisphereLight.cs" />
+    <Compile Include="Lights\ILightShadow.cs" />
+    <Compile Include="Lights\Light.cs" />
+    <Compile Include="Lights\LightCollection.cs" />
+    <Compile Include="Lights\PointLight.cs" />
+    <Compile Include="Lights\SpotLight.cs" />
+    <Compile Include="Loaders\Cache.cs" />
+    <Compile Include="Loaders\ImageLoader.cs" />
+    <Compile Include="Loaders\JSONLoader.cs" />
+    <Compile Include="Loaders\Loader.cs" />
+    <Compile Include="Loaders\LoadingManager.cs" />
+    <Compile Include="Loaders\XHRLoader.cs" />
+    <Compile Include="Materials\IAttributes.cs" />
+    <Compile Include="Materials\IMap.cs" />
+    <Compile Include="Materials\IMorphTargets.cs" />
+    <Compile Include="Materials\IWireframe.cs" />
+    <Compile Include="Materials\LineBasicMaterial.cs" />
+    <Compile Include="Materials\LineDashedMaterial.cs" />
+    <Compile Include="Materials\Material.cs" />
+    <Compile Include="Materials\MeshBasicMaterial.cs" />
+    <Compile Include="Materials\MeshDepthMaterial.cs" />
+    <Compile Include="Materials\MeshFaceMaterial.cs" />
+    <Compile Include="Materials\MeshLambertMaterial.cs" />
+    <Compile Include="Materials\MeshNormalMaterial.cs" />
+    <Compile Include="Materials\MeshPhongMaterial.cs" />
+    <Compile Include="Materials\PointCloudMaterial.cs" />
+    <Compile Include="Materials\RawShaderMaterial.cs" />
+    <Compile Include="Materials\ShaderMaterial.cs" />
+    <Compile Include="Materials\SpriteMaterial.cs" />
+    <Compile Include="Materials\UniformLocation.cs" />
+    <Compile Include="Math\Box3.cs" />
+    <Compile Include="Math\ColorNormalized.cs" />
+    <Compile Include="Math\Euler.cs" />
+    <Compile Include="Math\ExtensionMethods.cs" />
+    <Compile Include="Math\Frustum.cs" />
+    <Compile Include="Math\HSLColor.cs" />
+    <Compile Include="Math\Line3.cs" />
+    <Compile Include="Math\Mathf.cs" />
+    <Compile Include="Math\MathUtils.cs" />
+    <Compile Include="Math\Matrix3.cs" />
+    <Compile Include="Math\Matrix4.cs" />
+    <Compile Include="Math\Plane.cs" />
+    <Compile Include="Math\Quaternion.cs" />
+    <Compile Include="Math\Ray.cs" />
+    <Compile Include="Math\Sphere.cs" />
+    <Compile Include="Math\Triangle.cs" />
+    <Compile Include="Math\Vector2.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Objects\Bone.cs" />
+    <Compile Include="Objects\Group.cs" />
+    <Compile Include="Objects\Line.cs" />
+    <Compile Include="Objects\LineStrip.cs" />
+    <Compile Include="Objects\LOD.cs" />
+    <Compile Include="Objects\Mesh.cs" />
+    <Compile Include="Objects\PointCloud.cs" />
+    <Compile Include="Objects\Skeleton.cs" />
+    <Compile Include="Objects\SkinnedMesh.cs" />
+    <Compile Include="PreventCircularUpdate.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderers\Renderables\RenderableFace.cs" />
+    <Compile Include="Renderers\Renderables\RenderableLine.cs" />
+    <Compile Include="Renderers\Renderables\RenderableObject.cs" />
+    <Compile Include="Renderers\Renderables\RenderableSprite.cs" />
+    <Compile Include="Renderers\Renderables\RenderableVertex.cs" />
+    <Compile Include="Renderers\Shaders\Attribute.cs" />
+    <Compile Include="Renderers\Shaders\Attributes.cs" />
+    <Compile Include="Renderers\Shaders\IUniforms.cs" />
+    <Compile Include="Renderers\Shaders\Shader.cs" />
+    <Compile Include="Renderers\Shaders\ShaderLib.cs" />
+    <Compile Include="Renderers\Shaders\Uniform.cs" />
+    <Compile Include="Renderers\Shaders\Uniforms.cs" />
+    <Compile Include="Renderers\Shaders\UniformsLib.cs" />
+    <Compile Include="Renderers\Shaders\UniformsUtils.cs" />
+    <Compile Include="Renderers\WebGLRenderer.cs" />
+    <Compile Include="Renderers\WebGLRenderTarget.cs" />
+    <Compile Include="Renderers\WebGlRenderTargetCube.cs" />
+    <Compile Include="Renderers\WebGL\PlugIns\LensFlarePlugin.cs" />
+    <Compile Include="Renderers\WebGL\PlugIns\ShadowMapPlugin.cs" />
+    <Compile Include="Renderers\WebGL\PlugIns\SpritePlugin.cs" />
+    <Compile Include="Renderers\WebGL\WebGlProgram.cs" />
+    <Compile Include="Renderers\WebGL\WebGlShader.cs" />
+    <Compile Include="Scenes\Fog.cs" />
+    <Compile Include="Scenes\FogExp2.cs" />
+    <Compile Include="Scenes\Scene.cs" />
+    <Compile Include="Textures\CompressedTexture.cs" />
+    <Compile Include="Textures\CubeTexture.cs" />
+    <Compile Include="Textures\DataTexture.cs" />
+    <Compile Include="Textures\ITexture.cs" />
+    <Compile Include="Textures\Texture.cs" />
+    <Compile Include="Three.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Renderers\Shaders\ShaderChunk\alphamap_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\alphamap_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\alphatest_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\bumpmap_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\color_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\color_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\color_pars_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\color_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\defaultnormal_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\default_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\envmap_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\envmap_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\envmap_pars_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\envmap_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\fog_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\fog_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\lightmap_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\lightmap_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\lightmap_pars_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\lightmap_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\lights_lambert_pars_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\lights_lambert_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\lights_phong_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\lights_phong_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\lights_phong_pars_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\lights_phong_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\linear_to_gamma_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\logdepthbuf_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\logdepthbuf_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\logdepthbuf_pars_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\logdepthbuf_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\map_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\map_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\map_pars_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\map_particle_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\map_particle_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\map_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\morphnormal_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\morphtarget_pars_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\morphtarget_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\normalmap_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\shadowmap_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\shadowmap_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\shadowmap_pars_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\shadowmap_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\skinbase_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\skinning_pars_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\skinning_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\skinnormal_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\specularmap_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\specularmap_pars_fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Renderers\Shaders\ShaderChunk\worldpos_vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="OpenTK">
+      <Version>3.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="OpenTK.GLControl">
+      <Version>3.1.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Animation\" />
+    <Folder Include="Audio\" />
+    <Folder Include="Extras\Core\" />
+    <Folder Include="Extras\Helpers\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
