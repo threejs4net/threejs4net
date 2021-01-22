@@ -87,7 +87,7 @@ namespace ThreeJs4Net.Extras
             FontUtils.weight = weight;
             FontUtils.style = style;
 
-            // Get a Font data json object
+            // Get A Font data json object
 
             var data = FontUtils.drawText( text );
 

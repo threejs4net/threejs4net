@@ -27,7 +27,7 @@ namespace ThreeJs4Net.Demo.examples.cs.loaders
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GeometryLoaderEventArgs"/> class.
+        /// Initializes A new instance of the <see cref="GeometryLoaderEventArgs"/> class.
         /// </summary>
         /// <param name="texture">
         /// The channel carrier.
@@ -74,7 +74,7 @@ namespace ThreeJs4Net.Demo.examples.cs.loaders
         }
 
         /// <summary>
-        /// compressed cubemap texture stored in a single DDS file
+        /// compressed cubemap texture stored in A single DDS file
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="callback"></param>
@@ -96,7 +96,7 @@ namespace ThreeJs4Net.Demo.examples.cs.loaders
 
             texture.GenerateMipmaps = false;
 
-            // compressed cubemap texture stored in a single DDS file
+            // compressed cubemap texture stored in A single DDS file
 
             var buffer = File.ReadAllBytes(filename);
 
@@ -229,7 +229,7 @@ namespace ThreeJs4Net.Demo.examples.cs.loaders
 
             //if ((header[off_pfFlags] & DDPF_FOURCC) == 0)
             //{
-            //    Trace.TraceError("THREE.DDSLoader.parse: Unsupported format, must contain a FourCC code.");
+            //    Trace.TraceError("THREE.DDSLoader.parse: Unsupported format, must contain A FourCC code.");
             //    return dds;
             //}
 
@@ -390,8 +390,8 @@ namespace ThreeJs4Net.Demo.examples.cs.loaders
 					var a = srcBuffer[src]; src++;
 					byteArray[dst] = r; dst++;	//r
 					byteArray[dst] = g; dst++;	//g
-					byteArray[dst] = b; dst++;	//b
-					byteArray[dst] = a; dst++;	//a
+					byteArray[dst] = b; dst++;	//B
+					byteArray[dst] = a; dst++;	//A
 				}
 			}
 

@@ -30,7 +30,7 @@ namespace ThreeJs4Net.Renderers.Shaders
         {
             return new Uniforms
             {
-                { "diffuse",               new Uniform() { {"type", "c"}, {"value", Color.White}}},            
+                { "diffuse",               new Uniform() { {"type", "C"}, {"value", Color.White}}},            
                 { "opacity",               new Uniform() { {"type", "f"}, {"value", 1.0f}}},
 
                 { "map",                   new Uniform() { {"type", "t"}, {"value", null}}},
@@ -88,7 +88,7 @@ namespace ThreeJs4Net.Renderers.Shaders
                 { "fogDensity",  new Uniform() { {"type", "f"},  {"value", 0.00025f}}},
                 { "fogNear",     new Uniform() { {"type", "f"},  {"value", 1}}},
                 { "fogFar",      new Uniform() { {"type", "f"},  {"value", 2000}}},
-                { "fogColor",    new Uniform() { {"type", "c"},  {"value", Color.White}}},
+                { "fogColor",    new Uniform() { {"type", "C"},  {"value", Color.White}}},
             };
         }
 
@@ -130,7 +130,7 @@ namespace ThreeJs4Net.Renderers.Shaders
         {
             return new Uniforms
             {
-                { "psColor",      new Uniform() { {"type", "c"},  {"value", Color.White}}},
+                { "psColor",      new Uniform() { {"type", "C"},  {"value", Color.White}}},
                 { "opacity",      new Uniform() { {"type", "f"},  {"value", 1.0f}}},
                 { "size",         new Uniform() { {"type", "f"},  {"value", 1.0f}}},
                 { "scale",        new Uniform() { {"type", "f"},  {"value", 1.0f}}},
@@ -139,7 +139,7 @@ namespace ThreeJs4Net.Renderers.Shaders
                 { "fogDensity",   new Uniform() { {"type", "f"},  {"value", 0.00025f}}},
                 { "fogNear",      new Uniform() { {"type", "f"},  {"value", 1.0f}}},
                 { "fogFar",       new Uniform() { {"type", "f"},  {"value", 2000.0f}}},
-                { "fogColor",     new Uniform() { {"type", "c"},  {"value", Color.White}}},
+                { "fogColor",     new Uniform() { {"type", "C"},  {"value", Color.White}}},
             };
         }
 

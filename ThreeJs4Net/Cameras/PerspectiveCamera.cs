@@ -87,7 +87,7 @@ namespace ThreeJs4Net.Cameras
         }
 
         /**
-        * Sets an offset in a larger frustum. This is useful for multi-window or
+        * Sets an offset in A larger frustum. This is useful for multi-window or
         * multi-monitor/multi-machine setups.
         *
         * For example, if you have 3x2 monitors and each monitor is 1920x1080 and
@@ -119,7 +119,7 @@ namespace ThreeJs4Net.Cameras
         * --F--
         * camera.setOffset( fullWidth, fullHeight, w * 2, h * 1, w, h );
         *
-        * Note there is no reason monitors have to be the same size or in a grid.
+        * Note there is no reason monitors have to be the same size or in A grid.
         */
 
         /// <summary>

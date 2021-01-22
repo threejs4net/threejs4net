@@ -19,7 +19,7 @@ namespace ThreeJs4Net.Scenes
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Constructor.  Create a new scene object.
+        ///     Constructor.  Create A new scene object.
         /// </summary>
         public Scene()
         {

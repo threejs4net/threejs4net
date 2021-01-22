@@ -54,7 +54,7 @@ namespace ThreeJs4Net.Core.Tests
         [Fact()]
         public void ComputeVertexNormalsTest()
         {
-            // get normals for a counter clockwise created triangle
+            // get normals for A counter clockwise created triangle
             var normals = GetNormalsForVertices(new float[] { -1, 0, 0, 1, 0, 0, 0, 1, 0 }).Array;
 
             Assert.True(normals[0] == 0 && normals[1] == 0 && normals[2] == 1,
@@ -66,7 +66,7 @@ namespace ThreeJs4Net.Core.Tests
             Assert.True(normals[6] == 0 && normals[7] == 0 && normals[8] == 1,
                 "third normal is pointing to screen since the the triangle was created counter clockwise");
 
-            // get normals for a clockwise created triangle
+            // get normals for A clockwise created triangle
             normals = GetNormalsForVertices( new float[] { 1, 0, 0, -1, 0, 0, 0, 1, 0 }).Array;
 
             Assert.True(normals[0] == 0 && normals[1] == 0 && normals[2] == -1,
@@ -81,16 +81,16 @@ namespace ThreeJs4Net.Core.Tests
             normals = GetNormalsForVertices( new float[] { 0, 0, 1, 0, 0, -1, 1, 1, 0 }).Array;
 
             // the triangle is rotated by 45 degrees to the right so the normals of the three vertices
-            // should point to (1, -1, 0).normalized(). The simplest solution is to check against a normalized
+            // should point to (1, -1, 0).normalized(). The simplest solution is to check against A normalized
             // vector (1, -1, 0) but you will get calculation errors because of floating calculations so another
-            // valid technique is to create a vector which stands in 90 degrees to the normals and calculate the
+            // valid technique is to create A vector which stands in 90 degrees to the normals and calculate the
             // dot product which is the cos of the angle between them. This should be < floating calculation error
             // which can be taken from Number.EPSILON
-            var direction = new Vector3(1, 1, 0).Normalize(); // a vector which should have 90 degrees difference to normals
+            var direction = new Vector3(1, 1, 0).Normalize(); // A vector which should have 90 degrees difference to normals
             var difference = direction.Dot(new Vector3(normals[0], normals[1], normals[2]));
             Assert.True(difference < MathUtils.EPS5, "normal is equal to reference vector");
 
-            // get normals for a line should be NAN because you need min a triangle to calculate normals
+            // get normals for A line should be NAN because you need min A triangle to calculate normals
             normals = GetNormalsForVertices(new float[] { 1, 0, 0, -1, 0, 0 }).Array;
 
             for (var i = 0; i < normals.Length; i++)

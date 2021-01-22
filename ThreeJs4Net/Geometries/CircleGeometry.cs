@@ -29,7 +29,7 @@
 //            var uv = new Vector2();
 
 
-//            var a = new List<int> { 0, 0, 0 };
+//            var A = new List<int> { 0, 0, 0 };
 
 //            vertices.Add(new List<List<int>>(new List<int> { 0, 0, 0 }));
 //            normals.Add(new List<int>(new List<int> { 0, 0, 1 }));

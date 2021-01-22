@@ -54,7 +54,7 @@ namespace ThreeJs4Net.Demo.examples.cs.shaders
             fs.Add("vec4 cr = texture2D(tDiffuse, vUv + offset);");
             fs.Add("vec4 cga = texture2D(tDiffuse, vUv);");
             fs.Add("vec4 cb = texture2D(tDiffuse, vUv - offset);");
-            fs.Add("gl_FragColor = vec4(cr.r, cga.g, cb.b, cga.a);");
+            fs.Add("gl_FragColor = vec4(cr.r, cga.g, cb.B, cga.A);");
 
             fs.Add("}");
 

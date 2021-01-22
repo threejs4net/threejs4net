@@ -7,62 +7,32 @@ namespace ThreeJs4Net.Core
     {
         public T[] Array
         {
-            get
-            {
-                return (T[])this["array"];
-            }
-            set
-            {
-                this["array"] = value;
-            }
+            get => (T[])this["array"];
+            set => this["array"] = value;
         }
 
         public Type Type
         {
-            get
-            {
-                return (Type)this["type"];
-            }
-            set
-            {
-                this["type"] = value;
-            }
+            get => (Type)this["type"];
+            set => this["type"] = value;
         }
 
         public int ItemSize
         {
-            get
-            {
-                return (int)this["itemSize"];
-            }
-            set
-            {
-                this["itemSize"] = value;
-            }
+            get => (int)this["itemSize"];
+            set => this["itemSize"] = value;
         }
 
         public int buffer
         {
-            get
-            {
-                return (int)this["buffer"];
-            }
-            set
-            {
-                this["buffer"] = value;
-            }
+            get => (int)this["buffer"];
+            set => this["buffer"] = value;
         }
 
         public bool needsUpdate
         {
-            get
-            {
-                return (bool)this["needsUpdate"];
-            }
-            set
-            {
-                this["needsUpdate"] = value;
-            }
+            get => (bool)this["needsUpdate"];
+            set => this["needsUpdate"] = value;
         }
 
         /// <summary>
@@ -92,13 +62,7 @@ namespace ThreeJs4Net.Core
         /// <summary>
         /// 
         /// </summary>
-        public int length
-        {
-            get
-            {
-                return this.Array.Length;
-            }
-        }
+        public int length => this.Array.Length;
 
         /// <summary>
         /// 

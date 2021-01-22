@@ -163,7 +163,7 @@ namespace ThreeJs4Net.Demo
                 {
                     // Add this example to the sample TreeView.
                     // First check whether the ExampleCategory exists in the tree (and add it if it doesn't).
-                    // Then add the example as a child node on this category.
+                    // Then add the example as A child node on this category.
 
                     if (!this.treeViewSamples.Nodes.ContainsKey(example.Category.ToString()))
                     {

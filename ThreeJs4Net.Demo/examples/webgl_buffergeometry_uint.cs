@@ -149,7 +149,7 @@ namespace ThreeJs4Net.Demo.examples
             geometry.AddAttribute("index", new BufferAttribute<uint>(indices, 1));
             geometry.AddAttribute("position", new BufferAttribute<float>(positions, 3));
             geometry.AddAttribute("normal", new BufferAttribute<float>(normals, 3));
-            geometry.AddAttribute("color", new BufferAttribute<float>(colors, 3));
+            geometry.AddAttribute("Color", new BufferAttribute<float>(colors, 3));
 
             geometry.ComputeBoundingSphere();
 

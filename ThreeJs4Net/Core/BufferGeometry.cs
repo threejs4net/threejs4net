@@ -19,14 +19,9 @@ namespace ThreeJs4Net.Core
     {
         protected static int BufferGeometryIdCount;
 
-        // IAttributes
-
         public Attributes Attributes { get; set; }
-
         public List<string> AttributesKeys { get; set; }
-
         public IList<Offset> Drawcalls = new List<Offset>();
-
         public IList<Offset> Offsets; // backwards compatibility
 
         /// <summary>
@@ -62,7 +57,9 @@ namespace ThreeJs4Net.Core
             // Object.keys
             this.AttributesKeys = new List<string>();
             foreach (var entry in this.Attributes)
+            {
                 this.AttributesKeys.Add(entry.Key);
+            }
         }
 
         public BufferGeometry SetAttribute(string name, Attribute attribute) {
@@ -71,7 +68,9 @@ namespace ThreeJs4Net.Core
             // Object.keys
             this.AttributesKeys = new List<string>();
             foreach (var entry in this.Attributes)
+            {
                 this.AttributesKeys.Add(entry.Key);
+            }
             return this;
         }
 
@@ -107,7 +106,7 @@ namespace ThreeJs4Net.Core
 
                 box.GetCenter(center);
 
-                // hoping to find a boundingSphere with a radius smaller than the
+                // hoping to find A boundingSphere with A radius smaller than the
                 // boundingSphere of the boundingBox: sqrt(3) smaller in the best case
 
                 var maxRadiusSq = float.NegativeInfinity;

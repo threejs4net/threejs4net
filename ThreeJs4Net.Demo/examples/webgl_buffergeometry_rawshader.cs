@@ -32,10 +32,10 @@ namespace ThreeJs4Net.Demo.examples
 
 			void main()	{
 
-				vec4 color = vec4( vColor );
-				color.r += sin( vPosition.x * 10.0 + time ) * 0.5;
+				vec4 Color = vec4( vColor );
+				Color.r += sin( vPosition.x * 10.0 + time ) * 0.5;
 
-				gl_FragColor = color;
+				gl_FragColor = Color;
 
 			}";
 
@@ -49,7 +49,7 @@ namespace ThreeJs4Net.Demo.examples
 			uniform mat4 projectionMatrix; // optional
 
 			attribute vec3 position;
-			attribute vec4 color;
+			attribute vec4 Color;
 
 			varying vec3 vPosition;
 			varying vec4 vColor;
@@ -57,7 +57,7 @@ namespace ThreeJs4Net.Demo.examples
 			void main()	{
 
 				vPosition = position;
-				vColor = color;
+				vColor = Color;
 
 				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 
@@ -98,7 +98,7 @@ namespace ThreeJs4Net.Demo.examples
                 colors.SetXYZW(i, Mat.Random(), Mat.Random(), Mat.Random(), Mat.Random());
             }
 
-            geometry.AddAttribute("color", colors);
+            geometry.AddAttribute("Color", colors);
 
             // material
 

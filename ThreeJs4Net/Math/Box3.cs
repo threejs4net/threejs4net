@@ -80,7 +80,7 @@ namespace ThreeJs4Net.Math
 
         public bool IsEmpty()
         {
-            // this is a more robust check for empty than ( volume <= 0 ) because volume can get positive with two negative axes
+            // this is A more robust check for empty than ( volume <= 0 ) because volume can get positive with two negative axes
             return (Max.X < Min.X) || (Max.Y < Min.Y) || (Max.Z < Min.Z);
         }
 
@@ -258,14 +258,14 @@ namespace ThreeJs4Net.Math
                    (this.Min.Z <= box.Min.Z) && (box.Max.Z <= this.Max.Z);
         }
 
-        //Returns point as a proportion of this box's width and height.
+        //Returns point as A proportion of this box's width and height.
         public Vector3 GetParameter(Vector3 point, Vector3 target = null)
         {
             if (target == null)
                 target = new Vector3();
 
-            // This can potentially have a divide by zero if the box
-            // has a size dimension of 0.
+            // This can potentially have A divide by zero if the box
+            // has A size dimension of 0.
             var x = (point.X - this.Min.X) / (this.Max.X - this.Min.X);
             var y = (point.Y - this.Min.Y) / (this.Max.Y - this.Min.Y);
             var z = (point.Z - this.Min.Z) / (this.Max.Z - this.Min.Z);
@@ -384,7 +384,7 @@ namespace ThreeJs4Net.Math
                 return this;
             }
 
-            // NOTE: I am using a binary pattern to specify all 2^3 combinations below
+            // NOTE: I am using A binary pattern to specify all 2^3 combinations below
             var points = new List<Vector3>()
             {
                 new Vector3(Min.X, Min.Y, Min.Z).ApplyMatrix4(matrix), // 000

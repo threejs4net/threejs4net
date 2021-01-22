@@ -111,40 +111,188 @@ namespace ThreeJs4Net.Core
 
         #endregion
 
-        #region Public Methods and Operators
+        #region --- Already in R116 ---
+        public Object3D RotateOnAxis(Vector3 axis, float angle)
+        {
+            var q1 = new Quaternion().SetFromAxisAngle(axis, angle);
+            this.Quaternion.Multiply(q1);
+            return this;
+        }
+
+        public Object3D RotateX(float angle)
+        {
+            return this.RotateOnAxis(Vector3.UnitX(), angle);
+        }
+
+        public Object3D RotateY(float angle)
+        {
+            return this.RotateOnAxis(Vector3.UnitY(), angle);
+        }
+
+        public Object3D RotateZ(float angle)
+        {
+            return this.RotateOnAxis(Vector3.UnitZ(), angle);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="distance"></param>
+        public Object3D TranslateX(float distance)
+        {
+            return this.translateOnAxis(Vector3.UnitX(), distance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="distance"></param>
+        public Object3D TranslateY(float distance)
+        {
+            return this.translateOnAxis(Vector3.UnitY(), distance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="distance"></param>
+        public Object3D TranslateZ(float distance)
+        {
+            return this.translateOnAxis(Vector3.UnitZ(), distance);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="axis"></param>
+        /// <param name="distance"></param>
+        public Object3D translateOnAxis(Vector3 axis, float distance)
+        {
+            // translate object by distance along axis in object space
+            // axis is assumed to be normalized
+
+            var v1 = new Vector3();
+            v1.Copy(axis).ApplyQuaternion(this.Quaternion);
+            this.Position.Add(v1.MultiplyScalar(distance));
+            return this;
+        }
+
+        /// 
+        /// </summary>
+        /// <param name="callback"></param>
+        public void Traverse(Action<Object3D> callback)
+        {
+            callback(this);
+
+            for (var i = 0; i < this.Children.Count; i++)
+            {
+                this.Children[i].Traverse(callback);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void UpdateMatrix()
+        {
+            this.Matrix.Compose(this.Position, this.Quaternion, this.Scale);
+            this.MatrixWorldNeedsUpdate = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="force"></param>
+        public void UpdateMatrixWorld(bool force = false)
+        {
+            if (this.MatrixAutoUpdate)
+            {
+                this.UpdateMatrix();
+            }
+
+            if (this.MatrixWorldNeedsUpdate || force)
+            {
+                if (this.Parent == null)
+                {
+                    this.MatrixWorld.Copy(this.Matrix);
+                }
+                else
+                {
+                    this.MatrixWorld.MultiplyMatrices(this.Parent.MatrixWorld, this.Matrix);
+                }
+
+                this.MatrixWorldNeedsUpdate = false;
+
+                force = true;
+            }
+
+            // update children
+
+            for (var i = 0; i < this.Children.Count; i++)
+            {
+                this.Children[i].UpdateMatrixWorld(force);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public virtual Vector3 GetWorldPosition(Vector3 target)
+        {
+            this.UpdateMatrixWorld(true);
+            return target.SetFromMatrixPosition(this.MatrixWorld);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public virtual Quaternion GetWorldQuaternion(Quaternion target)
+        {
+            var position = new Vector3();
+            var scale = new Vector3();
+            this.UpdateMatrixWorld(true);
+            this.MatrixWorld.Decompose(position, target, scale);
+            return target;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public virtual Vector3 GetWorldScale(Vector3 target)
+        {
+            var position = new Vector3();
+            var quaternion = new Quaternion();
+            this.UpdateMatrixWorld(true);
+            this.MatrixWorld.Decompose(position, quaternion, target);
+            return target;
+        }
+
+        /// <summary>
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public virtual Vector3 GetWorldDirection(Vector3 target)
+        {
+            this.UpdateMatrixWorld(true);
+            var e = this.MatrixWorld.elements;
+            return target.Set(e[8], e[9], e[10]).Normalize();
+        }
+
+
+
+
+
 
         #endregion
 
-        #region Methods
-
-        [Obsolete]
-        private bool eulerOrder
-        {
-            get
-            {
-                Trace.TraceWarning("THREE.Object3D: .eulerOrder has been moved to .rotation.Order.");
-                return false; // this.rotation.Order;
-            }
-            set
-            {
-                Trace.TraceWarning("THREE.Object3D: .eulerOrder has been moved to .rotation.Order.");
-                //this.rotation.Order = value;
-            }
-        }
-
-        [Obsolete]
-        private bool useQuaternion
-        {
-            get
-            {
-                Trace.TraceWarning("THREE.Object3D: .useQuaternion has been removed. The library now uses quaternions by default.");
-                throw new NotImplementedException();
-            }
-            set
-            {
-                Trace.TraceWarning("THREE.Object3D: .useQuaternion has been removed. The library now uses quaternions by default.");
-            }
-        }
 
         public void ApplyMatrix(Matrix4 matrix)
         {
@@ -171,7 +319,7 @@ namespace ThreeJs4Net.Core
         public void SetRotationFromMatrix()
         {
             throw new NotImplementedException();
-            //// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+            //// assumes the upper 3x3 of m is A pure rotation matrix (i.e, unscaled)
 
             //this.quaternion.setFromRotationMatrix(m);
         }
@@ -184,27 +332,8 @@ namespace ThreeJs4Net.Core
             //this.quaternion.copy(q);
         }
 
-        public Object3D RotateOnAxis(Vector3 axis, float angle)
-        {
-            var q1 = new Quaternion().SetFromAxisAngle(axis, angle );
-            this.Quaternion.PreMultiply(q1);
-            return this;
-        }
 
-        public Object3D RotateX(float angle)
-        {
-            return this.RotateOnAxis(Vector3.UnitX(), angle);
-        }
 
-        public Object3D RotateY(float angle)
-        {
-            return this.RotateOnAxis(Vector3.UnitY(), angle);
-        }
-
-        public Object3D RotateZ(float angle)
-        {
-            return this.RotateOnAxis(Vector3.UnitZ(), angle);
-        }
 
         public void TranslateOnAxis()
         {
@@ -226,75 +355,15 @@ namespace ThreeJs4Net.Core
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="distance"></param>
-        public Object3D TranslateX(float distance)
-        {
-            var v1 = new Vector3(1, 0, 0);
 
-            return this.translateOnAxis(v1, distance);
-        }
+
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="distance"></param>
-        public Object3D TranslateY(float distance)
-        {
-            var v1 = new Vector3(0, 1, 0);
 
-            return this.translateOnAxis(v1, distance);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="distance"></param>
-        public Object3D TranslateZ(float distance)
-        {
-            var v1 = new Vector3(0, 0, 1);
-
-            return this.translateOnAxis(v1, distance);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="axis"></param>
-        /// <param name="distance"></param>
-        public Object3D translateOnAxis(Vector3 axis, float distance)
-        {
-            // translate object by distance along axis in object space
-            // axis is assumed to be normalized
-
-            var v1 = new Vector3();
-
-            v1.Copy(axis).ApplyQuaternion(this.Quaternion);
-
-            this.Position.Add(v1.MultiplyScalar(distance));
-
-            return this;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="callback"></param>
-        public void Traverse(Action<Object3D> callback)
-        {
-            callback(this);
-
-            for (var i = 0; i < this.Children.Count; i++)
-            {
-                this.Children[i].Traverse(callback);
-            }
-        }
 
         public virtual void LookAt(float x, float y, float z)
         {
-            this.LookAt(new Vector3(x,y,z));
+            this.LookAt(new Vector3(x, y, z));
         }
 
         /// <summary>
@@ -402,7 +471,7 @@ namespace ThreeJs4Net.Core
 
             if (object3D == this)
             {
-                Trace.TraceError("THREE.Object3D.add:", object3D, "can't be added as a child of itself.");
+                Trace.TraceError("THREE.Object3D.add:", object3D, "can't be added as A child of itself.");
             }
 
             if (object3D is Object3D)
@@ -460,146 +529,10 @@ namespace ThreeJs4Net.Core
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void UpdateMatrix()
-        {
-            this.Matrix.Compose(this.Position, this.Quaternion, this.Scale);
-
-            this.MatrixWorldNeedsUpdate = true;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="force"></param>
-        public void UpdateMatrixWorld(bool force = false)
-        {
-            if (this.MatrixAutoUpdate)
-                this.UpdateMatrix();
-
-            if (this.MatrixWorldNeedsUpdate || force)
-            {
-
-                if (this.Parent == null)
-                {
-                    this.MatrixWorld.Copy(this.Matrix);
-                }
-                else
-                {
-                    this.MatrixWorld = this.Parent.MatrixWorld * this.Matrix;
-                }
-
-                this.MatrixWorldNeedsUpdate = false;
-
-                force = true;
-            }
-
-            // update children
-
-            for (var i = 0; i < this.Children.Count; i++)
-            {
-                this.Children[i].UpdateMatrixWorld(force);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="optionalTarget"></param>
-        /// <returns></returns>
-        public virtual Vector3 GetWorldPosition(Vector3 optionalTarget)
-        {
-            var result = new Vector3();
-            if (optionalTarget != null)
-                result = optionalTarget;
-
-            this.UpdateMatrixWorld(true);
-
-            return result.SetFromMatrixPosition(this.MatrixWorld);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="optionalTarget"></param>
-        /// <returns></returns>
-        public virtual Quaternion GetWorldQuaternion(Quaternion optionalTarget)
-        {
-            var position = new Vector3();
-            var scale = new Vector3();
 
 
-            var result = new Quaternion();
-            if (optionalTarget != null)
-                result = optionalTarget;
 
-            this.UpdateMatrixWorld(true);
 
-            this.MatrixWorld.Decompose(position, result, scale);
-
-            return result;
-
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="optionalTarget"></param>
-        /// <returns></returns>
-        public virtual Euler GetWorldRotation(Euler optionalTarget)
-        {
-            var quaternion = new Quaternion();
-
-            var result = new Euler();
-            if (optionalTarget != null)
-                result = optionalTarget;
-
-            this.GetWorldQuaternion(quaternion);
-
-            return result.SetFromQuaternion(quaternion, this.Rotation.Order/*, false */);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="optionalTarget"></param>
-        /// <returns></returns>
-        public virtual Vector3 GetWorldScale(Vector3 optionalTarget)
-        {
-            var position = new Vector3();
-            var quaternion = new Quaternion();
-
-            var result = new Vector3();
-            if (optionalTarget != null)
-                result = optionalTarget;
-
-            this.UpdateMatrixWorld(true);
-
-            this.MatrixWorld.Decompose(position, quaternion, result);
-
-            return result;
-        }
-
-        /// <summary>
-        /// 
-        /// 
-        /// </summary>
-        /// <param name="optionalTarget"></param>
-        /// <returns></returns>
-        public virtual Vector3 GetWorldDirection(Vector3 optionalTarget)
-        {
-            var quaternion = new Quaternion();
-
-            var result = new Vector3();
-            if (optionalTarget != null)
-                result = optionalTarget;
-
-            this.GetWorldQuaternion(quaternion);
-
-            return result = new Vector3(0, 0, 1).ApplyQuaternion(quaternion);
-        }
 
         public Object3D Copy(Object3D source, bool recursive = true)
         {
@@ -638,8 +571,9 @@ namespace ThreeJs4Net.Core
             return this;
         }
 
-        
-        public Object3D Clone(bool recursive = true) {
+
+        public Object3D Clone(bool recursive = true)
+        {
             return new Object3D().Copy(this, recursive);
         }
 
@@ -654,7 +588,7 @@ namespace ThreeJs4Net.Core
             // Therefore, you should call GC.SupressFinalize to
             // take this object off the finalization queue 
             // and prevent finalization code for this object
-            // from executing a second time.
+            // from executing A second time.
             GC.SuppressFinalize(this);
         }
 
@@ -675,7 +609,6 @@ namespace ThreeJs4Net.Core
                 }
             }
         }
-        #endregion
     }
 
     #endregion

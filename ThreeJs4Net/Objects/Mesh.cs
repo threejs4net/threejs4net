@@ -114,9 +114,9 @@ namespace ThreeJs4Net.Objects
 
                 if (material == null) continue;
 
-                var a = vertices[face.a];
-                var b = vertices[face.b];
-                var c = vertices[face.c];
+                var a = vertices[face.A];
+                var b = vertices[face.B];
+                var c = vertices[face.C];
                 /*
                         if ( material.MorphTargets == true ) {
 
@@ -135,27 +135,27 @@ namespace ThreeJs4Net.Objects
 
                                 var targets = morphTargets[ t ].vertices;
 
-                                vA.X += ( targets[ face.a ].x - a.X ) * influence;
-                                vA.Y += ( targets[ face.a ].y - a.Y ) * influence;
-                                vA.Z += ( targets[ face.a ].z - a.Z ) * influence;
+                                vA.X += ( targets[ face.A ].x - A.X ) * influence;
+                                vA.Y += ( targets[ face.A ].y - A.Y ) * influence;
+                                vA.Z += ( targets[ face.A ].z - A.Z ) * influence;
 
-                                vB.X += ( targets[ face.b ].x - b.X ) * influence;
-                                vB.Y += ( targets[ face.b ].y - b.Y ) * influence;
-                                vB.Z += ( targets[ face.b ].z - b.Z ) * influence;
+                                vB.X += ( targets[ face.B ].x - B.X ) * influence;
+                                vB.Y += ( targets[ face.B ].y - B.Y ) * influence;
+                                vB.Z += ( targets[ face.B ].z - B.Z ) * influence;
 
-                                vC.X += ( targets[ face.c ].x - c.X ) * influence;
-                                vC.Y += ( targets[ face.c ].y - c.Y ) * influence;
-                                vC.Z += ( targets[ face.c ].z - c.Z ) * influence;
+                                vC.X += ( targets[ face.C ].x - C.X ) * influence;
+                                vC.Y += ( targets[ face.C ].y - C.Y ) * influence;
+                                vC.Z += ( targets[ face.C ].z - C.Z ) * influence;
 
                             }
 
-                            vA.Add( a );
-                            vB.Add( b );
-                            vC.Add( c );
+                            vA.Add( A );
+                            vB.Add( B );
+                            vC.Add( C );
 
-                            a = vA;
-                            b = vB;
-                            c = vC;
+                            A = vA;
+                            B = vB;
+                            C = vC;
 
                         }
 */

@@ -122,7 +122,7 @@ namespace ThreeJs4Net.Math
         {
             if (right != null)
             {
-                Trace.TraceInformation("THREE.Matrix4: .multiply() now only accepts one argument. Use .multiplyMatrices( a, b ) instead.");
+                Trace.TraceInformation("THREE.Matrix4: .multiply() now only accepts one argument. Use .multiplyMatrices( A, B ) instead.");
                 return this.MultiplyMatrices(left, right);
             }
 

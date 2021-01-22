@@ -55,7 +55,7 @@ namespace ThreeJs4Net.Demo.examples
 			void main() {
 
 				gl_FragColor.rgb = mix( vec3( 1.0 ), vec3( 0.2 ), edgeFactorTri() );
-				gl_FragColor.a = 1.0;
+				gl_FragColor.A = 1.0;
 			}";
 
         /// <summary>

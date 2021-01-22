@@ -299,8 +299,8 @@ namespace ThreeJs4Net.Math
             var normal = new Vector3();
 
             // from http://www.geometrictools.com/LibMathematics/Intersection/Wm5IntrRay3Triangle3.cpp
-            //edge1.SubVectors(b, a);
-            //edge2.SubVectors(c, a);
+            //edge1.SubVectors(B, A);
+            //edge2.SubVectors(C, A);
             //normal.CrossVectors(edge1, edge2);
 
             var edge1 = b - a;
@@ -330,7 +330,7 @@ namespace ThreeJs4Net.Math
                 return null;
             }
 
-      //      diff.SubVectors(this.Origin, a);
+      //      diff.SubVectors(this.Origin, A);
 
             var diff = this.Origin - a;
 

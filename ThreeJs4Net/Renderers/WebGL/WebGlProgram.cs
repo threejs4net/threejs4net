@@ -240,7 +240,7 @@ namespace ThreeJs4Net.Renderers.WebGL
 
                 pv.Add("#ifdef USE_COLOR");
 
-                pv.Add("    attribute vec3 color;");
+                pv.Add("    attribute vec3 Color;");
 
                 pv.Add("#endif");
 
@@ -354,9 +354,9 @@ namespace ThreeJs4Net.Renderers.WebGL
 
                 if (index0AttributeName != null)
                 {
-                    // Force a particular attribute to index 0.
+                    // Force A particular attribute to index 0.
                     // because potentially expensive emulation is done by browser if attribute 0 is disabled.
-                    // And, color, for example is often automatically bound to index 0 so disabling it
+                    // And, Color, for example is often automatically bound to index 0 so disabling it
                     GL.BindAttribLocation(program, 0, index0AttributeName);
                 }
 
@@ -433,7 +433,7 @@ namespace ThreeJs4Net.Renderers.WebGL
                 // cache attributesLocation locations
 
                 identifiers = new List<string> {
-                    "position", "normal", "uv", "uv2", "tangent", "color",
+                    "position", "normal", "uv", "uv2", "tangent", "Color",
                     "skinIndex", "skinWeight", "lineDistance" 
                 };
 

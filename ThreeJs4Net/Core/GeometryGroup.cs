@@ -7,15 +7,10 @@ namespace ThreeJs4Net.Core
     public class GeometryGroup : BaseGeometry
     {
         protected static int GeometryGroupIdCount;
-
         public List<int> Faces3;
-
         public int MaterialIndex;
-
         public int Vertices;
-
         public int NumMorphTargets;
-
         public int NumMorphNormals;
 
         /// <summary>

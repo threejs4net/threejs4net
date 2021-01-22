@@ -12,8 +12,8 @@
 namespace ThreeJs4Net.Properties
 {
     /// <summary>
-    /// Indicates that the value of the marked element could be <c>null</c> sometimes,
-    /// so the check for <c>null</c> is necessary before its usage
+    /// Indicates that the value of the marked element could be <C>null</C> sometimes,
+    /// so the check for <C>null</C> is necessary before its usage
     /// </summary>
     /// <example><code>
     /// [CanBeNull] public object Test() { return null; }
@@ -29,7 +29,7 @@ namespace ThreeJs4Net.Properties
     public sealed class CanBeNullAttribute : Attribute { }
 
     /// <summary>
-    /// Indicates that the value of the marked element could never be <c>null</c>
+    /// Indicates that the value of the marked element could never be <C>null</C>
     /// </summary>
     /// <example><code>
     /// [NotNull] public object Foo() {
@@ -85,18 +85,18 @@ namespace ThreeJs4Net.Properties
     public sealed class InvokerParameterNameAttribute : Attribute { }
 
     /// <summary>
-    /// Indicates that the method is contained in a type that implements
+    /// Indicates that the method is contained in A type that implements
     /// <see cref="System.ComponentModel.INotifyPropertyChanged"/> interface
     /// and this method is used to notify that some property value changed
     /// </summary>
     /// <remarks>
     /// The method should be non-static and conform to one of the supported signatures:
     /// <list>
-    /// <item><c>NotifyChanged(string)</c></item>
-    /// <item><c>NotifyChanged(params string[])</c></item>
-    /// <item><c>NotifyChanged{T}(Expression{Func{T}})</c></item>
-    /// <item><c>NotifyChanged{T,U}(Expression{Func{T,U}})</c></item>
-    /// <item><c>SetProperty{T}(ref T, T, string)</c></item>
+    /// <item><C>NotifyChanged(string)</C></item>
+    /// <item><C>NotifyChanged(params string[])</C></item>
+    /// <item><C>NotifyChanged{T}(Expression{Func{T}})</C></item>
+    /// <item><C>NotifyChanged{T,U}(Expression{Func{T,U}})</C></item>
+    /// <item><C>SetProperty{T}(ref T, T, string)</C></item>
     /// </list>
     /// </remarks>
     /// <example><code>
@@ -114,10 +114,10 @@ namespace ThreeJs4Net.Properties
     /// </code>
     /// Examples of generated notifications:
     /// <list>
-    /// <item><c>NotifyChanged("Property")</c></item>
-    /// <item><c>NotifyChanged(() =&gt; Property)</c></item>
-    /// <item><c>NotifyChanged((VM x) =&gt; x.Property)</c></item>
-    /// <item><c>SetProperty(ref myField, value, "Property")</c></item>
+    /// <item><C>NotifyChanged("Property")</C></item>
+    /// <item><C>NotifyChanged(() =&gt; Property)</C></item>
+    /// <item><C>NotifyChanged((VM x) =&gt; x.Property)</C></item>
+    /// <item><C>SetProperty(ref myField, value, "Property")</C></item>
     /// </list>
     /// </example>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
@@ -145,10 +145,10 @@ namespace ThreeJs4Net.Properties
     /// <item>Value    ::= true | false | null | notnull | canbenull</item>
     /// </list>
     /// If method has single input parameter, it's name could be omitted.<br/>
-    /// Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same)
+    /// Using <C>halt</C> (or <C>void</C>/<C>nothing</C>, which is the same)
     /// for method output means that the methos doesn't return normally.<br/>
-    /// <c>canbenull</c> annotation is only applicable for output parameters.<br/>
-    /// You can use multiple <c>[ContractAnnotation]</c> for each FDT row,
+    /// <C>canbenull</C> annotation is only applicable for output parameters.<br/>
+    /// You can use multiple <C>[ContractAnnotation]</C> for each FDT row,
     /// or use single attribute with rows separated by semicolon.<br/>
     /// </syntax>
     /// <examples><list>
@@ -213,9 +213,9 @@ namespace ThreeJs4Net.Properties
 
     /// <summary>
     /// Indicates that the value of the marked type (or its derivatives)
-    /// cannot be compared using '==' or '!=' operators and <c>Equals()</c>
+    /// cannot be compared using '==' or '!=' operators and <C>Equals()</C>
     /// should be used instead. However, using '==' or '!=' for comparison
-    /// with <c>null</c> is always permitted.
+    /// with <C>null</C> is always permitted.
     /// </summary>
     /// <example><code>
     /// [CannotApplyEqualityOperator]
@@ -236,7 +236,7 @@ namespace ThreeJs4Net.Properties
     public sealed class CannotApplyEqualityOperatorAttribute : Attribute { }
 
     /// <summary>
-    /// When applied to a target attribute, specifies a requirement for any type marked
+    /// When applied to A target attribute, specifies A requirement for any type marked
     /// with the target attribute to implement or inherit specific type or types.
     /// </summary>
     /// <example><code>
@@ -319,14 +319,14 @@ namespace ThreeJs4Net.Properties
         Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
         /// <summary>Only entity marked with attribute considered used</summary>
         Access = 1,
-        /// <summary>Indicates implicit assignment to a member</summary>
+        /// <summary>Indicates implicit assignment to A member</summary>
         Assign = 2,
         /// <summary>
-        /// Indicates implicit instantiation of a type with fixed constructor signature.
+        /// Indicates implicit instantiation of A type with fixed constructor signature.
         /// That means any unused constructor parameters won't be reported as such.
         /// </summary>
         InstantiatedWithFixedConstructorSignature = 4,
-        /// <summary>Indicates implicit instantiation of a type</summary>
+        /// <summary>Indicates implicit instantiation of A type</summary>
         InstantiatedNoFixedConstructorSignature = 8,
     }
 
@@ -364,7 +364,7 @@ namespace ThreeJs4Net.Properties
 
     /// <summary>
     /// Tells code analysis engine if the parameter is completely handled
-    /// when the invoked method is on stack. If the parameter is a delegate,
+    /// when the invoked method is on stack. If the parameter is A delegate,
     /// indicates that delegate is executed while the method is executed.
     /// If the parameter is an enumerable, indicates that it is enumerated
     /// while the method is executed
@@ -373,22 +373,22 @@ namespace ThreeJs4Net.Properties
     public sealed class InstantHandleAttribute : Attribute { }
 
     /// <summary>
-    /// Indicates that a method does not make any observable state changes.
-    /// The same as <c>System.Diagnostics.Contracts.PureAttribute</c>
+    /// Indicates that A method does not make any observable state changes.
+    /// The same as <C>System.Diagnostics.Contracts.PureAttribute</C>
     /// </summary>
     /// <example><code>
     /// [Pure] private int Multiply(int x, int y) { return x * y; }
     /// public void Foo() {
-    ///   const int a = 2, b = 2;
-    ///   Multiply(a, b); // Waring: Return value of pure method is not used
+    ///   const int A = 2, B = 2;
+    ///   Multiply(A, B); // Waring: Return value of pure method is not used
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Method, Inherited = true)]
     public sealed class PureAttribute : Attribute { }
 
     /// <summary>
-    /// Indicates that a parameter is a path to a file or a folder
-    /// within a web project. Path can be relative or absolute,
+    /// Indicates that A parameter is A path to A file or A folder
+    /// within A web project. Path can be relative or absolute,
     /// starting from web root (~)
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
@@ -442,10 +442,10 @@ namespace ThreeJs4Net.Properties
     }
 
     /// <summary>
-    /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
-    /// is an MVC action. If applied to a method, the MVC action name is calculated
+    /// ASP.NET MVC attribute. If applied to A parameter, indicates that the parameter
+    /// is an MVC action. If applied to A method, the MVC action name is calculated
     /// implicitly from the context. Use this attribute for custom wrappers similar to
-    /// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>
+    /// <C>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
     public sealed class AspMvcActionAttribute : Attribute
@@ -460,9 +460,9 @@ namespace ThreeJs4Net.Properties
     }
 
     /// <summary>
-    /// ASP.NET MVC attribute. Indicates that a parameter is an MVC area.
+    /// ASP.NET MVC attribute. Indicates that A parameter is an MVC area.
     /// Use this attribute for custom wrappers similar to
-    /// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</c>
+    /// <C>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcAreaAttribute : PathReferenceAttribute
@@ -477,11 +477,11 @@ namespace ThreeJs4Net.Properties
     }
 
     /// <summary>
-    /// ASP.NET MVC attribute. If applied to a parameter, indicates that
-    /// the parameter is an MVC controller. If applied to a method,
+    /// ASP.NET MVC attribute. If applied to A parameter, indicates that
+    /// the parameter is an MVC controller. If applied to A method,
     /// the MVC controller name is calculated implicitly from the context.
     /// Use this attribute for custom wrappers similar to 
-    /// <c>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String, String)</c>
+    /// <C>System.Web.Mvc.Html.ChildActionExtensions.RenderAction(HtmlHelper, String, String)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
     public sealed class AspMvcControllerAttribute : Attribute
@@ -496,73 +496,73 @@ namespace ThreeJs4Net.Properties
     }
 
     /// <summary>
-    /// ASP.NET MVC attribute. Indicates that a parameter is an MVC Master.
+    /// ASP.NET MVC attribute. Indicates that A parameter is an MVC Master.
     /// Use this attribute for custom wrappers similar to
-    /// <c>System.Web.Mvc.Controller.View(String, String)</c>
+    /// <C>System.Web.Mvc.Controller.View(String, String)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcMasterAttribute : Attribute { }
 
     /// <summary>
-    /// ASP.NET MVC attribute. Indicates that a parameter is an MVC model type.
+    /// ASP.NET MVC attribute. Indicates that A parameter is an MVC model type.
     /// Use this attribute for custom wrappers similar to
-    /// <c>System.Web.Mvc.Controller.View(String, Object)</c>
+    /// <C>System.Web.Mvc.Controller.View(String, Object)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcModelTypeAttribute : Attribute { }
 
     /// <summary>
-    /// ASP.NET MVC attribute. If applied to a parameter, indicates that
-    /// the parameter is an MVC partial view. If applied to a method,
+    /// ASP.NET MVC attribute. If applied to A parameter, indicates that
+    /// the parameter is an MVC partial view. If applied to A method,
     /// the MVC partial view name is calculated implicitly from the context.
     /// Use this attribute for custom wrappers similar to
-    /// <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>
+    /// <C>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
     public sealed class AspMvcPartialViewAttribute : PathReferenceAttribute { }
 
     /// <summary>
     /// ASP.NET MVC attribute. Allows disabling all inspections
-    /// for MVC views within a class or a method.
+    /// for MVC views within A class or A method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public sealed class AspMvcSupressViewErrorAttribute : Attribute { }
 
     /// <summary>
-    /// ASP.NET MVC attribute. Indicates that a parameter is an MVC display template.
+    /// ASP.NET MVC attribute. Indicates that A parameter is an MVC display template.
     /// Use this attribute for custom wrappers similar to 
-    /// <c>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</c>
+    /// <C>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcDisplayTemplateAttribute : Attribute { }
 
     /// <summary>
-    /// ASP.NET MVC attribute. Indicates that a parameter is an MVC editor template.
+    /// ASP.NET MVC attribute. Indicates that A parameter is an MVC editor template.
     /// Use this attribute for custom wrappers similar to
-    /// <c>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</c>
+    /// <C>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcEditorTemplateAttribute : Attribute { }
 
     /// <summary>
-    /// ASP.NET MVC attribute. Indicates that a parameter is an MVC template.
+    /// ASP.NET MVC attribute. Indicates that A parameter is an MVC template.
     /// Use this attribute for custom wrappers similar to
-    /// <c>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</c>
+    /// <C>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
     public sealed class AspMvcTemplateAttribute : Attribute { }
 
     /// <summary>
-    /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
-    /// is an MVC view. If applied to a method, the MVC view name is calculated implicitly
+    /// ASP.NET MVC attribute. If applied to A parameter, indicates that the parameter
+    /// is an MVC view. If applied to A method, the MVC view name is calculated implicitly
     /// from the context. Use this attribute for custom wrappers similar to
-    /// <c>System.Web.Mvc.Controller.View(Object)</c>
+    /// <C>System.Web.Mvc.Controller.View(Object)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
     public sealed class AspMvcViewAttribute : PathReferenceAttribute { }
 
     /// <summary>
-    /// ASP.NET MVC attribute. When applied to a parameter of an attribute,
+    /// ASP.NET MVC attribute. When applied to A parameter of an attribute,
     /// indicates that this parameter is an MVC action name
     /// </summary>
     /// <example><code>
@@ -605,9 +605,9 @@ namespace ThreeJs4Net.Properties
     // Razor Attributes
 
     /// <summary>
-    /// Razor attribute. Indicates that a parameter or a method is a Razor section.
+    /// Razor attribute. Indicates that A parameter or A method is A Razor section.
     /// Use this attribute for custom wrappers similar to 
-    /// <c>System.Web.WebPages.WebPageBase.RenderSection(String)</c>
+    /// <C>System.Web.WebPages.WebPageBase.RenderSection(String)</C>
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method, Inherited = true)]
     public sealed class RazorSectionAttribute : Attribute { }

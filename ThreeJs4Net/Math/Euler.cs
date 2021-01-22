@@ -154,7 +154,7 @@ namespace ThreeJs4Net.Math
         public Euler SetFromRotationMatrix (Matrix4 m, RotationOrder order)
         {
 
-		    // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+		    // assumes the upper 3x3 of m is A pure rotation matrix (i.e, unscaled)
 
 		    var te = m.elements;
             var m11 = te[0]; var m12 = te[ 4 ]; var m13 = te[ 8 ];

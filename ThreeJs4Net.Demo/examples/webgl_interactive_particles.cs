@@ -59,18 +59,18 @@ namespace ThreeJs4Net.Demo.examples
 			}";
 
         private const string FragmentShader = @"
-			uniform vec3 color;
+			uniform vec3 Color;
 			uniform sampler2D texture;
 
 			varying vec3 vColor;
 
 			void main() {
 
-				gl_FragColor = vec4( color * vColor, 1.0 );
+				gl_FragColor = vec4( Color * vColor, 1.0 );
 
 				gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
 
-				if ( gl_FragColor.a < ALPHATEST ) discard;
+				if ( gl_FragColor.A < ALPHATEST ) discard;
 
 			}";
 
@@ -91,12 +91,12 @@ namespace ThreeJs4Net.Demo.examples
             attributes = new Attributes
             { 
                 { "size",        new Attribute() { {"type", "f"},  {"value", null }} },
-                { "customColor", new Attribute() { {"type", "c"},  {"value", null }} },
+                { "customColor", new Attribute() { {"type", "C"},  {"value", null }} },
             };
 
             uniforms = new Uniforms 
             { 
-                { "color",   new Uniform() { {"type", "c"},  {"value", Color.White}} },
+                { "Color",   new Uniform() { {"type", "C"},  {"value", Color.White}} },
                 { "texture", new Uniform() { {"type", "t"},  {"value", ImageUtils.LoadTexture(@"examples\textures/sprites/disc.png")}} } 
             };
    

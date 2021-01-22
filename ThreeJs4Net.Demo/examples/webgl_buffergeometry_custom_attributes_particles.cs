@@ -46,14 +46,14 @@ namespace ThreeJs4Net.Demo.examples
 			}";
 
         private const string FragmentShader = @"
-            uniform vec3 color;
+            uniform vec3 Color;
 			uniform sampler2D texture;
 
 			varying vec3 vColor;
 
 			void main() {
 
-				gl_FragColor = vec4( color * vColor, 1.0 );
+				gl_FragColor = vec4( Color * vColor, 1.0 );
 
 				gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
 
@@ -75,12 +75,12 @@ namespace ThreeJs4Net.Demo.examples
             var attributes = new Attributes 
             {
                 { "size",        new Attribute() { { "f", null } } }, 
-                { "customcolor", new Attribute() { { "c", null } } } 
+                { "customcolor", new Attribute() { { "C", null } } } 
             };
 
             uniforms = new Uniforms
             {
-                { "color",   new Uniform() { {"type", "c"},  {"value", Color.White}} },
+                { "Color",   new Uniform() { {"type", "C"},  {"value", Color.White}} },
                 { "texture", new Uniform() { {"type", "t"},  {"value", ImageUtils.LoadTexture(@"examples\textures/sprites/spark1.png")}} },
             };
 

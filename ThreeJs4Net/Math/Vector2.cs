@@ -87,7 +87,7 @@ namespace ThreeJs4Net.Math
         }
 
         /// <summary>
-        /// Defines a zero-length Vector2.
+        /// Defines A zero-length Vector2.
         /// </summary>
  //       public static readonly Vector2 Zero = new Vector2(0, 0);
 
@@ -196,7 +196,7 @@ namespace ThreeJs4Net.Math
         {
             if (w != null)
             {
-                Trace.TraceWarning("THREE.Vector2: .add() now only accepts one argument. Use .addVectors( a, b ) instead.");
+                Trace.TraceWarning("THREE.Vector2: .add() now only accepts one argument. Use .addVectors( A, B ) instead.");
                 return this.AddVectors(v, w);
 
             }
@@ -240,7 +240,7 @@ namespace ThreeJs4Net.Math
         {
             if (w != null)
             {
-                Trace.TraceInformation("THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.");
+                Trace.TraceInformation("THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( A, B ) instead.");
                 return this.SubVectors(v, w);
             }
 

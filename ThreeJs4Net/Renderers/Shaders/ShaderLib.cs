@@ -178,8 +178,8 @@ namespace ThreeJs4Net.Renderers.Shaders
                                     this.UniformsLib["lights"],
                                     this.UniformsLib["shadowmap"],
 
-                                    new Uniforms { { "ambient",  new Uniform() { {"type", "c"},  {"value", Color.White} } }},
-                                    new Uniforms { { "emissive", new Uniform() { {"type", "c"},  {"value", Color.Black} } }},
+                                    new Uniforms { { "ambient",  new Uniform() { {"type", "C"},  {"value", Color.White} } }},
+                                    new Uniforms { { "emissive", new Uniform() { {"type", "C"},  {"value", Color.Black} } }},
                                     new Uniforms { { "wrapRGB",  new Uniform() { {"type", "v3"}, {"value", new Vector3(1,1,1)} }}}});
             #endregion
 
@@ -310,7 +310,7 @@ namespace ThreeJs4Net.Renderers.Shaders
 
             #region construct uniform variables
 
-            var tt = new Uniforms { { "ambient", new Uniform() { {"type", "c"}, {"value", Color.White } }} };
+            var tt = new Uniforms { { "ambient", new Uniform() { {"type", "C"}, {"value", Color.White } }} };
 
             shader.Uniforms =
                 UniformsUtils.Merge(new List<Uniforms>
@@ -322,9 +322,9 @@ namespace ThreeJs4Net.Renderers.Shaders
                                       this.UniformsLib["lights"],
                                       this.UniformsLib["shadowmap"],
 
-                                      new Uniforms { { "ambient",   new Uniform() { {"type", "c"},  {"value", Color.White} } }},
-                                      new Uniforms { { "emissive",  new Uniform() { {"type", "c"},  {"value", Color.Black} } }},
-                                      new Uniforms { { "specular",  new Uniform() { {"type", "c"},  {"value", Color.DimGray} } }},
+                                      new Uniforms { { "ambient",   new Uniform() { {"type", "C"},  {"value", Color.White} } }},
+                                      new Uniforms { { "emissive",  new Uniform() { {"type", "C"},  {"value", Color.Black} } }},
+                                      new Uniforms { { "specular",  new Uniform() { {"type", "C"},  {"value", Color.DimGray} } }},
                                       new Uniforms { { "shininess", new Uniform() { {"type", "f"},  {"value", 30.0f} }} },
                                       new Uniforms { { "wrapRGB",   new Uniform() { {"type", "v3"}, {"value", new Vector3(1,1,1)} }}}});
 

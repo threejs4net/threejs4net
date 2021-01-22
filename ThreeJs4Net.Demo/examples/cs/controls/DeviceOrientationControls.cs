@@ -33,7 +33,7 @@ namespace ThreeJs4Net.Demo.examples.cs.controls
         }
 
         /// <summary>
-        /// The angles alpha, beta and gamma form a Set of intrinsic Tait-Bryan angles of type Z-X'-Y''
+        /// The angles alpha, beta and gamma form A Set of intrinsic Tait-Bryan angles of type Z-X'-Y''
         /// </summary>
         /// <param name="quaternion"></param>
         /// <param name="alpha"></param>
