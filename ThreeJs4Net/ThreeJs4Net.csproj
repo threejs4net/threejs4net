@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cameras\Camera.cs" />
+    <Compile Include="Cameras\CameraView.cs" />
     <Compile Include="Cameras\CubeCamera.cs" />
     <Compile Include="Cameras\OrthographicCamera.cs" />
     <Compile Include="Cameras\PerspectiveCamera.cs" />
@@ -359,6 +360,7 @@
     <Folder Include="Audio\" />
     <Folder Include="Extras\Core\" />
     <Folder Include="Extras\Helpers\" />
+    <Folder Include="Math\Interpolants\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

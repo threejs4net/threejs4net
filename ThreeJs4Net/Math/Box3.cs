@@ -85,7 +85,12 @@ namespace ThreeJs4Net.Math
             return (Max.X < Min.X) || (Max.Y < Min.Y) || (Max.Z < Min.Z);
         }
 
-        
+        /// <summary>
+        /// Get the center point of the box
+        /// </summary>
+        /// <param name="target">The result will be copied into this Vector3</param>
+        /// <returns>Center point of the box as a Vector3.</returns>
+        /// <seealso cref="Vector3"/>
         public Vector3 GetCenter(Vector3 target)
         {
             if (this.IsEmpty())
@@ -199,6 +204,11 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
+        /// <summary>
+        /// Get the size (width, height and depth)
+        /// </summary>
+        /// <param name="target">The result will be copied into this Vector3</param>
+        /// <returns>The width, height and depth of this box.</returns>
         public Vector3 GetSize(Vector3 target)
         {
             if (this.IsEmpty())
@@ -337,6 +347,13 @@ namespace ThreeJs4Net.Math
             return target;
         }
 
+        /// <summary>
+        /// Computes the intersection of this and box, setting the upper bound of this box to the lesser of
+        /// the two boxes' upper bounds and the lower bound of this box to the greater of the two boxes'
+        /// lower bounds. If there's no overlap, makes this box empty.
+        /// </summary>
+        /// <param name="box">Box to intersect with</param>
+        /// <returns>Box3 with the intersection or empty if no overlap</returns>
         public Box3 Intersect(Box3 box)
         {
             Min.Max(box.Min);
