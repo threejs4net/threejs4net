@@ -161,5 +161,16 @@ namespace ThreeJs4Net
         */
 
         public static LoadingManager DefaultLoadingManager = null;
+
+        public static int StaticDrawUsage = 35044;
+        public static int DynamicDrawUsage = 35048;
+        public static int StreamDrawUsage = 35040;
+        public static int StaticReadUsage = 35045;
+        public static int DynamicReadUsage = 35049;
+        public static int StreamReadUsage = 35041;
+        public static int StaticCopyUsage = 35046;
+        public static int DynamicCopyUsage = 35050;
+        public static int StreamCopyUsage = 35042;
+
     }
 }

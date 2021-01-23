@@ -13,5 +13,8 @@ namespace ThreeJs4Net.Core
         int ItemSize { get; }
 
         Type Type { get; }
+
+        bool Normalized { get; set; }
+        int Usage { get; }
     }
 }

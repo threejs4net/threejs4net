@@ -62,7 +62,8 @@ namespace ThreeJs4Net.Core
             }
         }
 
-        public BufferGeometry SetAttribute(string name, Attribute attribute) {
+        public BufferGeometry SetAttribute(string name, Attribute attribute)
+        {
             this.Attributes[name] = attribute;
 
             // Object.keys
@@ -71,6 +72,7 @@ namespace ThreeJs4Net.Core
             {
                 this.AttributesKeys.Add(entry.Key);
             }
+
             return this;
         }
 
@@ -228,7 +230,9 @@ namespace ThreeJs4Net.Core
 
                     var indices = indicesBufferAttribute.Array;
 
-                    var offsets = (this.Offsets.Count > 0 ? this.Offsets : new List<Offset>() { new Offset() { Start = 0, Count = indices.Length, Index = 0 } });
+                    var offsets = (this.Offsets.Count > 0
+                        ? this.Offsets
+                        : new List<Offset>() { new Offset() { Start = 0, Count = indices.Length, Index = 0 } });
 
                     for (var j = 0; j < offsets.Count; ++j)
                     {
@@ -309,7 +313,7 @@ namespace ThreeJs4Net.Core
         /// <summary>
         /// 
         /// </summary>
-	    public void NormalizeNormals()
+        public void NormalizeNormals()
         {
             var normalBufferAttribute = this.Attributes["normal"] as BufferAttribute<float>;
             Debug.Assert(null != normalBufferAttribute);
@@ -335,7 +339,7 @@ namespace ThreeJs4Net.Core
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-    	public object GetAttribute(string name)
+        public object GetAttribute(string name)
         {
             return this.Attributes[name];
         }
@@ -346,7 +350,7 @@ namespace ThreeJs4Net.Core
         /// <param name="start"></param>
         /// <param name="count"></param>
         /// <param name="indexOffset"></param>
-	    public void AddDrawCall(int start, int count, int indexOffset)
+        public void AddDrawCall(int start, int count, int indexOffset)
         {
             //   this.Drawcalls.Add() { start = start, count = count, index = indexOffset };
         }
@@ -410,5 +414,9 @@ namespace ThreeJs4Net.Core
             return this;
         }
 
+
+        #region --- Already in R116 ---
+
+        #endregion
     }
 }

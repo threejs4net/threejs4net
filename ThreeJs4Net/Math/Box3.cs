@@ -40,6 +40,7 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
+        #region --- Already in R116 ---
         /// <summary>
         /// 
         /// </summary>
@@ -84,11 +85,9 @@ namespace ThreeJs4Net.Math
             return (Max.X < Min.X) || (Max.Y < Min.Y) || (Max.Z < Min.Z);
         }
 
-        public Vector3 GetCenter(Vector3 target = null)
+        
+        public Vector3 GetCenter(Vector3 target)
         {
-            if (target == null)
-                target = new Vector3();
-
             if (this.IsEmpty())
             {
                 target.Set(0, 0, 0);
@@ -101,7 +100,7 @@ namespace ThreeJs4Net.Math
             return target;
         }
 
-
+        
         public Box3 SetFromArray(float[] array)
         {
             var minX = float.PositiveInfinity;
@@ -133,16 +132,6 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
-        public Box3 SetFromCenterAndSize(Vector3 center, Vector3 size)
-        {
-            var halfSize = new Vector3().Copy(size).MultiplyScalar((float)0.5);
-
-            this.Min.Copy(center).Sub(halfSize);
-            this.Max.Copy(center).Add(halfSize);
-
-            return this;
-        }
-
         public Box3 Clone()
         {
             return new Box3().Copy(this);
@@ -168,15 +157,14 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
-        public static Box3 FromCenterAndSize(Vector3 center, Vector3 size)
+        public Box3 SetFromCenterAndSize(Vector3 center, Vector3 size)
         {
-            var b = Box3.Empty();
-            var halfSize = size;
-            halfSize.MultiplyScalar(0.5f);
+            var halfSize = new Vector3().Copy(size).MultiplyScalar((float)0.5);
 
-            b.Min.SubVectors(center, halfSize);
-            b.Max.AddVectors(center, halfSize);
-            return b;
+            this.Min.Copy(center).Sub(halfSize);
+            this.Max.Copy(center).Add(halfSize);
+
+            return this;
         }
 
         public Box3 SetFromObject(Object3D o)
@@ -211,11 +199,8 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
-        public Vector3 GetSize(Vector3 target = null)
+        public Vector3 GetSize(Vector3 target)
         {
-            if (target == null)
-                target = new Vector3();
-
             if (this.IsEmpty())
             {
                 target.Set(0, 0, 0);
@@ -247,8 +232,8 @@ namespace ThreeJs4Net.Math
         public bool ContainsPoint(Vector3 point)
         {
             return !(point.X < this.Min.X || point.X > this.Max.X ||
-                    point.Y < this.Min.Y || point.Y > this.Max.Y ||
-                    point.Z < this.Min.Z || point.Z > this.Max.Z);
+                     point.Y < this.Min.Y || point.Y > this.Max.Y ||
+                     point.Z < this.Min.Z || point.Z > this.Max.Z);
         }
 
         public bool ContainsBox(Box3 box)
@@ -259,11 +244,8 @@ namespace ThreeJs4Net.Math
         }
 
         //Returns point as A proportion of this box's width and height.
-        public Vector3 GetParameter(Vector3 point, Vector3 target = null)
+        public Vector3 GetParameter(Vector3 point, Vector3 target)
         {
-            if (target == null)
-                target = new Vector3();
-
             // This can potentially have A divide by zero if the box
             // has A size dimension of 0.
             var x = (point.X - this.Min.X) / (this.Max.X - this.Min.X);
@@ -277,8 +259,8 @@ namespace ThreeJs4Net.Math
         {
             // using 6 splitting planes to rule out intersections.
             return !(box.Max.X < this.Min.X || box.Min.X > this.Max.X ||
-                   box.Max.Y < this.Min.Y || box.Min.Y > this.Max.Y ||
-                   box.Max.Z < this.Min.Z || box.Min.Z > this.Max.Z);
+                     box.Max.Y < this.Min.Y || box.Min.Y > this.Max.Y ||
+                     box.Max.Z < this.Min.Z || box.Min.Z > this.Max.Z);
         }
 
         public bool IntersectsSphere(Sphere sphere)
@@ -290,6 +272,7 @@ namespace ThreeJs4Net.Math
             return vector.DistanceToSquared(sphere.Center) <= (sphere.Radius * sphere.Radius);
         }
 
+        
         public bool IntersectsPlane(Plane plane)
         {
             // We compute the minimum and maximum dot product values. If those values
@@ -333,7 +316,6 @@ namespace ThreeJs4Net.Math
             return (min <= -plane.Constant && max >= -plane.Constant);
         }
 
-
         public Vector3 ClampPoint(Vector3 point, Vector3 target = null)
         {
             if (target == null)
@@ -351,7 +333,7 @@ namespace ThreeJs4Net.Math
         public Sphere GetBoundingSphere(Sphere target)
         {
             this.GetCenter(target.Center);
-            target.Radius = this.GetSize().Length() * (float)0.5;
+            target.Radius = this.GetSize(new Vector3()).Length() * (float)0.5;
             return target;
         }
 
@@ -410,5 +392,7 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
+
+        #endregion
     }
 }
