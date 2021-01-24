@@ -14,7 +14,7 @@ namespace ThreeJs4Net.Demo.examples.cs.loaders
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes A new instance of the <see cref="BufferGeometryLoaderEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="BufferGeometryLoaderEventArgs"/> class.
         /// </summary>
         /// <param name="bufferGeometry">
         /// The channel carrier.

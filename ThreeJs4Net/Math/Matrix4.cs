@@ -351,23 +351,24 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fov"></param>
-        /// <param name="aspect"></param>
-        /// <param name="near"></param>
-        /// <param name="far"></param>
-        public Matrix4 MakePerspective(float fov, float aspect, float near, float far)
+
+        public Matrix4 MakePerspective(float left, float right, float top, float bottom, float near, float far)
         {
-            var rad = Mat.DegToRad(fov * 0.5f);
+            var te = this.elements;
+            var x = 2 * near / (right - left);
+            var y = 2 * near / (top - bottom);
 
-            var ymax = near * (float)System.Math.Tan(rad); // An angle, measured in radians
-            var ymin = -ymax;
-            var xmin = ymin * aspect;
-            var xmax = ymax * aspect;
+            var a = (right + left) / (right - left);
+            var b = (top + bottom) / (top - bottom);
+            var c = -(far + near) / (far - near);
+            var d = -2 * far * near / (far - near);
 
-            return MakeFrustum(xmin, xmax, ymin, ymax, near, far);
+            te[0] = x; te[4] = 0; te[8] = a; te[12] = 0;
+            te[1] = 0; te[5] = y; te[9] = b; te[13] = 0;
+            te[2] = 0; te[6] = 0; te[10] = c; te[14] = d;
+            te[3] = 0; te[7] = 0; te[11] = -1; te[15] = 0;
+
+            return this;
         }
 
         /// <summary>

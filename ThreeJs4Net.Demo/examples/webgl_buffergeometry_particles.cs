@@ -68,7 +68,7 @@ namespace ThreeJs4Net.Demo.examples
             var geometry = new BufferGeometry();
 
             geometry.AddAttribute("position", new BufferAttribute<float>(positions, 3));
-            geometry.AddAttribute("Color",    new BufferAttribute<float>(colors, 3));
+            geometry.AddAttribute("color",    new BufferAttribute<float>(colors, 3));
 
             geometry.ComputeBoundingSphere();
 

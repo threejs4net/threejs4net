@@ -14,12 +14,8 @@ namespace ThreeJs4Net.Core
     [DebuggerDisplay("Object3D")]
     public class Object3D : Hashtable, IDisposable
     {
-        #region Static Fields
-
+        #region --- Members ---
         protected static int Object3DIdCount;
-
-        #endregion
-
         private bool _disposed;
         public bool __webglInit = false;
         public bool __webglActive = false;
@@ -51,11 +47,14 @@ namespace ThreeJs4Net.Core
 
         [CanBeNull]
         public string Name;
+
+        [CanBeNull]
         public Object3D Parent;
         public string Tag;
         public object UserData;
         public Guid Uuid = Guid.NewGuid();
         private readonly PreventCircularUpdate preventCircularUpdate = new PreventCircularUpdate();
+        #endregion
 
         #region Constructors and Destructors
 
@@ -203,7 +202,7 @@ namespace ThreeJs4Net.Core
         /// 
         /// </summary>
         /// <param name="force"></param>
-        public void UpdateMatrixWorld(bool force = false)
+        public virtual void UpdateMatrixWorld(bool force = false)
         {
             if (this.MatrixAutoUpdate)
             {
@@ -281,17 +280,61 @@ namespace ThreeJs4Net.Core
         /// <returns></returns>
         public virtual Vector3 GetWorldDirection(Vector3 target)
         {
+            if (target == null)
+            {
+                target = new Vector3();
+            }
+
             this.UpdateMatrixWorld(true);
             var e = this.MatrixWorld.elements;
             return target.Set(e[8], e[9], e[10]).Normalize();
+        }
+
+        public virtual void UpdateWorldMatrix(bool updateParents, bool updateChildren)
+        {
+            var parent = this.Parent;
+            if (updateParents)
+            {
+                parent?.UpdateWorldMatrix(true, false);
+            }
+
+            if (this.MatrixAutoUpdate)
+            {
+                this.UpdateMatrix();
+            }
+
+            if (this.Parent == null)
+            {
+                this.MatrixWorld.Copy(this.Matrix);
+            }
+            else
+            {
+                this.MatrixWorld.MultiplyMatrices(this.Parent.MatrixWorld, this.Matrix);
+            }
+
+            // update children
+            if (updateChildren)
+            {
+                var children = this.Children;
+                foreach (var child in children)
+                {
+                    child.UpdateWorldMatrix(false, true);
+                }
+            }
         }
 
 
 
 
 
-
         #endregion
+
+
+
+
+
+
+
 
 
         public void ApplyMatrix(Matrix4 matrix)
@@ -414,7 +457,7 @@ namespace ThreeJs4Net.Core
             sphere.Copy(geometry.BoundingSphere);
             sphere.ApplyMatrix4(this.MatrixWorld);
 
-            if (raycaster.Ray.IsIntersectionSphere(sphere) == false)
+            if (!raycaster.Ray.IntersectsSphere(sphere))
             {
                 return;
             }

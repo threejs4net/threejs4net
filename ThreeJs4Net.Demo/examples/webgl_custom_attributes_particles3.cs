@@ -56,7 +56,7 @@ namespace ThreeJs4Net.Demo.examples
 
         private const string FragmentShader = @"
 	
-            uniform vec3 Color;
+            uniform vec3 color;
 			uniform sampler2D texture;
 
 			varying vec4 vColor;
@@ -65,9 +65,9 @@ namespace ThreeJs4Net.Demo.examples
 
 				vec4 outColor = texture2D( texture, gl_PointCoord );
 
-				if ( outColor.A < 0.5 ) discard;
+				if ( outColor.a < 0.5 ) discard;
 
-				gl_FragColor = outColor * vec4( Color * vColor.xyz, 1.0 );
+				gl_FragColor = outColor * vec4( color * vColor.xyz, 1.0 );
 
 				float depth = gl_FragCoord.z / gl_FragCoord.w;
 				const vec3 fogColor = vec3( 0.0 );
@@ -112,13 +112,13 @@ namespace ThreeJs4Net.Demo.examples
             attributes = new Attributes
             {
                 { "size", new Attribute() { { "type", "f" }, { "value", new float[0] } } },
-                { "ca",   new Attribute() { { "type", "C" }, { "value", new Color[0] } } },
+                { "ca",   new Attribute() { { "type", "c" }, { "value", new Color[0] } } },
             };
 
             uniforms = new Uniforms
             {
                 { "amplitude", new Uniform() { {"type", "f"},  {"value", 1.0f}} },
-                { "Color",     new Uniform() { {"type", "C"},  {"value", Color.White}} },
+                { "color",     new Uniform() { {"type", "c"},  {"value", Color.White}} },
                 { "texture",   new Uniform() { {"type", "t"},  {"value", ImageUtils.LoadTexture(@"examples\textures/sprites/ball.png")} }},
             };
 

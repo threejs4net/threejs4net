@@ -526,6 +526,22 @@ namespace ThreeJs4Net.Tests.Math
         [Fact()]
         public void RoundTest()
         {
+
+            //NOTE: Needs more tests. It looks like rounding in javascript is different from C#
+
+            //var a = new Vector3((float)-0.01, (float)0.5, (float)1.5);
+            //a.Round();
+
+            //Assert.Equal(System.Math.Round((float)0), a.X);
+            //Assert.Equal(System.Math.Round((float)0), a.Y);
+            //Assert.Equal(System.Math.Round((float)2), a.Z);
+
+            //a.SetX((float)0.6);
+            //a.SetY((float)-0.6);
+            //a.Round();
+            //Assert.Equal(System.Math.Round((float)1), a.X);
+            //Assert.Equal(System.Math.Round((float)-1), a.Y);
+
             Assert.True(false, "This test needs an implementation");
         }
 

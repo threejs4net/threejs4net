@@ -33,7 +33,7 @@ namespace ThreeJs4Net.Objects
         public Mesh(BaseGeometry geometry = null, Material material = null)
         {
             this.type = "Mesh";
-            
+
             this.Geometry = geometry ?? new Geometry();
             this.Material = material ?? new MeshBasicMaterial() { Color = new Color().Random() };
 
@@ -159,18 +159,14 @@ namespace ThreeJs4Net.Objects
 
                         }
 */
-                Vector3 intersectionPoint;
+                Vector3 intersectionPoint = null;
                 if (material.Side == Three.BackSide)
                 {
-
-                    intersectionPoint = ray.IntersectTriangle(c, b, a, true);
-
+                    intersectionPoint = ray.IntersectTriangle(c, b, a, true, intersectionPoint);
                 }
                 else
                 {
-
-                    intersectionPoint = ray.IntersectTriangle(a, b, c, material.Side != Three.DoubleSide);
-
+                    intersectionPoint = ray.IntersectTriangle(a, b, c, material.Side != Three.DoubleSide, intersectionPoint);
                 }
 
                 if (intersectionPoint == null) continue;
@@ -183,13 +179,13 @@ namespace ThreeJs4Net.Objects
 
                 intersects.Add(
                     new Intersect()
-                        {
-                            Distance = distance,
-                            Point = intersectionPoint,
-                            Face = face,
-                            FaceIndex = f,
-                            Object3D = this
-                        });
+                    {
+                        Distance = distance,
+                        Point = intersectionPoint,
+                        Face = face,
+                        FaceIndex = f,
+                        Object3D = this
+                    });
 
             }
 
@@ -260,18 +256,14 @@ namespace ThreeJs4Net.Objects
                             positions[c * 3 + 2]
                         );
 
-                        Vector3 intersectionPoint;
+                        Vector3 intersectionPoint = null;
                         if (material.Side == Three.BackSide)
                         {
-
-                            intersectionPoint = ray.IntersectTriangle(vC, vB, vA, true);
-
+                            intersectionPoint = ray.IntersectTriangle(vC, vB, vA, true, intersectionPoint);
                         }
                         else
                         {
-
-                            intersectionPoint = ray.IntersectTriangle(vA, vB, vC, material.Side != Three.DoubleSide);
-
+                            intersectionPoint = ray.IntersectTriangle(vA, vB, vC, material.Side != Three.DoubleSide, intersectionPoint);
                         }
 
                         if (intersectionPoint == null) continue;
@@ -329,18 +321,14 @@ namespace ThreeJs4Net.Objects
                         positions[j + 8]
                     );
 
-                    Vector3 intersectionPoint;
+                    Vector3 intersectionPoint = null;
                     if (material.Side == Three.BackSide)
                     {
-
-                        intersectionPoint = ray.IntersectTriangle(vC, vB, vA, true);
-
+                        intersectionPoint = ray.IntersectTriangle(vC, vB, vA, true, intersectionPoint);
                     }
                     else
                     {
-
-                        intersectionPoint = ray.IntersectTriangle(vA, vB, vC, material.Side != Three.DoubleSide);
-
+                        intersectionPoint = ray.IntersectTriangle(vA, vB, vC, material.Side != Three.DoubleSide, intersectionPoint);
                     }
 
                     if (intersectionPoint == null) continue;
@@ -372,19 +360,20 @@ namespace ThreeJs4Net.Objects
         /// <param name="intersects"></param>
         public override void Raycast(Raycaster raycaster, ref List<Intersect> intersects)
         {
-		    var geometry = this.Geometry;
+            var geometry = this.Geometry;
 
-		    // Checking boundingSphere distance to ray
+            // Checking boundingSphere distance to ray
 
-		    if (geometry.BoundingSphere == null)
+            if (geometry.BoundingSphere == null)
                 geometry.ComputeBoundingSphere();
 
             var sphere = geometry.BoundingSphere;
-		    sphere.ApplyMatrix4( this.MatrixWorld );
+            sphere.ApplyMatrix4(this.MatrixWorld);
 
-		    if ( raycaster.Ray.IsIntersectionSphere(sphere) == false ) {
-			    return;
-		    }
+            if (!raycaster.Ray.IntersectsSphere(sphere))
+            {
+                return;
+            }
 
             // Check boundingBox before continuing
 
@@ -395,7 +384,8 @@ namespace ThreeJs4Net.Objects
 
             if (geometry.BoundingBox != null)
             {
-                if ( ray.IsIntersectionBox( geometry.BoundingBox ) == false )  {
+                if (!ray.IntersectsBox(geometry.BoundingBox))
+                {
                     return;
                 }
             }
@@ -403,11 +393,11 @@ namespace ThreeJs4Net.Objects
             // We are within the boundingbox or sphere
 
             var bufferGeometry = geometry as BufferGeometry;
-            if ( bufferGeometry != null ) 
+            if (bufferGeometry != null)
             {
                 this.Raycast(raycaster, ray, bufferGeometry, ref intersects);
-            } 
-            else if ( geometry is Geometry ) 
+            }
+            else if (geometry is Geometry)
             {
                 this.Raycast(raycaster, ray, geometry as Geometry, ref intersects);
             }

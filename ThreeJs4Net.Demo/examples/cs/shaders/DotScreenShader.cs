@@ -56,10 +56,10 @@ namespace ThreeJs4Net.Demo.examples.cs.shaders
 
             fs.Add("float pattern() {");
 
-            fs.Add("float s = sin( angle ), C = cos( angle );");
+            fs.Add("float s = sin( angle ), c = cos( angle );");
 
             fs.Add("vec2 tex = vUv * tSize - center;");
-            fs.Add("vec2 point = vec2( C * tex.x - s * tex.y, s * tex.x + C * tex.y ) * scale;");
+            fs.Add("vec2 point = vec2( c * tex.x - s * tex.y, s * tex.x + c * tex.y ) * scale;");
 
             fs.Add("return ( sin( point.x ) * sin( point.y ) ) * 4.0;");
 
@@ -67,9 +67,9 @@ namespace ThreeJs4Net.Demo.examples.cs.shaders
 
             fs.Add("void main() {");
 
-            fs.Add("vec4 Color = texture2D( tDiffuse, vUv );");
-            fs.Add("float average = ( Color.r + Color.g + Color.B ) / 3.0;");
-            fs.Add("gl_FragColor = vec4( vec3( average * 10.0 - 5.0 + pattern() ), Color.A );");
+            fs.Add("vec4 color = texture2D( tDiffuse, vUv );");
+            fs.Add("float average = ( color.r + color.g + color.b ) / 3.0;");
+            fs.Add("gl_FragColor = vec4( vec3( average * 10.0 - 5.0 + pattern() ), color.a );");
 
             fs.Add("}");
 

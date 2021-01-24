@@ -2,34 +2,31 @@
 
 namespace ThreeJs4Net.Math
 {
-    public class Line3 : ICloneable, IEquatable<Line3>
+    public class Line3 : IEquatable<Line3>
     {
-        public Vector3 Start;
+        public Vector3 Start = new Vector3();
+        public Vector3 End = new Vector3();
 
-        public Vector3 End;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public Line3()
         {
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
         public Line3(Vector3 start, Vector3 end)
         {
             this.Start.Copy(start);
             this.End.Copy(end);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="other"></param>
+
+        #region --- Already in R116 ---
+        public Line3 Set(Vector3 start, Vector3 end)
+        {
+            this.Start.Copy(start);
+            this.End.Copy(end);
+
+            return this;
+        }
+
         public Line3 Copy(Line3 other)
         {
             this.Start.Copy(other.Start);
@@ -38,118 +35,73 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="optionalTarget"></param>
-        /// <returns></returns>
-        public Vector3 Center(Vector3 optionalTarget = null)
+        public Line3 Clone()
         {
-            var result = optionalTarget ?? new Vector3();
-            return result.AddVectors(this.Start, this.End).MultiplyScalar(0.5f);
+            return new Line3().Copy(this);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="optionalTarget"></param>
-        /// <returns></returns>
-        public Vector3 delta(Vector3 optionalTarget = null)
+        public Vector3 GetCenter(Vector3 target)
         {
-            var result = optionalTarget ?? new Vector3();
-            return result.SubVectors(this.End, this.Start);
+            return target.AddVectors(this.Start, this.End).MultiplyScalar((float)0.5);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public float distanceSq()
+        public Vector3 Delta(Vector3 target)
+        {
+            return target.SubVectors(this.End, this.Start);
+        }
+
+        public float DistanceSq()
         {
             return this.Start.DistanceToSquared(this.End);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public float distance()
+        public float Distance()
         {
             return this.Start.DistanceTo(this.End);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Vector3 at(float t, Vector3 optionalTarget = null)
+        public Vector3 At(float t, Vector3 target)
         {
-            var result = optionalTarget ?? new Vector3();
-            return this.delta(result).MultiplyScalar(t).Add(this.Start);
+            return this.Delta(target).MultiplyScalar(t).Add(this.Start);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public float closestPointToPointParameter(Vector3 point, bool clampToLine )
+        public float ClosestPointToPointParameter(Vector3 point, bool clampToLine)
         {
             var startP = new Vector3();
             var startEnd = new Vector3();
 
             startP.SubVectors(point, this.Start);
             startEnd.SubVectors(this.End, this.Start);
+
             var startEnd2 = startEnd.Dot(startEnd);
-            var startEnd_startP = startEnd.Dot(startP);
-            var t = startEnd_startP / startEnd2;
+            var startEndstartP = startEnd.Dot(startP);
+            var t = startEndstartP / startEnd2;
             if (clampToLine)
             {
-                t.Clamp(0, 1);
+                t = MathUtils.Clamp(t, 0, 1);
             }
 
             return t;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Vector3 closestPointToPoint(Vector3 point, bool clampToLine, Vector3 optionalTarget = null)
+        public Vector3 ClosestPointToPoint(Vector3 point, bool clampToLine, Vector3 target)
         {
-            var t = this.closestPointToPointParameter(point, clampToLine); 
-            var result = optionalTarget ?? new Vector3();
-            return this.delta(result).MultiplyScalar(t).Add(this.Start);
+            var t = this.ClosestPointToPointParameter(point, clampToLine);
+            return this.Delta(target).MultiplyScalar(t).Add(this.Start);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Line3 applyMatrix4(Matrix4 matrix)
+        
+        public Line3 ApplyMatrix4(Matrix4 matrix)
         {
             this.Start.ApplyMatrix4(matrix);
             this.End.ApplyMatrix4(matrix);
 
             return this;
         }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public object Clone()
-        {
-            return new Line3().Copy(this);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
         public bool Equals(Line3 other)
         {
-            return other.Start.Equals(this.Start) && other.End.Equals(this.End);
+            return other != null && other.Start.Equals(this.Start) && other.End.Equals(this.End);
         }
     }
 }

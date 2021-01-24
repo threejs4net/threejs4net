@@ -52,7 +52,7 @@ namespace ThreeJs4Net.Demo.examples
             varying vec3 vNormal;
 			varying vec2 vUv;
 
-			uniform vec3 Color;
+			uniform vec3 color;
 			uniform sampler2D texture;
 
 			void main() {
@@ -63,9 +63,9 @@ namespace ThreeJs4Net.Demo.examples
 				float dProd = dot( vNormal, light ) * 0.5 + 0.5;
 
 				vec4 tcolor = texture2D( texture, vUv );
-				vec4 gray = vec4( vec3( tcolor.r * 0.3 + tcolor.g * 0.59 + tcolor.B * 0.11 ), 1.0 );
+				vec4 gray = vec4( vec3( tcolor.r * 0.3 + tcolor.g * 0.59 + tcolor.b * 0.11 ), 1.0 );
 
-				gl_FragColor = gray * vec4( vec3( dProd ) * vec3( Color ), 1.0 );
+				gl_FragColor = gray * vec4( vec3( dProd ) * vec3( color ), 1.0 );
 
 			}";
 
@@ -90,7 +90,7 @@ namespace ThreeJs4Net.Demo.examples
             uniforms = new Uniforms
             {
                 { "amplitude", new Uniform() { {"type", "f"},  {"value", 1.0f}} },
-                { "Color",     new Uniform() { {"type", "C"},  {"value", (Color)colorConvertor.ConvertFromString("#ff2200")}} },
+                { "color",     new Uniform() { {"type", "c"},  {"value", (Color)colorConvertor.ConvertFromString("#ff2200")}} },
                 { "texture",   new Uniform() { {"type", "t"},  {"value", ImageUtils.LoadTexture(@"examples\textures/water.jpg")} }},
             };
 
@@ -155,7 +155,7 @@ namespace ThreeJs4Net.Demo.examples
             this.sphere.Rotation.Y = this.sphere.Rotation.Z = 0.01f * time;
 
             uniforms["amplitude"]["value"] = 2.5f * System.Math.Sin(this.sphere.Rotation.Y * 0.125);
-            uniforms["Color"]["value"] = ((Color)uniforms["Color"]["value"]).OffsetHSL(512 * 0.0005f, 0, 0);
+            uniforms["color"]["value"] = ((Color)uniforms["color"]["value"]).OffsetHSL(512 * 0.0005f, 0, 0);
 
             var values = (float[])attributes["displacement"]["value"];
 

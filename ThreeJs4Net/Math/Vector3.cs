@@ -966,12 +966,7 @@ namespace ThreeJs4Net.Math
         /// <returns></returns>
         public bool Equals(Vector3 vector)
         {
-            if (vector == null)
-            {
-                return false;
-            }
-
-            return ((vector.X == this.X) && (vector.Y == this.Y) && (vector.Z == this.Z));
+            return vector != null && (vector.X == this.X) && (vector.Y == this.Y) && (vector.Z == this.Z);
         }
 
         /// <summary>

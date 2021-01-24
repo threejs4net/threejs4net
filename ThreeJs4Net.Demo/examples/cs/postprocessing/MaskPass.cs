@@ -42,7 +42,7 @@ namespace ThreeJs4Net.Demo.examples.cs.postprocessing
         /// <param name="delta"></param>
         public void Render(WebGLRenderer renderer, WebGLRenderTarget writeBuffer, WebGLRenderTarget readBuffer, float delta)
         {
-            // don't update Color or depth
+            // don't update color or depth
 
             GL.ColorMask(false, false, false, false);
             GL.DepthMask(false);
@@ -72,7 +72,7 @@ namespace ThreeJs4Net.Demo.examples.cs.postprocessing
             renderer.Render(this.scene, this.camera, readBuffer, this.Clear);
             renderer.Render(this.scene, this.camera, writeBuffer, this.Clear);
 
-            // re-enable update of Color and depth
+            // re-enable update of color and depth
 
             GL.ColorMask(true, true, true, true);
             GL.DepthMask(true);

@@ -1182,7 +1182,7 @@ namespace ThreeJs4Net.Renderers
                         if ((string)attribute["type"] == "v2") size = 2;
                         else if ((string)attribute["type"] == "v3") size = 3;
                         else if ((string)attribute["type"] == "v4") size = 4;
-                        else if ((string)attribute["type"] == "C") size = 3;
+                        else if ((string)attribute["type"] == "c") size = 3;
 
                         attribute["size"] = size;
 
@@ -1787,7 +1787,7 @@ namespace ThreeJs4Net.Renderers
                 var geometry = object3D.Geometry as Geometry;
                 Debug.Assert(null != geometry, "object3D.Geometry is not Geometry");
 
-                attributeLocation = attributesLocation["Color"];
+                attributeLocation = attributesLocation["color"];
                 if (null != attributeLocation)
                 {
                     if (geometry.Colors.Count > 0 || geometry.Faces.Count > 0)
@@ -1798,7 +1798,7 @@ namespace ThreeJs4Net.Renderers
                     }
                     //else if (material.defaultAttributeValues)
                     //{
-                    //    GL.VertexAttrib3fv(attributesLocation.Color, material.defaultAttributeValues.Color);
+                    //    GL.VertexAttrib3fv(attributesLocation.Color, material.defaultAttributeValues.color);
                     //}
                 }
 
@@ -3238,7 +3238,7 @@ namespace ThreeJs4Net.Renderers
                         if ((string)attribute["type"] == "v2") size = 2;
                         else if ((string)attribute["type"] == "v3") size = 3;
                         else if ((string)attribute["type"] == "v4") size = 4;
-                        else if ((string)attribute["type"] == "C") size = 3;
+                        else if ((string)attribute["type"] == "c") size = 3;
 
                         attribute["size"] = size;
 
@@ -3380,7 +3380,7 @@ namespace ThreeJs4Net.Renderers
                             GL.Uniform4(location, v4.X, v4.Y, v4.Z, v4.W);
                             break;
 
-                        case "C":
+                        case "c":
                             var color = (Color)value;
                             GL.Uniform3(location, color.R / 255.0f, color.G / 255.0f, color.B / 255.0f);
                             break;
@@ -4560,10 +4560,10 @@ namespace ThreeJs4Net.Renderers
                     {
                         List<string> pp = null;
 
-                        if ((string)customAttribute["type"] == "C")
+                        if ((string)customAttribute["type"] == "c")
                         {
 
-                            pp = new List<string>() { "r", "g", "B" };
+                            pp = new List<string>() { "r", "g", "b" };
 
                         }
                         else
@@ -5591,9 +5591,10 @@ namespace ThreeJs4Net.Renderers
                 }
                 else if (material is MeshDepthMaterial)
                 {
-                    m_uniforms["mNear"]["value"] = camera.Near;
-                    m_uniforms["mFar"]["value"] = camera.Far;
-                    m_uniforms["opacity"]["value"] = material.Opacity;
+                    //TODO: !! This must be updated because of the changes to the camera
+                    //m_uniforms["mNear"]["value"] = camera.Near;
+                    //m_uniforms["mFar"]["value"] = camera.Far;
+                    //m_uniforms["opacity"]["value"] = material.Opacity;
                 }
                 else if (material is MeshNormalMaterial)
                 {
@@ -6023,7 +6024,7 @@ namespace ThreeJs4Net.Renderers
 
                     offset = c * 3;
 
-                    //                var Color = colors[sortArray[C][1]];
+                    //                var Color = colors[sortArray[c][1]];
 
                     //colorArray[ offset ]     = Color.R;
                     //colorArray[ offset + 1 ] = Color.G;
@@ -6205,7 +6206,7 @@ namespace ThreeJs4Net.Renderers
                             else if ((int)customAttribute["size"] == 3)
                             {
 
-                                if ((string)customAttribute["type"] == "C")
+                                if ((string)customAttribute["type"] == "c")
                                 {
 
                                     for (int ca = 0; ca < cal; ca++)
@@ -6406,7 +6407,7 @@ namespace ThreeJs4Net.Renderers
 
                                             } else if ( customAttribute.size == 3 ) {
 
-                                                if ( customAttribute.type == "C" ) {
+                                                if ( customAttribute.type == "c" ) {
 
                                                     for (int ca = 0; ca < cal; ca ++ ) {
 

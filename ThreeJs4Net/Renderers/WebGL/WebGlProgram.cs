@@ -240,7 +240,7 @@ namespace ThreeJs4Net.Renderers.WebGL
 
                 pv.Add("#ifdef USE_COLOR");
 
-                pv.Add("    attribute vec3 Color;");
+                pv.Add("    attribute vec3 color;");
 
                 pv.Add("#endif");
 
@@ -433,7 +433,7 @@ namespace ThreeJs4Net.Renderers.WebGL
                 // cache attributesLocation locations
 
                 identifiers = new List<string> {
-                    "position", "normal", "uv", "uv2", "tangent", "Color",
+                    "position", "normal", "uv", "uv2", "tangent", "color",
                     "skinIndex", "skinWeight", "lineDistance" 
                 };
 
