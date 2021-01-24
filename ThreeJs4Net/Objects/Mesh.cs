@@ -159,7 +159,7 @@ namespace ThreeJs4Net.Objects
 
                         }
 */
-                Vector3 intersectionPoint = null;
+                Vector3 intersectionPoint = new Vector3();
                 if (material.Side == Three.BackSide)
                 {
                     intersectionPoint = ray.IntersectTriangle(c, b, a, true, intersectionPoint);
@@ -256,7 +256,7 @@ namespace ThreeJs4Net.Objects
                             positions[c * 3 + 2]
                         );
 
-                        Vector3 intersectionPoint = null;
+                        Vector3 intersectionPoint = new Vector3();
                         if (material.Side == Three.BackSide)
                         {
                             intersectionPoint = ray.IntersectTriangle(vC, vB, vA, true, intersectionPoint);
@@ -321,7 +321,7 @@ namespace ThreeJs4Net.Objects
                         positions[j + 8]
                     );
 
-                    Vector3 intersectionPoint = null;
+                    Vector3 intersectionPoint = new Vector3();
                     if (material.Side == Three.BackSide)
                     {
                         intersectionPoint = ray.IntersectTriangle(vC, vB, vA, true, intersectionPoint);
