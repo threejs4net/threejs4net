@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using ThreeJs4Net.Cameras;
+using ThreeJs4Net.Core;
 using ThreeJs4Net.Properties;
 
 namespace ThreeJs4Net.Math
@@ -1072,6 +1073,16 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
+        public Vector3 FromBufferAttribute(BufferAttribute<float> attribute, int index)
+        {
+            this.x = attribute.GetX(index);
+            this.y = attribute.GetY(index);
+            this.z = attribute.GetZ(index);
+
+            return this;
+        }
+
+
         public override int GetHashCode()
         {
             return X.GetHashCode() ^ Y.GetHashCode() << 8 ^ Z.GetHashCode() << 16;
@@ -1088,6 +1099,7 @@ namespace ThreeJs4Net.Math
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
     }
 
 }

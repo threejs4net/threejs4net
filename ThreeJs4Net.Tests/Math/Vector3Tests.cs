@@ -1,4 +1,5 @@
 ﻿using System;
+using ThreeJs4Net.Core;
 using ThreeJs4Net.Math;
 using Xunit;
 
@@ -917,5 +918,24 @@ namespace ThreeJs4Net.Tests.Math
         {
             Assert.True(false, "This test needs an implementation");
         }
+
+
+        [Fact()]
+        public void FromBufferAttributeTest()
+        {
+            var a = new Vector3();
+            var attr = new BufferAttribute<float>(new float[] { 1, 2, 3, 4, 5, 6 }, 3);
+
+            a.FromBufferAttribute(attr, 0);
+            Assert.Equal(1, a.X);
+            Assert.Equal(2, a.Y);
+            Assert.Equal(3, a.Z);
+
+            a.FromBufferAttribute(attr, 1);
+            Assert.Equal(4, a.X);
+            Assert.Equal(5, a.Y);
+            Assert.Equal(6, a.Z);
+        }
+
     }
 }

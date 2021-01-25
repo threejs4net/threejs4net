@@ -86,6 +86,7 @@
     <Compile Include="Geometries\TextGeometry.cs" />
     <Compile Include="Geometries\TorusGeometry.cs" />
     <Compile Include="Helpers\ArrowHelper.cs" />
+    <Compile Include="Helpers\BoxHelper.cs" />
     <Compile Include="Helpers\GridHelper.cs" />
     <Compile Include="Helpers\ListHelper.cs" />
     <Compile Include="Extras\ImageUtils.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Objects\Bone.cs" />
     <Compile Include="Objects\Group.cs" />
     <Compile Include="Objects\Line.cs" />
+    <Compile Include="Objects\LineSegments.cs" />
     <Compile Include="Objects\LineStrip.cs" />
     <Compile Include="Objects\LOD.cs" />
     <Compile Include="Objects\Mesh.cs" />

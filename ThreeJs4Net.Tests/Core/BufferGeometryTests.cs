@@ -1,4 +1,6 @@
-﻿using ThreeJs4Net.Core;
+﻿using System;
+using System.Collections.Generic;
+using ThreeJs4Net.Core;
 using ThreeJs4Net.Math;
 using Xunit;
 
@@ -7,6 +9,25 @@ namespace ThreeJs4Net.Tests.Core
     public class BufferGeometryTests : BaseGeometry
     {
         #region -- private ---
+        private bool BufferAttributeEquals(BufferAttribute<float> a, BufferAttribute<float> b, float tolerance = 0.0001f)
+        {
+            if (a.Count != b.Count || a.ItemSize != b.ItemSize)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < a.Count * a.ItemSize; i++)
+            {
+                var delta = a.Array[i] - b.Array[i];
+                if (delta > tolerance)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+
         private BufferAttribute<float> GetNormalsForVertices(float[] vertices)
         {
             var geometry = new BufferGeometry();
@@ -49,6 +70,32 @@ namespace ThreeJs4Net.Tests.Core
         }
 
         [Fact()]
+        public void ComputeVertexNormals_IndexedTest()
+        {
+            float sqrt = 0.5f * Mathf.Sqrt(2);
+            var normal = new BufferAttribute<float>(new float[] { -1, 0, 0, -1, 0, 0, -1, 0, 0, sqrt, sqrt, 0, sqrt, sqrt, 0, sqrt, sqrt, 0, -1, 0, 0 }, 3);
+            var position = new BufferAttribute<float>(new float[] { 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f }, 3);
+            var index = new BufferAttribute<uint>(new uint[] { 0, 2, 1, 2, 3, 1, 4, 6, 5, 6, 7, 5 }, 1);
+            var a = new BufferGeometry();
+
+            a.SetAttribute("position", position);
+            a.ComputeVertexNormals();
+            Assert.True(BufferAttributeEquals(normal, a.GetAttribute<float>("normal")));
+
+            // a second time to see if the existing normals get properly deleted
+            a.ComputeVertexNormals();
+            Assert.True(BufferAttributeEquals(normal, a.GetAttribute<float>("normal")));
+
+            // indexed geometry
+            a = new BufferGeometry();
+            a.SetAttribute("position", position);
+            a.SetIndex(index);
+            a.ComputeVertexNormals();
+            Assert.True(BufferAttributeEquals(normal, a.GetAttribute<float>("normal")));
+
+        }
+
+        [Fact()]
         public void ComputeVertexNormalsTest()
         {
             // get normals for A counter clockwise created triangle
@@ -64,7 +111,7 @@ namespace ThreeJs4Net.Tests.Core
                 "third normal is pointing to screen since the the triangle was created counter clockwise");
 
             // get normals for A clockwise created triangle
-            normals = GetNormalsForVertices( new float[] { 1, 0, 0, -1, 0, 0, 0, 1, 0 }).Array;
+            normals = GetNormalsForVertices(new float[] { 1, 0, 0, -1, 0, 0, 0, 1, 0 }).Array;
 
             Assert.True(normals[0] == 0 && normals[1] == 0 && normals[2] == -1,
                 "first normal is pointing to screen since the the triangle was created clockwise");
@@ -75,7 +122,7 @@ namespace ThreeJs4Net.Tests.Core
             Assert.True(normals[6] == 0 && normals[7] == 0 && normals[8] == -1,
                 "third normal is pointing to screen since the the triangle was created clockwise");
 
-            normals = GetNormalsForVertices( new float[] { 0, 0, 1, 0, 0, -1, 1, 1, 0 }).Array;
+            normals = GetNormalsForVertices(new float[] { 0, 0, 1, 0, 0, -1, 1, 1, 0 }).Array;
 
             // the triangle is rotated by 45 degrees to the right so the normals of the three vertices
             // should point to (1, -1, 0).normalized(). The simplest solution is to check against A normalized
@@ -94,6 +141,22 @@ namespace ThreeJs4Net.Tests.Core
             {
                 //Assert.True(!normals[i], "normals can't be calculated which is good");
             }
+        }
+
+
+        [Fact()]
+        public void Set_DeleteAttributeTest()
+        {
+            var geometry = new BufferGeometry();
+            var attributeName = "position";
+
+            Assert.Throws<KeyNotFoundException>(() => geometry.Attributes[attributeName]);
+
+            geometry.SetAttribute(attributeName, new BufferAttribute<float>(new float[] { 1, 2, 3 }, 1));
+            Assert.NotNull(geometry.Attributes[attributeName]);
+
+            geometry.DeleteAttribute(attributeName);
+            Assert.Throws<KeyNotFoundException>(() => geometry.Attributes[attributeName]);
         }
 
         [Fact()]
@@ -155,5 +218,7 @@ namespace ThreeJs4Net.Tests.Core
         {
             Assert.True(false, "This test needs an implementation");
         }
+
+
     }
 }
