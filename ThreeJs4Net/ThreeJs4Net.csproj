@@ -48,11 +48,13 @@
     <Compile Include="Cameras\Camera.cs" />
     <Compile Include="Cameras\CameraView.cs" />
     <Compile Include="Cameras\CubeCamera.cs" />
+    <Compile Include="Cameras\ICameraProjection.cs" />
     <Compile Include="Cameras\OrthographicCamera.cs" />
     <Compile Include="Cameras\PerspectiveCamera.cs" />
     <Compile Include="Core\BaseGeometry.cs" />
     <Compile Include="Core\BufferAttribute.cs" />
     <Compile Include="Core\BufferGeometry.cs" />
+    <Compile Include="Core\DrawRange.cs" />
     <Compile Include="Core\EventDispatcher.cs" />
     <Compile Include="Core\Face3.cs" />
     <Compile Include="Core\Geometry.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Geometries\SphereGeometry.cs" />
     <Compile Include="Geometries\TextGeometry.cs" />
     <Compile Include="Geometries\TorusGeometry.cs" />
+    <Compile Include="Helpers\AxesHelper.cs" />
     <Compile Include="Helpers\ArrowHelper.cs" />
     <Compile Include="Helpers\BoxHelper.cs" />
     <Compile Include="Helpers\GridHelper.cs" />
@@ -96,6 +99,7 @@
     <Compile Include="Extras\Objects\Sprite.cs" />
     <Compile Include="Extras\PlaneBufferGeometry.cs" />
     <Compile Include="Extras\Renderers\IPlugin.cs" />
+    <Compile Include="Jsm\Controls\OrbitControl.cs" />
     <Compile Include="Lights\AmbientLight.cs" />
     <Compile Include="Lights\AreaLight.cs" />
     <Compile Include="Lights\DirectionalLight.cs" />
@@ -143,6 +147,7 @@
     <Compile Include="Math\Plane.cs" />
     <Compile Include="Math\Quaternion.cs" />
     <Compile Include="Math\Ray.cs" />
+    <Compile Include="Math\Spherical.cs" />
     <Compile Include="Math\Sphere.cs" />
     <Compile Include="Math\Triangle.cs" />
     <Compile Include="Math\Vector2.cs" />
@@ -362,6 +367,7 @@
   <ItemGroup>
     <Folder Include="Animation\" />
     <Folder Include="Audio\" />
+    <Folder Include="Complement\" />
     <Folder Include="Extras\Core\" />
     <Folder Include="Extras\Helpers\" />
     <Folder Include="Math\Interpolants\" />

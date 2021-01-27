@@ -56,7 +56,7 @@ namespace ThreeJs4Net.Lights
         /// </summary>
         /// <param name="raycaster"></param>
         /// <param name="intersects"></param>
-        public override void Raycast(Raycaster raycaster, ref List<Intersect> intersects)
+        public override void Raycast(Raycaster raycaster, List<Intersect> intersects)
         {
             return;
         }

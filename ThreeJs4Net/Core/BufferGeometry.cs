@@ -20,6 +20,7 @@ namespace ThreeJs4Net.Core
         #region --- Fields ---
         public BufferAttribute<uint> Index;
         public Attributes Attributes { get; set; }
+        public DrawRange DrawRange = new DrawRange();
         #endregion
 
         protected static int BufferGeometryIdCount;
@@ -96,7 +97,12 @@ namespace ThreeJs4Net.Core
 
         public BufferAttribute<T> GetAttribute<T>(string name)
         {
-            return this.Attributes[name] as BufferAttribute<T>;
+            if (this.Attributes.ContainsKey(name))
+            {
+                return this.Attributes[name] as BufferAttribute<T>;
+            }
+
+            return null;
         }
 
         public BufferGeometry DeleteAttribute(string name)
@@ -357,13 +363,122 @@ namespace ThreeJs4Net.Core
             }
         }
 
+        public BufferGeometry Clone()
+        {
+            return new BufferGeometry().Copy(this);
+        }
+
+        public BufferGeometry Copy(BufferGeometry source)
+        {
+            //var name, i, l;
+
+            // reset
+
+            this.Index = null;
+            this.Attributes.Clear();
+            //this.morphAttributes = { };
+            //this.groups = [];
+            this.BoundingBox = null;
+            this.BoundingSphere = null;
+
+            // name
+            this.Name = source.Name;
+
+            // index
+
+            var index = source.Index;
+
+            if (index != null)
+            {
+                this.SetIndex(index.Clone());
+            }
+
+            // attributes
+            var attributes = source.Attributes;
+
+            foreach (var attr in attributes)
+            {
+                attr.Value.TryGetValue("type", out object bufType);
+
+                if (bufType == typeof(float))
+                {
+                    this.SetAttribute(attr.Key, (attr.Value as BufferAttribute<float>).Clone());
+                }
+                if (bufType == typeof(int))
+                {
+                    this.SetAttribute(attr.Key, (attr.Value as BufferAttribute<int>).Clone());
+                }
+                if (bufType == typeof(uint))
+                {
+                    this.SetAttribute(attr.Key, (attr.Value as BufferAttribute<uint>).Clone());
+                }
+            }
+
+            //TODO: review morph attributes
+            //var morphAttributes = source.morphAttributes;
+            //for (name in morphAttributes )
+            //{
+            //    var array = [];
+            //    var morphAttribute = morphAttributes[name]; // morphAttribute: array of Float32BufferAttributes
+            //    for (i = 0, l = morphAttribute.length; i < l; i++)
+            //    {
+            //        array.push(morphAttribute[i].clone());
+            //    }
+            //    this.morphAttributes[name] = array;
+            //}
+            //this.morphTargetsRelative = source.morphTargetsRelative;
+
+            // groups
+            //var groups = source.groups;
+            //for (i = 0, l = groups.length; i < l; i++)
+            //{
+            //    var group = groups[i];
+            //    this.addGroup(group.start, group.count, group.materialIndex);
+            //}
+
+
+
+
+            // bounding box
+            var boundingBox = source.BoundingBox;
+
+            if (boundingBox != null)
+            {
+                this.BoundingBox = boundingBox.Clone();
+            }
+
+
+
+            // bounding sphere
+            var boundingSphere = source.BoundingSphere;
+            if (boundingSphere != null)
+            {
+                this.BoundingSphere = boundingSphere.Clone();
+            }
+
+
+
+            // draw range
+            this.DrawRange.Start = source.DrawRange.Start;
+            this.DrawRange.Count = source.DrawRange.Count;
+
+            // user data
+            //this.userData = source.userData;
+
+            return this;
+
+        }
 
         public void AddDrawCall(int start, int count, int indexOffset)
         {
             //   this.Drawcalls.Add() { start = start, count = count, index = indexOffset };
         }
 
-
+        public void SetDrawRange(int start, int count)
+        {
+            this.DrawRange.Start = start;
+            this.DrawRange.Count = count;
+        }
 
         public override void ApplyMatrix4(Matrix4 matrix)
         {

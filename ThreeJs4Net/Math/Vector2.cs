@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using ThreeJs4Net.Core;
 using ThreeJs4Net.Properties;
 
 namespace ThreeJs4Net.Math
@@ -318,6 +319,14 @@ namespace ThreeJs4Net.Math
                     this.MultiplyScalar(value / OldLength);
                 }
             }
+        }
+
+        public Vector2 FromBufferAttribute(BufferAttribute<float> attribute, int index)
+        {
+            this.X = attribute.GetX(index);
+            this.X = attribute.GetY(index);
+
+            return this;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -40,6 +40,7 @@ namespace ThreeJs4Net.Core
         public bool FrustumCulled = true;
         public BaseGeometry Geometry;
         public Material Material;
+        public List<Material> Materials;
 
         public IList<Object3D> Children = new List<Object3D>();
         public int id = Object3DIdCount++;
@@ -438,7 +439,7 @@ namespace ThreeJs4Net.Core
         /// </summary>
         /// <param name="raycaster"></param>
         /// <param name="intersects"></param>
-        public virtual void Raycast(Raycaster raycaster, ref List<Intersect> intersects)
+        public virtual void Raycast(Raycaster raycaster, List<Intersect> intersects)
         {
             var inverseMatrix = new Matrix4();
             var ray = new Ray();

@@ -1100,6 +1100,24 @@ namespace ThreeJs4Net.Math
             }
         }
 
+
+
+
+        [Obsolete("Will be removed as soon as we update Camera")]
+        public Vector3 ApplyProjectionCustom(Matrix4 matrix)
+        {
+            //REMOVE
+            float X = this.X, Y = this.Y, Z = this.Z;
+
+            var e = matrix.Elements;
+            var w = (e[3] * X + e[7] * Y + e[11] * Z + e[15]); // perspective divide
+
+            this.X = (e[0] * X + e[4] * Y + e[8] * Z + e[12]) * w;
+            this.Y = (e[1] * X + e[5] * Y + e[9] * Z + e[13]) * w;
+            this.Z = (e[2] * X + e[6] * Y + e[10] * Z + e[14]) * w;
+
+            return this;
+        }
     }
 
 }

@@ -2,7 +2,7 @@
 
 namespace ThreeJs4Net.Cameras
 {
-    public class PerspectiveCamera : Camera
+    public class PerspectiveCamera : Camera, ICameraProjection
     {
         #region --- Members ---
 

@@ -1,6 +1,6 @@
 ﻿namespace ThreeJs4Net.Cameras
 {
-    public class OrthographicCamera : Camera
+    public class OrthographicCamera : Camera, ICameraProjection
     {
         #region Fields
         public float Bottom;

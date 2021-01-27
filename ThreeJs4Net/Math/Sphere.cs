@@ -74,6 +74,11 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
+        public Sphere Clone()
+        {
+            return new Sphere().Copy(this);
+        }
+
         /// <summary>
         /// 
         /// </summary>

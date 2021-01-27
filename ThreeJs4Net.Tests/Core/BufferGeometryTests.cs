@@ -143,6 +143,54 @@ namespace ThreeJs4Net.Tests.Core
             }
         }
 
+        [Fact()]
+        public void CopyTest()
+        {
+            //var geometry = new BufferGeometry();
+            //var attributeName = "position";
+
+            //geometry.SetAttribute(attributeName, new BufferAttribute<float>(new float[] { 1, 2, 3 }, 1));
+            //Assert.NotNull(geometry.Attributes[attributeName]);
+
+            //var geometry2 = new BufferGeometry();
+            //geometry2.Copy(geometry);
+
+            var geometry = new BufferGeometry();
+            geometry.SetAttribute("position", new BufferAttribute<float>(new float[] { 1, 2, 3, 4, 5, 6 }, 3));
+            geometry.SetAttribute("attrName", new BufferAttribute<float>(new float[] { 1, 2, 3, 4, 5, 6 }, 3));
+            geometry.SetAttribute("attrName2", new BufferAttribute<float>(new float[] { 0, 1, 3, 5, 6 }, 1));
+
+            geometry.ComputeBoundingBox();
+            geometry.ComputeBoundingSphere();
+
+            var copy = new BufferGeometry().Copy(geometry);
+
+            Assert.True(copy != geometry && geometry.Id != copy.Id);
+
+            copy.ComputeBoundingBox();
+            copy.ComputeBoundingSphere();
+
+            copy.RotateX(10);
+            copy.Translate(2,3,3);
+            copy.Scale(1,2,3);
+
+            copy.ComputeBoundingBox();
+            copy.ComputeBoundingSphere();
+
+
+
+            //foreach (var attr in geometry.Attributes)
+            //{
+            //   for (var i = 0; i < attribute.array.length; i++)
+            //    {
+
+            //        assert.ok(attribute.array[i] === copy.attributes[key].array[i], "values of the attribute are equal");
+
+            //    }
+            //}
+        }
+
+
 
         [Fact()]
         public void Set_DeleteAttributeTest()

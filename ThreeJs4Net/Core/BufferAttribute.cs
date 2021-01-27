@@ -116,7 +116,7 @@ namespace ThreeJs4Net.Core
             int newSize;
             if (offset > this.Array.Length)
             {
-                newSize = offset  + source.Length;
+                newSize = offset + source.Length;
             }
             else
             {
