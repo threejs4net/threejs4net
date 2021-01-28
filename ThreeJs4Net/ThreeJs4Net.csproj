@@ -61,6 +61,7 @@
     <Compile Include="Core\GeometryGroup.cs" />
     <Compile Include="Core\IBufferAttribute.cs" />
     <Compile Include="Core\Object3D.cs" />
+    <Compile Include="Core\Layers.cs" />
     <Compile Include="Core\Projector.cs" />
     <Compile Include="Core\Raycaster.cs" />
     <Compile Include="Core\WebGlObject.cs" />

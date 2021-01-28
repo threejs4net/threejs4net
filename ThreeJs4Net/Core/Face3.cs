@@ -60,6 +60,13 @@ namespace ThreeJs4Net.Core
             
         }
 
+        #region --- Already in R116 ---
+
+        public Face3 Clone()
+        {
+            return new Face3().Copy(this);
+        }
+
         public Face3 Copy(Face3 source)
         {
             this.A = source.A;
@@ -85,13 +92,6 @@ namespace ThreeJs4Net.Core
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Face3 Clone()
-        {
-            return new Face3().Copy(this);
-        }
+        #endregion
     }
 }

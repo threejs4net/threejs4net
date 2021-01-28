@@ -57,9 +57,6 @@ namespace ThreeJs4Net.Core
         // If needed we can use base.Count to use it again
         public new int Count => this.Array.Length / this.ItemSize;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
         public BufferAttribute()
         {
             this.Add("array", null);
@@ -71,12 +68,6 @@ namespace ThreeJs4Net.Core
             this.Add("usage", Three.StaticDrawUsage);
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="itemSize"></param>
-        /// <param name="normalized"></param>
         public BufferAttribute(T[] array, int itemSize, bool normalized = false) : this()
         {
             this.Array = array;

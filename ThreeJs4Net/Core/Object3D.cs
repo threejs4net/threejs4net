@@ -41,6 +41,7 @@ namespace ThreeJs4Net.Core
         public BaseGeometry Geometry;
         public Material Material;
         public List<Material> Materials;
+        public Layers Layers = new Layers();
 
         public IList<Object3D> Children = new List<Object3D>();
         public int id = Object3DIdCount++;
@@ -593,7 +594,7 @@ namespace ThreeJs4Net.Core
             this.MatrixAutoUpdate = source.MatrixAutoUpdate;
             this.MatrixWorldNeedsUpdate = source.MatrixWorldNeedsUpdate;
 
-            //!!this.Layers.mask = source.Layers.mask;
+            this.Layers.Mask = source.Layers.Mask;
             this.Visible = source.Visible;
 
             this.CastShadow = source.CastShadow;

@@ -147,8 +147,8 @@ namespace ThreeJs4Net.Demo.examples.cs.controls
 
             this.activePlane = (Mesh)planes["XYZE"];
 
-            ((Object3D)planes["YZ"]).Rotation.set(0, (float)System.Math.PI / 2, 0);
-            ((Object3D)planes["XZ"]).Rotation.set((float)-System.Math.PI / 2, 0, 0);
+            ((Object3D)planes["YZ"]).Rotation.Set(0, (float)System.Math.PI / 2, 0);
+            ((Object3D)planes["XZ"]).Rotation.Set((float)-System.Math.PI / 2, 0, 0);
 
 			foreach (DictionaryEntry i in planes)
 			{
@@ -174,7 +174,7 @@ namespace ThreeJs4Net.Demo.examples.cs.controls
 
 					child.Geometry = tempGeometry;
 				    child.Position.Set(0, 0, 0);
-				    child.Rotation.set(0, 0, 0);
+				    child.Rotation.Set(0, 0, 0);
 				    child.Scale.Set(1, 1, 1);
 				}
             });
@@ -204,7 +204,7 @@ namespace ThreeJs4Net.Demo.examples.cs.controls
                     object3D.Name = (string)name.Key;
 
                     if (null != position) object3D.Position.Set((float)position[0], (float)position[1], (float)position[2]);
-                    if (null != rotation) object3D.Rotation.set((float)rotation[0], (float)rotation[1], (float)rotation[2]);
+                    if (null != rotation) object3D.Rotation.Set((float)rotation[0], (float)rotation[1], (float)rotation[2]);
 
                     parent.Add(object3D);
                 }

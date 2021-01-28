@@ -11,6 +11,10 @@ namespace ThreeJs4Net.Tests
         public float y = 3;
         public float z = 4;
         public float w = 5;
+        public Euler eulerZero = new Euler(0, 0, 0, Euler.RotationOrder.XYZ);
+        public Euler eulerAxyz = new Euler(1, 0, 0, Euler.RotationOrder.XYZ);
+        public Euler eulerAzyx = new Euler(0, 1, 0, Euler.RotationOrder.ZYX);
+
         public Vector2 negInf2 = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
         public Vector2 posInf2 = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
         public Vector2 negOne2 = new Vector2(-1, -1);

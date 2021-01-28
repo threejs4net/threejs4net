@@ -10,7 +10,7 @@ namespace ThreeJs4Net.Core
     public class Raycaster
     {
         private Camera camera;
-
+        public Layers Layers = new Layers();
 
         public float Precision = 0.0001f;
         public float LinePrecision = 1;
@@ -39,75 +39,12 @@ namespace ThreeJs4Net.Core
             // direction is assumed to be normalized (for accurate distance calculations)
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="object3D"></param>
-        ///// <param name="raycaster"></param>
-        ///// <param name="intersects"></param>
-        ///// <param name="recursive"></param>
-        ///// <returns></returns>
-        //public void IntersectObject(Object3D object3D, Raycaster raycaster, ref List<Intersect> intersects, bool recursive = false)
-        //{
-        //    object3D.Raycast(raycaster, ref intersects);
-
-        //    if (recursive)
-        //    {
-        //        var children = object3D.Children;
-        //        foreach (var t in children)
-        //            this.IntersectObject(t, raycaster, ref intersects, true);
-        //    }
-        //}
-
-
-
-
-        public List<Intersect> IntersectObject(Object3D object3d, bool recursive = false, List<Intersect> optionalTarget = null)
-        {
-            var intersects = optionalTarget ?? new List<Intersect>();
-
-            CheckIntersectObject(object3d, this, intersects, recursive);
-
-            intersects.Sort((left, right) => (int)(left.Distance - right.Distance));
-
-            return intersects;
-        }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="object3D"></param>
-        ///// <param name="recursive"></param>
-        ///// <returns></returns>
-        //public List<Intersect> IntersectObject(Object3D object3D, bool recursive = false)
-        //{
-        //    var intersects = new List<Intersect>();
-
-        //    this.IntersectObject(object3D, this, ref intersects, recursive);
-
-        //    intersects.Sort(
-        //        (left, right) =>
-        //            {
-        //                return (int)(left.Distance - right.Distance);
-        //            });
-
-        //    return intersects;
-        //}
-
-        //public List<Intersect> IntersectObject(Object3D object3D, bool recursive = false)
-        //{
-        //    var intersects = optionalTarget || [];
-        //    intersectObject( object, this, intersects, recursive );
-        //    intersects.sort( ascSort );
-        //    return intersects;
-        //}
-
         private void CheckIntersectObject(Object3D object3d, Raycaster raycaster, List<Intersect> intersects, bool recursive)
         {
-            //!!NOTE LAYERS NOT IMPLEMENTED YET
-            //if ( object3d.layers.test( raycaster.layers ) ) {
-            //    object.raycast( raycaster, intersects );
-            //}
+            if (object3d.Layers.Test(raycaster.Layers))
+            {
+                object3d.Raycast(raycaster, intersects);
+            }
 
             object3d.Raycast(raycaster, intersects);
 
@@ -121,32 +58,32 @@ namespace ThreeJs4Net.Core
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="object3Ds"></param>
-        /// <param name="recursive"></param>
-        /// <returns></returns>
+        #region --- Already in R116 ---
+        public void Set(Vector3 origin, Vector3 direction)
+        {
+            // direction is assumed to be normalized (for accurate distance calculations)
+            this.Ray.Set(origin, direction);
+        }
+       
+        public List<Intersect> IntersectObject(Object3D object3d, bool recursive = false, List<Intersect> optionalTarget = null)
+        {
+            var intersects = optionalTarget ?? new List<Intersect>();
+            CheckIntersectObject(object3d, this, intersects, recursive);
+            intersects.Sort((left, right) => (int)(left.Distance - right.Distance));
+            return intersects;
+        }
+
         public List<Intersect> IntersectObjects(IEnumerable<Object3D> object3Ds, bool recursive = false, List<Intersect> optionalTarget = null)
         {
             var intersects = optionalTarget ?? new List<Intersect>();
-
+            
             foreach (var t in object3Ds)
             {
                 this.CheckIntersectObject(t, this, intersects, recursive);
             }
 
             intersects.Sort((left, right) => (int)(left.Distance - right.Distance));
-
             return intersects;
-        }
-
-
-        #region --- Already in R116 ---
-        public void Set(Vector3 origin, Vector3 direction)
-        {
-            // direction is assumed to be normalized (for accurate distance calculations)
-            this.Ray.Set(origin, direction);
         }
 
         public void SetFromCamera(Vector2 coords, Camera camera)
