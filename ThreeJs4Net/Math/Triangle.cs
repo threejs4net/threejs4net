@@ -6,7 +6,7 @@ using ThreeJs4Net.Properties;
 
 namespace ThreeJs4Net.Math
 {
-    [DebuggerDisplay("a = {a}, b = {b}, c = {c}")]
+    [DebuggerDisplay("A = {a}, B = {b}, C = {c}")]
     public class Triangle : IEquatable<Triangle>, INotifyPropertyChanged
     {
         public Vector3 a, b, c;
@@ -145,7 +145,7 @@ namespace ThreeJs4Net.Math
 
         //!!public Vector3 GetPlane(Plane target)
         //{
-        //    return target.setFromCoplanarPoints(this.a, this.b, this.c);
+        //    return target.setFromCoplanarPoints(this.A, this.B, this.C);
         //}
 
         public Vector3 GetBarycoord(Vector3 point, Vector3 target)
@@ -178,7 +178,7 @@ namespace ThreeJs4Net.Math
             float v, w;
 
             // algorithm thanks to Real-Time Collision Detection by Christer Ericson,
-            // published by Morgan Kaufmann Publishers, (c) 2005 Elsevier Inc.,
+            // published by Morgan Kaufmann Publishers, (C) 2005 Elsevier Inc.,
             // under the accompanying license; see chapter 5.1.5 for detailed explanation.
             // basically, we're distinguishing which of the voronoi regions of the triangle
             // the point lies in with the minimum amount of redundant computation.

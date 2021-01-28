@@ -126,7 +126,7 @@ namespace ThreeJs4Net.Geometries
             this.Vertices.Add(vertex);
             //vertex.index = this.Vertices.Count - 1;
 
-            // Texture coords are equivalent to map coords, calculate angle and convert to fraction of a circle.
+            // Texture coords are equivalent to map coords, calculate angle and convert to fraction of A circle.
 
             var u = Azimuth( vector ) / 2 / System.Math.PI + 0.5;
             var v = Inclination(vector) / System.Math.PI + 0.5;
@@ -139,7 +139,7 @@ namespace ThreeJs4Net.Geometries
 
 
         /// <summary>
-        /// Approximate a curved face with recursively sub-divided triangles.
+        /// Approximate A curved face with recursively sub-divided triangles.
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
@@ -166,7 +166,7 @@ namespace ThreeJs4Net.Geometries
         
 
         /// <summary>
-        /// Analytically subdivide a face to the required detail level.
+        /// Analytically subdivide A face to the required detail level.
         /// </summary>
         /// <param name="face"></param>
         /// <param name="detail"></param>
@@ -174,9 +174,9 @@ namespace ThreeJs4Net.Geometries
         {
             var cols = System.Math.Pow(2, detail);
             var cells = System.Math.Pow(4, detail);
-            var a = Prepare(this.Vertices[face.a]);
-            var b = Prepare(this.Vertices[face.b]);
-            var c = Prepare(this.Vertices[face.c]);
+            var a = Prepare(this.Vertices[face.A]);
+            var b = Prepare(this.Vertices[face.B]);
+            var c = Prepare(this.Vertices[face.C]);
 
             var v = new List<List<Vector3>>();
 

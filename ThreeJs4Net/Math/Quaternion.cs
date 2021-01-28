@@ -509,6 +509,11 @@ namespace ThreeJs4Net.Math
 
         public float[] ToArray(ref float[] array, int offset = 0)
         {
+            if (array == null)
+            {
+                array = new float[4];
+            }
+
             if (array.Length < offset + 4)
             {
                 Array.Resize(ref array, offset + 4);

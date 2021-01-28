@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace ThreeJs4Net.Math
 {
     [DebuggerDisplay("Center = ({Center.X}, {Center.Y}, {Center.Z}), Radius = {Radius}")]
-    public class Sphere
+    public class Sphere: IEquatable<Sphere>
     {
         public Vector3 Center = new Vector3();
 
@@ -17,7 +17,7 @@ namespace ThreeJs4Net.Math
         public Sphere()
         {
             this.Center = new Vector3();
-            this.Radius = 0;
+            this.Radius = -1;
         }
 
         /// <summary>
@@ -72,6 +72,11 @@ namespace ThreeJs4Net.Math
             this.Radius = sphere.Radius;
 
             return this;
+        }
+
+        public Sphere Clone()
+        {
+            return new Sphere().Copy(this);
         }
 
         /// <summary>
@@ -150,15 +155,42 @@ namespace ThreeJs4Net.Math
         /// </summary>
         /// <param name="offset"></param>
         /// <returns></returns>
-	    public Sphere Translate(object offset)
+	    public Sphere Translate(Vector3 offset)
         {
-            throw new NotImplementedException();
-            //	    this.Center.add( offset );
+            this.Center.Add(offset);
 
             return this;
         }
 
+        public bool IntersectsPlane(Plane plane)
+        {
+            return Mathf.Abs(plane.DistanceToPoint(this.Center)) <= this.Radius;
+        }
 
 
+        #region Equality members
+        public bool Equals(Sphere other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Center.Equals(other.Center) && Radius == other.Radius;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Center.Equals(((Sphere)obj).Center) && Radius == ((Sphere)obj).Radius;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Center != null ? Center.GetHashCode() : 0) * 397) ^ Radius.GetHashCode();
+            }
+        }
+        #endregion
     }
 }

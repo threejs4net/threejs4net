@@ -9,9 +9,6 @@ namespace ThreeJs4Net.Cameras
         public Matrix4 ProjectionMatrix = new Matrix4().Identity();
         public Matrix4 ProjectionMatrixInverse = new Matrix4().Identity();
 
-        public float Far = (float)2000.0;
-        public float Near = (float)0.1;
-
         #region Constructors and Destructors
 
         /// <summary>
@@ -25,15 +22,17 @@ namespace ThreeJs4Net.Cameras
         /// <summary>
         ///     Constructor
         /// </summary>
-        protected Camera(Camera other)
-            : base(other)
-        {
-        }
+        protected Camera(Camera other) : base(other) { }
 
         #endregion
 
-        #region Public Methods and Operators
 
+
+
+
+
+
+        #region --- Already in R116 ---
         public Camera Copy(Camera source, bool recursive)
         {
             //!! TEST this... not sure 
@@ -46,17 +45,30 @@ namespace ThreeJs4Net.Cameras
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="optionalTarget"></param>
-        /// <returns></returns>
         public override Vector3 GetWorldDirection(Vector3 target)
         {
+            if (target == null)
+            {
+                target = new Vector3();
+            }
+
             this.UpdateMatrixWorld(true);
             var e = this.MatrixWorld.elements;
             return target.Set(-e[8], -e[9], -e[10]).Normalize();
         }
+
+        public override void UpdateWorldMatrix(bool updateParents, bool updateChildren)
+        {
+            base.UpdateWorldMatrix(updateParents, updateChildren);
+            this.MatrixWorldInverse.GetInverse(this.MatrixWorld);
+        }
+
+        public override void UpdateMatrixWorld(bool force = false)
+        {
+            base.UpdateMatrixWorld(force);
+            this.MatrixWorldInverse.GetInverse(this.MatrixWorld);
+        }
+
 
         #endregion
     }

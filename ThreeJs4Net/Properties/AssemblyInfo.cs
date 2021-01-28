@@ -5,17 +5,17 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // Set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Three4Net")]
+[assembly: AssemblyTitle("ThreeJs4Net")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Three4Net")]
+[assembly: AssemblyProduct("ThreeJs4Net")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
-// to COM components.  If you need to access a type in this assembly from
+// to COM components.  If you need to access A type in this assembly from
 // COM, Set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 

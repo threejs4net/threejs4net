@@ -45,7 +45,7 @@ namespace ThreeJs4Net.Materials
         // When rendered geometry doesn"t include these Attributes but the material does,
         // use these default values in WebGL. This avoids errors when buffer data is missing.
         //public object defaultAttributeValues = {
-        //"color": [ 1, 1, 1 ],
+        //"Color": [ 1, 1, 1 ],
         //"uv": [ 0, 0 ],
         //"uv2": [ 0, 0 ]
         //};

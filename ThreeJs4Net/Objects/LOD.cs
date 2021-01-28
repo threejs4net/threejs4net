@@ -64,13 +64,13 @@ namespace ThreeJs4Net.Objects
         /// <summary>
         /// 
         /// </summary>
-        public override void Raycast(Raycaster raycaster, ref List<Intersect> intersects)
+        public override void Raycast(Raycaster raycaster, List<Intersect> intersects)
         {
             var matrixPosition = new Vector3();
 
             matrixPosition.SetFromMatrixPosition(this.MatrixWorld);
             var distance = raycaster.Ray.Origin.DistanceTo(matrixPosition);
-            this.GetObjectForDistance(distance).Raycast(raycaster, ref intersects);
+            this.GetObjectForDistance(distance).Raycast(raycaster, intersects);
         }
 
         /// <summary>

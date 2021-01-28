@@ -33,7 +33,7 @@ namespace ThreeJs4Net.Materials
         public bool Visible = true;
         public bool NeedsUpdate = true;
         public List<UniformLocation> UniformsList;
-        public int VertexColors; // Set to use "color" attribute stream
+        public int VertexColors; // Set to use "Color" attribute stream
         public Texture EnvMap = null; // Hoort hier eigenlijk niet
 
         
@@ -131,7 +131,7 @@ namespace ThreeJs4Net.Materials
             // Therefore, you should call GC.SupressFinalize to
             // take this object off the finalization queue 
             // and prevent finalization code for this object
-            // from executing a second time.
+            // from executing A second time.
             GC.SuppressFinalize(this);
         }
 

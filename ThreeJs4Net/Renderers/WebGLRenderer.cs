@@ -1798,7 +1798,7 @@ namespace ThreeJs4Net.Renderers
                     }
                     //else if (material.defaultAttributeValues)
                     //{
-                    //    GL.VertexAttrib3fv(attributesLocation.color, material.defaultAttributeValues.color);
+                    //    GL.VertexAttrib3fv(attributesLocation.Color, material.defaultAttributeValues.color);
                     //}
                 }
 
@@ -3217,7 +3217,7 @@ namespace ThreeJs4Net.Renderers
                 {
                     var originalAttribute = a.Value;
 
-                    // Do a shallow copy of the attribute object so different geometryGroup chunks use different
+                    // Do A shallow copy of the attribute object so different geometryGroup chunks use different
                     // attribute buffers which are correctly indexed in the setMeshBuffers function
 
                     var attribute = new Attribute();
@@ -3737,7 +3737,7 @@ namespace ThreeJs4Net.Renderers
                 Uniforms.SetValue(uniforms, "useRefract", ((null != m.EnvMap) && (m.EnvMap.Mapping is Three.CubeRefractionMapping)) ? 1 : 0);
             }
 
-            //  1. color map
+            //  1. Color map
             //  2. specular map
             //  3. normal map
             //  4. bump map
@@ -4052,9 +4052,9 @@ namespace ThreeJs4Net.Renderers
                 {
                     var face = obj_faces[chuck_face];
 
-                    var v1 = vertices[face.a];
-                    var v2 = vertices[face.b];
-                    var v3 = vertices[face.c];
+                    var v1 = vertices[face.A];
+                    var v2 = vertices[face.B];
+                    var v3 = vertices[face.C];
 
                     vertexArray[offset] = v1.X;
                     vertexArray[offset + 1] = v1.Y;
@@ -4091,9 +4091,9 @@ namespace ThreeJs4Net.Renderers
                         /*
                         // morph positions
 
-                        var v1 = morphTargets[vk].vertices[face.a];
-                        var v2 = morphTargets[vk].vertices[face.b];
-                        var v3 = morphTargets[vk].vertices[face.c];
+                        var v1 = morphTargets[vk].vertices[face.A];
+                        var v2 = morphTargets[vk].vertices[face.B];
+                        var v3 = morphTargets[vk].vertices[face.C];
 
                         var vka = morphTargetsArrays[vk];
 
@@ -4117,9 +4117,9 @@ namespace ThreeJs4Net.Renderers
                             {
                                 var faceVertexNormals = morphNormals[vk].vertexNormals[chf];
 
-                                n1 = faceVertexNormals.a;
-                                n2 = faceVertexNormals.b;
-                                n3 = faceVertexNormals.c;
+                                n1 = faceVertexNormals.A;
+                                n2 = faceVertexNormals.B;
+                                n3 = faceVertexNormals.C;
                             }
                             else
                             {
@@ -4167,9 +4167,9 @@ namespace ThreeJs4Net.Renderers
 
                     // weights
 
-                    var sw1 = obj_skinWeights[face.a];
-                    var sw2 = obj_skinWeights[face.b];
-                    var sw3 = obj_skinWeights[face.c];
+                    var sw1 = obj_skinWeights[face.A];
+                    var sw2 = obj_skinWeights[face.B];
+                    var sw3 = obj_skinWeights[face.C];
 
                     skinWeightArray[offset_skin] = sw1.X;
                     skinWeightArray[offset_skin + 1] = sw1.Y;
@@ -4188,9 +4188,9 @@ namespace ThreeJs4Net.Renderers
 
                     // indices
 
-                    var si1 = obj_skinIndices[face.a];
-                    var si2 = obj_skinIndices[face.b];
-                    var si3 = obj_skinIndices[face.c];
+                    var si1 = obj_skinIndices[face.A];
+                    var si2 = obj_skinIndices[face.B];
+                    var si3 = obj_skinIndices[face.C];
 
                     skinIndexArray[offset_skin] = si1.X;
                     skinIndexArray[offset_skin + 1] = si1.Y;
@@ -4228,7 +4228,7 @@ namespace ThreeJs4Net.Renderers
                     var face = obj_faces[chunk_faces3[f]];
 
                     var vertexColors = face.VertexColors;
-                    var faceColor = face.color;
+                    var faceColor = face.Color;
 
                     Color c1, c2, c3;
 
@@ -4469,9 +4469,9 @@ namespace ThreeJs4Net.Renderers
                             {
                                 var face = obj_faces[chunk_faces3[f]];
 
-                                array[offset_custom + 0] = values[face.a];
-                                array[offset_custom + 1] = values[face.b];
-                                array[offset_custom + 2] = values[face.c];
+                                array[offset_custom + 0] = values[face.A];
+                                array[offset_custom + 1] = values[face.B];
+                                array[offset_custom + 2] = values[face.C];
 
                                 offset_custom += 3;
 
@@ -4509,9 +4509,9 @@ namespace ThreeJs4Net.Renderers
                             {
                                 var face = obj_faces[chunk_faces3[f]];
 
-                                //var v1 = customAttribute.value[face.a];
-                                //var v2 = customAttribute.value[face.b];
-                                //var v3 = customAttribute.value[face.c];
+                                //var v1 = customAttribute.value[face.A];
+                                //var v2 = customAttribute.value[face.B];
+                                //var v3 = customAttribute.value[face.C];
 
                                 //customAttribute["array"][offset_custom] = v1.X;
                                 //customAttribute["array"][offset_custom + 1] = v1.Y;
@@ -4582,9 +4582,9 @@ namespace ThreeJs4Net.Renderers
 
                                 var face = obj_faces[chunk_faces3[f]];
 
-                                var v1 = ((float[])customAttribute["value"])[face.a];
-                                var v2 = ((float[])customAttribute["value"])[face.b];
-                                var v3 = ((float[])customAttribute["value"])[face.c];
+                                var v1 = ((float[])customAttribute["value"])[face.A];
+                                var v2 = ((float[])customAttribute["value"])[face.B];
+                                var v3 = ((float[])customAttribute["value"])[face.C];
 
                                 //array[offset_custom + 0] = v1[pp[0]];
                                 //array[offset_custom + 1] = v1[pp[1]];
@@ -4678,9 +4678,9 @@ namespace ThreeJs4Net.Renderers
 
                                 var face = obj_faces[chunk_faces3[f]];
 
-                                //var v1 = customAttribute.value[face.a];
-                                //var v2 = customAttribute.value[face.b];
-                                //var v3 = customAttribute.value[face.c];
+                                //var v1 = customAttribute.value[face.A];
+                                //var v2 = customAttribute.value[face.B];
+                                //var v3 = customAttribute.value[face.C];
 
                                 //customAttribute["array"][offset_custom] = v1.X;
                                 //customAttribute["array"][offset_custom + 1] = v1.Y;
@@ -5199,19 +5199,19 @@ namespace ThreeJs4Net.Renderers
             /*
             var meshBasicMaterial = material as MeshBasicMaterial;
             if (null != meshBasicMaterial)
-                uniforms["diffuse"]["value"] = meshBasicMaterial.color;
+                uniforms["diffuse"]["value"] = meshBasicMaterial.Color;
 
             var meshLambertMaterial = material as MeshLambertMaterial;
             if (null != meshLambertMaterial)
-                uniforms["diffuse"]["value"] = meshLambertMaterial.color;
+                uniforms["diffuse"]["value"] = meshLambertMaterial.Color;
 
             var meshPhongMaterial = material as MeshPhongMaterial;
             if (null != meshPhongMaterial)
-                uniforms["diffuse"]["value"] = meshPhongMaterial.color;
+                uniforms["diffuse"]["value"] = meshPhongMaterial.Color;
 
             var pointCloudMaterial = material as PointCloudMaterial;
             if (null != pointCloudMaterial)
-                uniforms["diffuse"]["value"] = pointCloudMaterial.color;
+                uniforms["diffuse"]["value"] = pointCloudMaterial.Color;
      */
             //           uniforms["opacity"]["value"] = material.opacity;
         }
@@ -5591,9 +5591,10 @@ namespace ThreeJs4Net.Renderers
                 }
                 else if (material is MeshDepthMaterial)
                 {
-                    m_uniforms["mNear"]["value"] = camera.Near;
-                    m_uniforms["mFar"]["value"] = camera.Far;
-                    m_uniforms["opacity"]["value"] = material.Opacity;
+                    //TODO: !! This must be updated because of the changes to the camera
+                    //m_uniforms["mNear"]["value"] = camera.Near;
+                    //m_uniforms["mFar"]["value"] = camera.Far;
+                    //m_uniforms["opacity"]["value"] = material.Opacity;
                 }
                 else if (material is MeshNormalMaterial)
                 {
@@ -5623,7 +5624,7 @@ namespace ThreeJs4Net.Renderers
             return program;
         }
 
-        //NOTE: This is a new method added to convert an array to IntPtr - needs testing
+        //NOTE: This is A new method added to convert an array to IntPtr - needs testing
         public IntPtr GetIntPtr(Byte[] byteBuf)
         {
             IntPtr ptr = Marshal.AllocHGlobal(byteBuf.Length);
@@ -6023,11 +6024,11 @@ namespace ThreeJs4Net.Renderers
 
                     offset = c * 3;
 
-                    //                var color = colors[sortArray[c][1]];
+                    //                var Color = colors[sortArray[c][1]];
 
-                    //colorArray[ offset ]     = color.R;
-                    //colorArray[ offset + 1 ] = color.G;
-                    //colorArray[ offset + 2 ] = color.B;
+                    //colorArray[ offset ]     = Color.R;
+                    //colorArray[ offset + 1 ] = Color.G;
+                    //colorArray[ offset + 2 ] = Color.B;
 
                 }
 
@@ -6071,7 +6072,7 @@ namespace ThreeJs4Net.Renderers
 
                                             } else if ( customAttribute.size == 3 ) {
 
-                                                if ( customAttribute.type == "c" ) {
+                                                if ( customAttribute.type == "C" ) {
 
                                                     for (int ca = 0; ca < cal; ca ++ ) {
 
@@ -6679,7 +6680,7 @@ namespace ThreeJs4Net.Renderers
             // Therefore, you should call GC.SupressFinalize to
             // take this object off the finalization queue 
             // and prevent finalization code for this object
-            // from executing a second time.
+            // from executing A second time.
             GC.SuppressFinalize(this);
         }
         protected virtual void Dispose(bool disposing)

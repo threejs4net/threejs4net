@@ -122,7 +122,7 @@ namespace ThreeJs4Net.Math
         {
             if (right != null)
             {
-                Trace.TraceInformation("THREE.Matrix4: .multiply() now only accepts one argument. Use .multiplyMatrices( a, b ) instead.");
+                Trace.TraceInformation("THREE.Matrix4: .multiply() now only accepts one argument. Use .multiplyMatrices( A, B ) instead.");
                 return this.MultiplyMatrices(left, right);
             }
 
@@ -351,23 +351,24 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fov"></param>
-        /// <param name="aspect"></param>
-        /// <param name="near"></param>
-        /// <param name="far"></param>
-        public Matrix4 MakePerspective(float fov, float aspect, float near, float far)
+
+        public Matrix4 MakePerspective(float left, float right, float top, float bottom, float near, float far)
         {
-            var rad = Mat.DegToRad(fov * 0.5f);
+            var te = this.elements;
+            var x = 2 * near / (right - left);
+            var y = 2 * near / (top - bottom);
 
-            var ymax = near * (float)System.Math.Tan(rad); // An angle, measured in radians
-            var ymin = -ymax;
-            var xmin = ymin * aspect;
-            var xmax = ymax * aspect;
+            var a = (right + left) / (right - left);
+            var b = (top + bottom) / (top - bottom);
+            var c = -(far + near) / (far - near);
+            var d = -2 * far * near / (far - near);
 
-            return MakeFrustum(xmin, xmax, ymin, ymax, near, far);
+            te[0] = x; te[4] = 0; te[8] = a; te[12] = 0;
+            te[1] = 0; te[5] = y; te[9] = b; te[13] = 0;
+            te[2] = 0; te[6] = 0; te[10] = c; te[14] = d;
+            te[3] = 0; te[7] = 0; te[11] = -1; te[15] = 0;
+
+            return this;
         }
 
         /// <summary>
@@ -785,6 +786,89 @@ namespace ThreeJs4Net.Math
                 0, 0, 1, 0,
                 0, 0, 0, 1
             );
+            return this;
+        }
+
+
+        public Matrix4 Translate(Vector3 vec3)
+        {
+            var x = vec3.X;
+            var y = vec3.Y;
+            var z = vec3.Z;
+            float a00, a01, a02, a03;
+            float a10, a11, a12, a13;
+            float a20, a21, a22, a23;
+
+            var a = this.elements;
+
+            a00 = a[0]; a01 = a[1]; a02 = a[2]; a03 = a[3];
+            a10 = a[4]; a11 = a[5]; a12 = a[6]; a13 = a[7];
+            a20 = a[8]; a21 = a[9]; a22 = a[10]; a23 = a[11];
+
+            var b = new Matrix4();
+            var o = b.elements;
+            o[0] = a00; o[1] = a01; o[2] = a02; o[3] = a03;
+            o[4] = a10; o[5] = a11; o[6] = a12; o[7] = a13;
+            o[8] = a20; o[9] = a21; o[10] = a22; o[11] = a23;
+
+            o[12] = a00 * x + a10 * y + a20 * z + a[12];
+            o[13] = a01 * x + a11 * y + a21 * z + a[13];
+            o[14] = a02 * x + a12 * y + a22 * z + a[14];
+            o[15] = a03 * x + a13 * y + a23 * z + a[15];
+
+            return b;
+        }
+
+        public Matrix4 Rotate(Matrix4 mat, float rad, Vector3 axis)
+        {
+            float x = axis.X, y = axis.Y, z = axis.Z;
+            float len = Mathf.Sqrt(x * x + y * y + z * z);
+
+            if (Mathf.Abs(len) < 0.00001) { return null; }
+
+            len = 1 / len;
+            x *= len;
+            y *= len;
+            z *= len;
+
+            var s = Mathf.Sin(rad);
+            var c = Mathf.Cos(rad);
+            var t = 1 - c;
+
+            var a = mat.elements;
+
+            var a00 = a[0]; var a01 = a[1]; var a02 = a[2]; var a03 = a[3];
+            var a10 = a[4]; var a11 = a[5]; var a12 = a[6]; var a13 = a[7];
+            var a20 = a[8]; var a21 = a[9]; var a22 = a[10]; var a23 = a[11];
+
+            // Construct the elements of the rotation matrix
+            var b00 = x * x * t + c; var b01 = y * x * t + z * s; var b02 = z * x * t - y * s;
+            var b10 = x * y * t - z * s; var b11 = y * y * t + c; var b12 = z * y * t + x * s;
+            var b20 = x * z * t + y * s; var b21 = y * z * t - x * s; var b22 = z * z * t + c;
+
+            var o = this.elements;
+
+            // Perform rotation-specific matrix multiplication
+            o[0] = a00 * b00 + a10 * b01 + a20 * b02;
+            o[1] = a01 * b00 + a11 * b01 + a21 * b02;
+            o[2] = a02 * b00 + a12 * b01 + a22 * b02;
+            o[3] = a03 * b00 + a13 * b01 + a23 * b02;
+            o[4] = a00 * b10 + a10 * b11 + a20 * b12;
+            o[5] = a01 * b10 + a11 * b11 + a21 * b12;
+            o[6] = a02 * b10 + a12 * b11 + a22 * b12;
+            o[7] = a03 * b10 + a13 * b11 + a23 * b12;
+            o[8] = a00 * b20 + a10 * b21 + a20 * b22;
+            o[9] = a01 * b20 + a11 * b21 + a21 * b22;
+            o[10] = a02 * b20 + a12 * b21 + a22 * b22;
+            o[11] = a03 * b20 + a13 * b21 + a23 * b22;
+
+            if (a != o) { // If the source and destination differ, copy the unchanged last row
+                o[12] = a[12];
+                o[13] = a[13];
+                o[14] = a[14];
+                o[15] = a[15];
+            }
+
             return this;
         }
     }

@@ -51,7 +51,7 @@ namespace ThreeJs4Net.Demo.examples
                 var mesh = new Mesh(geometry, material);
                 mesh.Position.Set(Mat.Random() - 0.5f, Mat.Random() - 0.5f, Mat.Random() - 0.5f).Normalize();
                 mesh.Position.MultiplyScalar(Mat.Random() * 400);
-                mesh.Rotation.set(Mat.Random() * 2, Mat.Random() * 2, Mat.Random() * 2);
+                mesh.Rotation.Set(Mat.Random() * 2, Mat.Random() * 2, Mat.Random() * 2);
                 mesh.Scale.X = mesh.Scale.Y = mesh.Scale.Z = Mat.Random() * 50;
                 object3D.Add(mesh);
             }

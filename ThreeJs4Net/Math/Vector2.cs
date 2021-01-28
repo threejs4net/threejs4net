@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using ThreeJs4Net.Core;
 using ThreeJs4Net.Properties;
 
 namespace ThreeJs4Net.Math
@@ -87,7 +88,7 @@ namespace ThreeJs4Net.Math
         }
 
         /// <summary>
-        /// Defines a zero-length Vector2.
+        /// Defines A zero-length Vector2.
         /// </summary>
  //       public static readonly Vector2 Zero = new Vector2(0, 0);
 
@@ -196,7 +197,7 @@ namespace ThreeJs4Net.Math
         {
             if (w != null)
             {
-                Trace.TraceWarning("THREE.Vector2: .add() now only accepts one argument. Use .addVectors( a, b ) instead.");
+                Trace.TraceWarning("THREE.Vector2: .add() now only accepts one argument. Use .addVectors( A, B ) instead.");
                 return this.AddVectors(v, w);
 
             }
@@ -240,7 +241,7 @@ namespace ThreeJs4Net.Math
         {
             if (w != null)
             {
-                Trace.TraceInformation("THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.");
+                Trace.TraceInformation("THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( A, B ) instead.");
                 return this.SubVectors(v, w);
             }
 
@@ -318,6 +319,14 @@ namespace ThreeJs4Net.Math
                     this.MultiplyScalar(value / OldLength);
                 }
             }
+        }
+
+        public Vector2 FromBufferAttribute(BufferAttribute<float> attribute, int index)
+        {
+            this.X = attribute.GetX(index);
+            this.X = attribute.GetY(index);
+
+            return this;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

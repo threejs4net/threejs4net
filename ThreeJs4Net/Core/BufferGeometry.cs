@@ -17,21 +17,19 @@ namespace ThreeJs4Net.Core
 
     public class BufferGeometry : BaseGeometry, IAttributes // Note: in three.js, BufferGeometry is not Geometry
     {
+        #region --- Fields ---
+        public bool UcVisible = true;
+        public BufferAttribute<uint> Index;
+        public Attributes Attributes { get; set; }
+        public DrawRange DrawRange = new DrawRange();
+        #endregion
+
         protected static int BufferGeometryIdCount;
 
-        // IAttributes
-
-        public Attributes Attributes { get; set; }
-
         public List<string> AttributesKeys { get; set; }
-
         public IList<Offset> Drawcalls = new List<Offset>();
-
         public IList<Offset> Offsets; // backwards compatibility
 
-        /// <summary>
-        /// 
-        /// </summary>
         public BufferGeometry()
         {
             Id = BufferGeometryIdCount++;
@@ -44,11 +42,23 @@ namespace ThreeJs4Net.Core
             this.Offsets = this.Drawcalls;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="attribute"></param>
+        public BufferAttribute<uint> GetIndex()
+        {
+            return this.Index;
+        }
+
+        public void SetIndex(BufferAttribute<uint> index)
+        {
+            this.Index = index;
+        }
+
+
+
+
+
+
+        #region --- Already in R116 ---
+
         [Obsolete("Removed on newest release")]
         public void AddAttribute(string name, Attribute attribute)
         {
@@ -62,18 +72,89 @@ namespace ThreeJs4Net.Core
             // Object.keys
             this.AttributesKeys = new List<string>();
             foreach (var entry in this.Attributes)
+            {
                 this.AttributesKeys.Add(entry.Key);
+            }
         }
 
-        public BufferGeometry SetAttribute(string name, Attribute attribute) {
+        public BufferGeometry SetAttribute(string name, Attribute attribute)
+        {
             this.Attributes[name] = attribute;
 
             // Object.keys
             this.AttributesKeys = new List<string>();
             foreach (var entry in this.Attributes)
+            {
                 this.AttributesKeys.Add(entry.Key);
+            }
+
             return this;
         }
+
+        public object GetAttribute(string name)
+        {
+            return this.Attributes[name];
+        }
+
+        public BufferAttribute<T> GetAttribute<T>(string name)
+        {
+            if (this.Attributes.ContainsKey(name))
+            {
+                return this.Attributes[name] as BufferAttribute<T>;
+            }
+
+            return null;
+        }
+
+        public BufferGeometry DeleteAttribute(string name)
+        {
+            this.Attributes.Remove(name);
+            return this;
+        }
+
+        public BufferGeometry Scale(float x, float y, float z)
+        {
+            this.ApplyMatrix4(new Matrix4().MakeScale(x, y, z));
+            return this;
+        }
+
+        public BufferGeometry RotateX(float angle)
+        {
+            this.ApplyMatrix4(new Matrix4().MakeRotationX(angle));
+            return this;
+        }
+
+        public BufferGeometry RotateY(float angle)
+        {
+            this.ApplyMatrix4(new Matrix4().MakeRotationY(angle));
+            return this;
+
+        }
+
+        public BufferGeometry RotateZ(float angle)
+        {
+            this.ApplyMatrix4(new Matrix4().MakeRotationZ(angle));
+            return this;
+        }
+
+        public BufferGeometry Translate(float x, float y, float z)
+        {
+            this.ApplyMatrix4(new Matrix4().MakeTranslation(x, y, z));
+            return this;
+        }
+
+        public BufferGeometry Center()
+        {
+            var offset = new Vector3();
+            this.ComputeBoundingBox();
+            this.BoundingBox.GetCenter(offset).Negate();
+            this.Translate(offset.X, offset.Y, offset.Z);
+            return this;
+        }
+
+        #endregion
+
+
 
 
         /// <summary>
@@ -82,43 +163,33 @@ namespace ThreeJs4Net.Core
         public override void ComputeBoundingSphere()
         {
             var box = new Box3();
+            var vector = new Vector3();
 
-            if (this.BoundingSphere == null)
+            this.BoundingSphere ??= new Sphere();
+
+            var position = this.Attributes["position"] as BufferAttribute<float>;
+            var positions = GetBuffer<float>("position");
+
+            if (positions != null)
             {
-                this.BoundingSphere = new Sphere();
-            }
-
-            var bufferAttribute = this.Attributes["position"] as BufferAttribute<float>;
-            Debug.Assert(null != bufferAttribute);
-
-            var positions = bufferAttribute.Array;
-
-            if (null != positions)
-            {
-                box.MakeEmpty();
-
                 var center = this.BoundingSphere.Center;
+                box.SetFromBufferAttribute(position);
 
-                for (var i = 0; i < positions.Length; i += 3)
-                {
-                    var vector = new Vector3(positions[i], positions[i + 1], positions[i + 2]);
-                    box.ExpandByPoint(vector);
-                }
+                //!! IMPLEMENT MORPH
 
                 box.GetCenter(center);
 
-                // hoping to find a boundingSphere with a radius smaller than the
-                // boundingSphere of the boundingBox: sqrt(3) smaller in the best case
+                float maxRadiusSq = 0;
 
-                var maxRadiusSq = float.NegativeInfinity;
-
-                for (var i = 0; i < positions.Length; i += 3)
+                for (var i = 0; i < positions.Length / position.ItemSize; i++)
                 {
-                    var vector = new Vector3(positions[i], positions[i + 1], positions[i + 2]);
-                    maxRadiusSq = System.Math.Max(maxRadiusSq, center.DistanceToSquared(vector));
+                    vector.FromBufferAttribute(position, i);
+                    maxRadiusSq = Mathf.Max(maxRadiusSq, center.DistanceToSquared(vector));
                 }
 
-                this.BoundingSphere.Radius = (float)System.Math.Sqrt(maxRadiusSq);
+                //!! IMPLEMENT MORPH
+
+                this.BoundingSphere.Radius = Mathf.Sqrt(maxRadiusSq);
 
                 //if ()
                 //{
@@ -127,80 +198,63 @@ namespace ThreeJs4Net.Core
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override void ComputeBoundingBox()
         {
-            if (this.BoundingBox == null)
+            this.BoundingBox ??= new Box3();
+
+            var position = this.Attributes["position"] as BufferAttribute<float>;
+            //!! NOT IMPLEMENTED YET:   var morphAttributesPosition = this.Attributes["position"] as BufferAttribute<float>;
+            Debug.Assert(position != null);
+
+            var positions = GetBuffer<float>("position");
+
+
+            if (positions != null)
             {
-                this.BoundingBox = new Box3();
+                this.BoundingBox.SetFromBufferAttribute(position);
+
+                //!! IMPLEMENT MORPH
+            }
+            else
+            {
+                this.BoundingBox.MakeEmpty();
             }
 
-            var bufferAttribute = this.Attributes["position"] as BufferAttribute<float>;
-            Debug.Assert(null != bufferAttribute);
-
-            var positions = bufferAttribute.Array;
-
-            if (null != positions)
-            {
-
-                var bb = this.BoundingBox;
-                bb.MakeEmpty();
-
-                for (var i = 0; i < positions.Length; i += 3)
-                {
-                    var vector = new Vector3(positions[i], positions[i + 1], positions[i + 2]);
-                    bb.ExpandByPoint(vector);
-                }
-            }
-
-            if (positions == null || positions.Length == 0)
-            {
-                this.BoundingBox.Min = new Vector3(0, 0, 0);
-                this.BoundingBox.Max = new Vector3(0, 0, 0);
-            }
 
             //if ( isNaN( this.BoundingBox.Min.X ) || isNaN( this.BoundingBox.Min.Y ) || isNaN( this.BoundingBox.Min.Z ) ) {
             //    Trace.TraceError( "THREE.BufferGeometry.computeBoundingBox: Computed min/max have NaN values. The 'position' attribute is likely to have NaN values. ););
             //}
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public void ComputeFaceNormals()
         {
             // backwards compatibility
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="areaWeighted"></param>
+
+        private T[] GetBuffer<T>(string name)
+        {
+            var bufferAttr = this.Attributes[name] as BufferAttribute<float>;
+            return bufferAttr?.Array as T[];
+        }
+
         public override void ComputeVertexNormals(bool areaWeighted = false)
         {
+            var index = this.Index;
             var attributes = this.Attributes;
+            var position = this.Attributes["position"] as BufferAttribute<float>;
+            var positions = GetBuffer<float>("position");
 
-            var positionBufferAttribute = this.Attributes["position"] as BufferAttribute<float>;
-            Debug.Assert(null != positionBufferAttribute);
-
-            var positions = positionBufferAttribute.Array;
-
-            if (null != positions)
+            if (positions != null)
             {
                 if (!attributes.ContainsKey("normal"))
                 {
-                    this.AddAttribute("normal", new BufferAttribute<float>(new float[positions.Length], 3));
+                    this.SetAttribute("normal", new BufferAttribute<float>(new float[positions.Length], 3));
                 }
                 else
                 {
                     // reset existing normals to zero
-
-                    var bufferAttribute = this.Attributes["normal"] as BufferAttribute<float>;
-                    Debug.Assert(null != bufferAttribute);
-
-                    var array = bufferAttribute.Array;
+                    var array = GetBuffer<float>("normal");
 
                     for (var i = 0; i < array.Length; i++)
                     {
@@ -215,54 +269,39 @@ namespace ThreeJs4Net.Core
                 var cb = new Vector3();
                 var ab = new Vector3();
 
-                var normalBufferAttribute = this.Attributes["normal"] as BufferAttribute<float>;
-                Debug.Assert(null != normalBufferAttribute);
-
-                var normals = normalBufferAttribute.Array;
+                var normals = GetBuffer<float>("normal");
 
                 // indexed elements
 
-                if (attributes.ContainsKey("index"))
+                if (index != null && index.length > 0)
                 {
-                    var indicesBufferAttribute = this.Attributes["index"] as BufferAttribute<uint>;
-                    Debug.Assert(null != indicesBufferAttribute);
+                    var indices = index.Array;
 
-                    var indices = indicesBufferAttribute.Array;
-
-                    var offsets = (this.Offsets.Count > 0 ? this.Offsets : new List<Offset>() { new Offset() { Start = 0, Count = indices.Length, Index = 0 } });
-
-                    for (var j = 0; j < offsets.Count; ++j)
+                    for (var i = 0; i < index.Count; i += 3)
                     {
-                        var start = offsets[j].Start;
-                        var count = offsets[j].Count;
-                        var index = offsets[j].Index;
+                        var vA = (int)(indices[i + 0]) * 3;
+                        var vB = (int)(indices[i + 1]) * 3;
+                        var vC = (int)(indices[i + 2]) * 3;
 
-                        for (var i = start; i < start + count; i += 3)
-                        {
-                            var vA = (int)(index + indices[i + 0]) * 3;
-                            var vB = (int)(index + indices[i + 1]) * 3;
-                            var vC = (int)(index + indices[i + 2]) * 3;
+                        pA.FromArray(positions, vA);
+                        pB.FromArray(positions, vB);
+                        pC.FromArray(positions, vC);
 
-                            pA.FromArray(positions, vA);
-                            pB.FromArray(positions, vB);
-                            pC.FromArray(positions, vC);
+                        cb.SubVectors(pC, pB);
+                        ab.SubVectors(pA, pB);
+                        cb.Cross(ab);
 
-                            cb.SubVectors(pC, pB);
-                            ab.SubVectors(pA, pB);
-                            cb.Cross(ab);
+                        normals[vA + 0] += cb.X;
+                        normals[vA + 1] += cb.Y;
+                        normals[vA + 2] += cb.Z;
 
-                            normals[vA + 0] += cb.X;
-                            normals[vA + 1] += cb.Y;
-                            normals[vA + 2] += cb.Z;
+                        normals[vB + 0] += cb.X;
+                        normals[vB + 1] += cb.Y;
+                        normals[vB + 2] += cb.Z;
 
-                            normals[vB + 0] += cb.X;
-                            normals[vB + 1] += cb.Y;
-                            normals[vB + 2] += cb.Z;
-
-                            normals[vC + 0] += cb.X;
-                            normals[vC + 1] += cb.Y;
-                            normals[vC + 2] += cb.Z;
-                        }
+                        normals[vC + 0] += cb.X;
+                        normals[vC + 1] += cb.Y;
+                        normals[vC + 2] += cb.Z;
                     }
                 }
                 else
@@ -299,18 +338,12 @@ namespace ThreeJs4Net.Core
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public void Merge()
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-	    public void NormalizeNormals()
+        public void NormalizeNormals()
         {
             var normalBufferAttribute = this.Attributes["normal"] as BufferAttribute<float>;
             Debug.Assert(null != normalBufferAttribute);
@@ -331,39 +364,123 @@ namespace ThreeJs4Net.Core
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-    	public object GetAttribute(string name)
+        public BufferGeometry Clone()
         {
-            return this.Attributes[name];
+            return new BufferGeometry().Copy(this);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="count"></param>
-        /// <param name="indexOffset"></param>
-	    public void AddDrawCall(int start, int count, int indexOffset)
+        public BufferGeometry Copy(BufferGeometry source)
+        {
+            //var name, i, l;
+
+            // reset
+
+            this.Index = null;
+            this.Attributes.Clear();
+            //this.morphAttributes = { };
+            //this.groups = [];
+            this.BoundingBox = null;
+            this.BoundingSphere = null;
+
+            // name
+            this.Name = source.Name;
+
+            // index
+
+            var index = source.Index;
+
+            if (index != null)
+            {
+                this.SetIndex(index.Clone());
+            }
+
+            // attributes
+            var attributes = source.Attributes;
+
+            foreach (var attr in attributes)
+            {
+                attr.Value.TryGetValue("type", out object bufType);
+
+                if (bufType == typeof(float))
+                {
+                    this.SetAttribute(attr.Key, (attr.Value as BufferAttribute<float>).Clone());
+                }
+                if (bufType == typeof(int))
+                {
+                    this.SetAttribute(attr.Key, (attr.Value as BufferAttribute<int>).Clone());
+                }
+                if (bufType == typeof(uint))
+                {
+                    this.SetAttribute(attr.Key, (attr.Value as BufferAttribute<uint>).Clone());
+                }
+            }
+
+            //TODO: review morph attributes
+            //var morphAttributes = source.morphAttributes;
+            //for (name in morphAttributes )
+            //{
+            //    var array = [];
+            //    var morphAttribute = morphAttributes[name]; // morphAttribute: array of Float32BufferAttributes
+            //    for (i = 0, l = morphAttribute.length; i < l; i++)
+            //    {
+            //        array.push(morphAttribute[i].clone());
+            //    }
+            //    this.morphAttributes[name] = array;
+            //}
+            //this.morphTargetsRelative = source.morphTargetsRelative;
+
+            // groups
+            //var groups = source.groups;
+            //for (i = 0, l = groups.length; i < l; i++)
+            //{
+            //    var group = groups[i];
+            //    this.addGroup(group.start, group.count, group.materialIndex);
+            //}
+
+
+
+
+            // bounding box
+            var boundingBox = source.BoundingBox;
+
+            if (boundingBox != null)
+            {
+                this.BoundingBox = boundingBox.Clone();
+            }
+
+
+
+            // bounding sphere
+            var boundingSphere = source.BoundingSphere;
+            if (boundingSphere != null)
+            {
+                this.BoundingSphere = boundingSphere.Clone();
+            }
+
+
+
+            // draw range
+            this.DrawRange.Start = source.DrawRange.Start;
+            this.DrawRange.Count = source.DrawRange.Count;
+
+            // user data
+            //this.userData = source.userData;
+
+            return this;
+
+        }
+
+        public void AddDrawCall(int start, int count, int indexOffset)
         {
             //   this.Drawcalls.Add() { start = start, count = count, index = indexOffset };
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Center()
+        public void SetDrawRange(int start, int count)
         {
-            // TODO
+            this.DrawRange.Start = start;
+            this.DrawRange.Count = count;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="matrix"></param>
         public override void ApplyMatrix4(Matrix4 matrix)
         {
 
@@ -385,31 +502,5 @@ namespace ThreeJs4Net.Core
                 normal.needsUpdate = true;
             }
         }
-
-        public BufferGeometry Scale(float x, float y, float z)
-        {
-            this.ApplyMatrix4(new Matrix4().MakeScale(x, y, z));
-            return this;
-        }
-
-        public BufferGeometry RotateX(float angle)
-        {
-            this.ApplyMatrix4(new Matrix4().MakeRotationX(angle));
-            return this;
-        }
-
-        public BufferGeometry RotateY(float angle)
-        {
-            this.ApplyMatrix4(new Matrix4().MakeRotationY(angle));
-            return this;
-
-        }
-
-        public BufferGeometry RotateZ(float angle)
-        {
-            this.ApplyMatrix4(new Matrix4().MakeRotationZ(angle));
-            return this;
-        }
-
     }
 }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using ThreeJs4Net.Cameras;
+using ThreeJs4Net.Core;
 using ThreeJs4Net.Properties;
 
 namespace ThreeJs4Net.Math
@@ -966,12 +967,7 @@ namespace ThreeJs4Net.Math
         /// <returns></returns>
         public bool Equals(Vector3 vector)
         {
-            if (vector == null)
-            {
-                return false;
-            }
-
-            return ((vector.X == this.X) && (vector.Y == this.Y) && (vector.Z == this.Z));
+            return vector != null && (vector.X == this.X) && (vector.Y == this.Y) && (vector.Z == this.Z);
         }
 
         /// <summary>
@@ -1000,6 +996,11 @@ namespace ThreeJs4Net.Math
 
         public float[] ToArray(ref float[] array, int offset = 0)
         {
+            if (array == null)
+            {
+                array = new float[3];
+            }
+
             if (array.Length < offset + 3)
             {
                 Array.Resize(ref array, offset + 3);
@@ -1072,6 +1073,16 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
+        public Vector3 FromBufferAttribute(BufferAttribute<float> attribute, int index)
+        {
+            this.x = attribute.GetX(index);
+            this.y = attribute.GetY(index);
+            this.z = attribute.GetZ(index);
+
+            return this;
+        }
+
+
         public override int GetHashCode()
         {
             return X.GetHashCode() ^ Y.GetHashCode() << 8 ^ Z.GetHashCode() << 16;
@@ -1087,6 +1098,25 @@ namespace ThreeJs4Net.Math
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+
+
+
+        [Obsolete("Will be removed as soon as we update Camera")]
+        public Vector3 ApplyProjectionCustom(Matrix4 matrix)
+        {
+            //REMOVE
+            float X = this.X, Y = this.Y, Z = this.Z;
+
+            var e = matrix.Elements;
+            var w = (e[3] * X + e[7] * Y + e[11] * Z + e[15]); // perspective divide
+
+            this.X = (e[0] * X + e[4] * Y + e[8] * Z + e[12]) * w;
+            this.Y = (e[1] * X + e[5] * Y + e[9] * Z + e[13]) * w;
+            this.Z = (e[2] * X + e[6] * Y + e[10] * Z + e[14]) * w;
+
+            return this;
         }
     }
 

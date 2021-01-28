@@ -77,7 +77,7 @@ namespace ThreeJs4Net.Core
             // Therefore, you should call GC.SupressFinalize to
             // take this object off the finalization queue 
             // and prevent finalization code for this object
-            // from executing a second time.
+            // from executing A second time.
             GC.SuppressFinalize(this);
         }
 

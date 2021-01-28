@@ -40,14 +40,14 @@ namespace ThreeJs4Net.Helpers
             var coneGeometry = new CylinderGeometry(0, 0.5f, 1, 5, 1);
             //          coneGeometry.ApplyMatrix4(new Matrix4().MakeTranslation(0, - 0.5, 0));
 
-            //if ( color == null ) color = 0xffff00;
+            //if ( Color == null ) Color = 0xffff00;
             //if ( length == null ) length = 1;
             //if (headLength == null) headLength = 0.2 * length;
             //if (headWidth == null) headWidth = 0.2 * headLength;
 
             this.Position = origin;
 
-            //		    this.line = new Line( lineGeometry, new LineBasicMaterial() { color = color } ) ;
+            //		    this.line = new Line( lineGeometry, new LineBasicMaterial() { Color = Color } ) ;
             this.line.MatrixAutoUpdate = false;
             this.Add(this.line);
 
@@ -107,8 +107,8 @@ namespace ThreeJs4Net.Helpers
         /// <param name="color"></param>
         public void SetColor(Color color)
         {
-            //this.line.Material.Color = color;
-            //this.cone.Material.Color = color;
+            //this.line.Material.Color = Color;
+            //this.cone.Material.Color = Color;
         }
     }
 }

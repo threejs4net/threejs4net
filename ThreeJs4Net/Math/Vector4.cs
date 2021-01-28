@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using ThreeJs4Net.Core;
 using ThreeJs4Net.Properties;
 
 namespace ThreeJs4Net.Math
@@ -16,71 +17,75 @@ namespace ThreeJs4Net.Math
 
         public Vector4()
         {
-            this.X = this.Y = this.Z = this.W = 0;
+            this.X = this.Y = this.Z = 0;
+            this.W = 1;
         }
 
-        public Vector4(float Scalar)
+        public Vector4(float scalar)
         {
-            this.X = this.Y = this.Z = this.W = Scalar;
+            this.X = this.Y = this.Z = this.W = scalar;
         }
 
-        public Vector4(float X, float Y, float Z, float W)
+        public Vector4(float x, float y, float z, float w = 1)
         {
-            this.X = X;
-            this.Y = Y;
-            this.Z = Z;
-            this.W = W;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
+            this.W = w;
         }
 
         /// <summary>
-        /// Defines a unit-length Vector4 that points towards the X-axis.
+        /// Defines A unit-length Vector4 that points towards the X-axis.
         /// </summary>
-        public static Vector4 UnitX = new Vector4(1, 0, 0, 0);
+        public static Vector4 UnitX()
+        {
+            return new Vector4(1, 0, 0, 0);
+        }
 
         /// <summary>
-        /// Defines a unit-length Vector4 that points towards the Y-axis.
+        /// Defines A unit-length Vector4 that points towards the Y-axis.
         /// </summary>
-        public static Vector4 UnitY = new Vector4(0, 1, 0, 0);
+        public static Vector4 UnitY()
+        {
+            return new Vector4(0, 1, 0, 0);
+        }
 
         /// <summary>
-        /// Defines a unit-length Vector4 that points towards the Z-axis.
+        /// Defines A unit-length Vector4 that points towards the Z-axis.
         /// </summary>
-        public static Vector4 UnitZ = new Vector4(0, 0, 1, 0);
+        public static Vector4 UnitZ()
+        {
+            return new Vector4(0, 0, 1, 0);
+        }
 
         /// <summary>
-        /// Defines a unit-length Vector4 that points towards the W-axis.
+        /// Defines A unit-length Vector4 that points towards the W-axis.
         /// </summary>
-        public static Vector4 UnitW = new Vector4(0, 0, 0, 1);
+        public static Vector4 UnitW()
+        {
+            return new Vector4(0, 0, 0, 1);
+        }
 
         /// <summary>
-        /// Defines a zero-length Vector4.
+        /// Defines A zero-length Vector4.
         /// </summary>
-    //    public static Vector4 Zero = new Vector4(0, 0, 0, 0);
+        public static Vector4 Zero()
+        {
+            return new Vector4(0, 0, 0, 0);
+        }
 
         /// <summary>
         /// Defines an instance with all components Set to 1.
         /// </summary>
-  //      public static readonly Vector4 One = new Vector4(1, 1, 1, 1);
-
-        public float Length
+        /// <returns></returns>
+        public static Vector4 One()
         {
-            get { return (float)Math.Sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z); }
-            set
-            {
-                var OldLength = (float)Math.Sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z);
-
-                if (OldLength != 0 && value != OldLength)
-                {
-                    this.MultiplyScalar(value / OldLength);
-                }
-            }
+            return new Vector4(1, 1, 1, 1);
         }
 
-        public Vector4 Clone()
-        {
-            return new Vector4(this.X, this.Y, this.Z, this.W);
-        }
 
+
+        #region --- Already in R116 ---
         public Vector4 Set(float X, float Y, float Z, float W)
         {
             this.X = X;
@@ -91,511 +96,562 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Vector4 Zero()
+        public Vector4 SetScalar(float scalar)
         {
-            return new Vector4(0, 0, 0, 0);
+            this.X = scalar;
+            this.Y = scalar;
+            this.Z = scalar;
+            this.W = scalar;
+
+            return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Vector4 One()
+        public Vector4 SetX(float x)
         {
-            return new Vector4(1, 1, 1, 1);
+            this.X = x;
+            return this;
         }
 
-        public void SetComponent(int Index, float Value)
+        public Vector4 SetY(float y)
         {
-            switch (Index)
+            this.Y = y;
+            return this;
+        }
+
+        public Vector4 SetZ(float z)
+        {
+            this.Z = z;
+            return this;
+        }
+
+        public Vector4 SetW(float w)
+        {
+            this.W = w;
+            return this;
+        }
+
+        public void SetComponent(int index, float value)
+        {
+            switch (index)
             {
-                case 0:
-                    this.X = Value;
-                    break;
-                case 1:
-                    this.Y = Value;
-                    break;
-                case 2:
-                    this.Z = Value;
-                    break;
-
-                default:
-                    throw new IndexOutOfRangeException(String.Format("Index {0} is out of bounds", Index));
+                case 0: this.X = value; break;
+                case 1: this.Y = value; break;
+                case 2: this.Z = value; break;
+                case 3: this.W = value; break;
+                default: throw new IndexOutOfRangeException($"Index {index} is out of bounds");
             }
         }
 
-        public float GetComponent(int Index)
+        public float GetComponent(int index)
         {
-            switch (Index)
+            switch (index)
             {
-                case 0:
-                    return this.X;
-                case 1:
-                    return this.Y;
-                case 2:
-                    return this.Z;
-
-                default:
-                    throw new IndexOutOfRangeException(String.Format("Index {0} is out of bounds", Index));
+                case 0: return this.X;
+                case 1: return this.Y;
+                case 2: return this.Z;
+                case 3: return this.W;
+                default: throw new IndexOutOfRangeException($"Index {index} is out of bounds");
             }
         }
 
-        public Vector4 Copy(Vector4 Vector)
+        public Vector4 Clone()
         {
-            this.X = Vector.X;
-            this.Y = Vector.Y;
-            this.Z = Vector.Z;
-            this.W = Vector.W;
+            return new Vector4(this.X, this.Y, this.Z, this.W);
+        }
+
+        public Vector4 Copy(Vector4 vector)
+        {
+            this.X = vector.X;
+            this.Y = vector.Y;
+            this.Z = vector.Z;
+            this.W = vector.W;
 
             return this;
         }
 
-        public static Vector4 operator +(Vector4 V1, Vector4 V2)
+        public Vector4 Add(Vector4 v)
         {
-            V1.X += V2.X;
-            V1.Y += V2.Y;
-            V1.Z += V2.Z;
-            V1.W += V2.W;
-
-            return V1;
-        }
-
-        public static Vector4 operator -(Vector4 V1, Vector4 V2)
-        {
-            V1.X -= V2.X;
-            V1.Y -= V2.Y;
-            V1.Z -= V2.Z;
-            V1.W -= V2.W;
-
-            return V1;
-        }
-
-        public static Vector4 operator *(Vector4 V1, Vector4 V2)
-        {
-            V1.X *= V2.X;
-            V1.Y *= V2.Y;
-            V1.Z *= V2.Z;
-            V1.W *= V2.W;
-
-            return V1;
-        }
-
-        public Vector4 AddScalar(float Scalar)
-        {
-            this.X += Scalar;
-            this.Y += Scalar;
-            this.Z += Scalar;
-            return this;
-        }
-
-        public Vector4 AddVectors(Vector4 V1, Vector4 V2)
-        {
-            this.X = V1.X + V2.X;
-            this.Y = V1.Y + V2.Y;
-            this.Z = V1.Z + V2.Z;
-            return this;
-        }
-
-        public Vector4 SubtractVectors(Vector4 V1, Vector4 V2)
-        {
-            this.X = V1.X - V2.X;
-            this.Y = V1.Y - V2.Y;
-            this.Z = V1.Z - V2.Z;
-            return this;
-        }
-
-        public Vector4 MultiplyScalar(float Scalar)
-        {
-            this.X *= Scalar;
-            this.Y *= Scalar;
-            this.Z *= Scalar;
-            return this;
-        }
-
-        public Vector4 MultiplyVectors(Vector4 A, Vector4 B)
-        {
-            this.X = A.X * B.X;
-            this.Y = A.Y * B.Y;
-            this.Z = A.Z * B.Z;
-            return this;
-        }
-
-        public Vector4 ApplyMatrix3(Matrix3 Matrix)
-        {
-            var X = this.X;
-            var Y = this.Y;
-            var Z = this.Z;
-
-            var E = Matrix.Elements;
-
-            this.X = E[0] * X + E[3] * Y + E[6] * Z;
-            this.Y = E[1] * X + E[4] * Y + E[7] * Z;
-            this.Z = E[2] * X + E[5] * Y + E[8] * Z;
-            return this;
-        }
-
-        public Vector4 ApplyMatrix4(Matrix4 Matrix)
-        {
-            var X = this.X;
-            var Y = this.Y;
-            var Z = this.Z;
-
-            var E = Matrix.Elements;
-
-            this.X = E[0] * X + E[4] * Y + E[8] * Z + E[12];
-            this.Y = E[1] * X + E[5] * Y + E[9] * Z + E[13];
-            this.Z = E[2] * X + E[6] * Y + E[10] * Z + E[14];
-            return this;
-        }
-
-        public Vector4 ApplyProjection(Matrix4 Matrix)
-        {
-            float X = this.X, Y = this.Y, Z = this.Z;
-
-            var e = Matrix.Elements;
-            var d = 1 / (e[3] * X + e[7] * Y + e[11] * Z + e[15]); // perspective divide
-
-            this.X = (e[0] * X + e[4] * Y + e[8] * Z + e[12]) * d;
-            this.Y = (e[1] * X + e[5] * Y + e[9] * Z + e[13]) * d;
-            this.Z = (e[2] * X + e[6] * Y + e[10] * Z + e[14]) * d;
+            this.X += v.X;
+            this.Y += v.Y;
+            this.Z += v.Z;
+            this.W += v.W;
 
             return this;
         }
 
-        public Vector4 ApplyQuaternion(Quaternion Quaternion)
+        public Vector4 AddScalar(float scalar)
         {
-            var X = this.X;
-            var Y = this.Y;
-            var Z = this.Z;
-
-            var qX = Quaternion.X;
-            var qY = Quaternion.Y;
-            var qZ = Quaternion.Z;
-            var qw = Quaternion.W;
-
-            // calculate quat * vector
-
-            var IX = qw * X + qY * Z - qZ * Y;
-            var IY = qw * Y + qZ * X - qX * Z;
-            var IZ = qw * Z + qX * Y - qY * X;
-            var IW = -qX * X - qY * Y - qZ * Z;
-
-            // calculate result * inverse quat
-
-            this.X = IX * qw + IW * -qX + IY * -qZ - IZ * -qY;
-            this.Y = IY * qw + IW * -qY + IZ * -qX - IX * -qZ;
-            this.Z = IZ * qw + IW * -qZ + IX * -qY - IY * -qX;
+            this.X += scalar;
+            this.Y += scalar;
+            this.Z += scalar;
+            this.W += scalar;
 
             return this;
         }
 
-        public Vector4 Reflect(Vector4 Vector)
+        public Vector4 AddVectors(Vector4 a, Vector4 b)
         {
-            var V = new Vector4();
-            V.Copy(this).ProjectOnVector(Vector).MultiplyScalar(2);
-            return this.SubtractVectors(V, this);
-        }
-
-        public Vector4 TransformDirection(Matrix4 Matrix)
-        {
-            float X = this.X, Y = this.Y, Z = this.Z;
-
-            var e = Matrix.Elements;
-
-            this.X = e[0] * X + e[4] * Y + e[8] * Z;
-            this.Y = e[1] * X + e[5] * Y + e[9] * Z;
-            this.Z = e[2] * X + e[6] * Y + e[10] * Z;
-
-            this.Normalize();
+            this.X = a.X + b.X;
+            this.Y = a.Y + b.Y;
+            this.Z = a.Z + b.Z;
+            this.W = a.W + b.Z;
 
             return this;
         }
 
-        public static Vector4 operator /(Vector4 V1, Vector4 V2)
+        public Vector4 AddScaledVector(Vector4 v, float s)
         {
-            V1.X /= V2.X;
-            V1.Y /= V2.Y;
-            V1.Z /= V2.Z;
-            return V1;
+            this.X += v.X * s;
+            this.Y += v.Y * s;
+            this.Z += v.Z * s;
+            this.W += v.W * s;
+
+            return this;
         }
 
-        public Vector4 DivideScalar(float Scalar)
+        public Vector4 Sub(Vector4 v)
         {
-            if (Scalar == 0)
+            this.X -= v.X;
+            this.Y -= v.Y;
+            this.Z -= v.Z;
+            this.W -= v.W;
+
+            return this;
+        }
+
+        public Vector4 SubScalar(float s)
+        {
+            this.X -= s;
+            this.Y -= s;
+            this.Z -= s;
+            this.W -= s;
+
+            return this;
+        }
+
+        public Vector4 SubVectors(Vector4 a, Vector4 b)
+        {
+            this.X = a.X - b.X;
+            this.Y = a.Y - b.Y;
+            this.Z = a.Z - b.Z;
+            this.W = a.W - b.W;
+
+            return this;
+        }
+
+        public Vector4 ApplyMatrix4(Matrix4 matrix)
+        {
+            var x = this.X;
+            var y = this.Y;
+            var z = this.Z;
+
+            var e = matrix.Elements;
+
+            this.X = e[0] * x + e[4] * y + e[8] * z + e[12];
+            this.Y = e[1] * x + e[5] * y + e[9] * z + e[13];
+            this.Z = e[2] * x + e[6] * y + e[10] * z + e[14];
+            return this;
+        }
+
+        public Vector4 DivideScalar(float scalar)
+        {
+            return this.MultiplyScalar(1 / scalar);
+        }
+
+        public Vector4 SetAxisAngleFromQuaternion(Quaternion q)
+        {
+            // http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
+            // q is assumed to be normalized
+
+            this.W = 2 * Mathf.Acos(q.W);
+            var s = Mathf.Sqrt(1 - q.W * q.W);
+
+            if (s < 0.0001)
             {
-                this.Set(0f, 0f, 0f, 0f);
+                this.X = 1;
+                this.Y = 0;
+                this.Z = 0;
             }
             else
             {
-                var InvScalar = 1 / Scalar;
-                this.X *= InvScalar;
-                this.Y *= InvScalar;
-                this.Z *= InvScalar;
+                this.X = q.X / s;
+                this.Y = q.Y / s;
+                this.Z = q.Z / s;
             }
+
             return this;
         }
 
-        public Vector4 Min(Vector4 Vector)
+        public Vector4 SetAxisAngleFromRotationMatrix(Matrix3 m)
         {
-            if (this.X > Vector.X)
+            // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
+            // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+
+            float angle, x, y, z;     // variables for result
+            float epsilon = (float)0.01;     // margin to allow for rounding errors
+            float epsilon2 = (float)0.1;     // margin to distinguish between 0 and 180 degrees
+
+            var te = m.Elements;
+
+            float m11 = te[0], m12 = te[4], m13 = te[8];
+            float m21 = te[1], m22 = te[5], m23 = te[9];
+            float m31 = te[2], m32 = te[6], m33 = te[10];
+
+            if ((Mathf.Abs(m12 - m21) < epsilon) &&
+                 (Mathf.Abs(m13 - m31) < epsilon) &&
+                 (Mathf.Abs(m23 - m32) < epsilon))
             {
-                this.X = Vector.X;
+                // singularity found
+                // first check for identity matrix which must have +1 for all terms
+                // in leading diagonal and zero in other terms
+
+                if ((Mathf.Abs(m12 + m21) < epsilon2) &&
+                     (Mathf.Abs(m13 + m31) < epsilon2) &&
+                     (Mathf.Abs(m23 + m32) < epsilon2) &&
+                     (Mathf.Abs(m11 + m22 + m33 - 3) < epsilon2))
+                {
+                    // this singularity is identity matrix so angle = 0
+                    this.Set(1, 0, 0, 0);
+                    return this; // zero angle, arbitrary axis
+                }
+
+                // otherwise this singularity is angle = 180
+                angle = Mathf.PI;
+
+                var xx = (m11 + 1) / 2;
+                var yy = (m22 + 1) / 2;
+                var zz = (m33 + 1) / 2;
+                var xy = (m12 + m21) / 4;
+                var xz = (m13 + m31) / 4;
+                var yz = (m23 + m32) / 4;
+
+                if ((xx > yy) && (xx > zz))
+                {
+                    // m11 is the largest diagonal term
+                    if (xx < epsilon)
+                    {
+                        x = 0;
+                        y = (float)0.707106781;
+                        z = (float)0.707106781;
+                    }
+                    else
+                    {
+                        x = Mathf.Sqrt(xx);
+                        y = xy / x;
+                        z = xz / x;
+                    }
+                }
+                else if (yy > zz)
+                {
+                    // m22 is the largest diagonal term
+                    if (yy < epsilon)
+                    {
+                        x = (float)0.707106781;
+                        y = 0;
+                        z = (float)0.707106781;
+                    }
+                    else
+                    {
+                        y = Mathf.Sqrt(yy);
+                        x = xy / y;
+                        z = yz / y;
+                    }
+                }
+                else
+                {
+                    // m33 is the largest diagonal term so base result on this
+                    if (zz < epsilon)
+                    {
+                        x = (float)0.707106781;
+                        y = (float)0.707106781;
+                        z = 0;
+                    }
+                    else
+                    {
+                        z = Mathf.Sqrt(zz);
+                        x = xz / z;
+                        y = yz / z;
+                    }
+
+                }
+
+                this.Set(x, y, z, angle);
+
+                return this; // return 180 deg rotation
             }
-            if (this.Y > Vector.Y)
-            {
-                this.X = Vector.Y;
-            }
-            if (this.Z > Vector.Z)
-            {
-                this.X = Vector.Z;
-            }
+
+            // as we have reached here there are no singularities so we can handle normally
+
+            var s = Mathf.Sqrt((m32 - m23) * (m32 - m23) +
+                               (m13 - m31) * (m13 - m31) +
+                               (m21 - m12) * (m21 - m12)); // used to normalize
+
+            if (Mathf.Abs(s) < 0.001) s = 1;
+
+            // prevent divide by zero, should not happen if matrix is orthogonal and should be
+            // caught by singularity test above, but I've left it in just in case
+
+            this.X = (m32 - m23) / s;
+            this.Y = (m13 - m31) / s;
+            this.Z = (m21 - m12) / s;
+            this.W = Mathf.Acos((m11 + m22 + m33 - 1) / 2);
+
             return this;
         }
 
-        public Vector4 Max(Vector4 Vector)
+        public Vector4 Min(Vector4 v)
         {
-            if (this.X < Vector.X)
-            {
-                this.X = Vector.X;
-            }
-            if (this.Y < Vector.Y)
-            {
-                this.X = Vector.Y;
-            }
-            if (this.Z < Vector.Z)
-            {
-                this.X = Vector.Z;
-            }
+            this.X = Mathf.Min(this.X, v.X);
+            this.Y = Mathf.Min(this.Y, v.Y);
+            this.Z = Mathf.Min(this.Z, v.Z);
+            this.W = Mathf.Min(this.W, v.W);
+
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
-        /// <returns></returns>
+        public Vector4 Max(Vector4 v)
+        {
+            this.X = Mathf.Max(this.X, v.X);
+            this.Y = Mathf.Max(this.Y, v.Y);
+            this.Z = Mathf.Max(this.Z, v.Z);
+            this.W = Mathf.Max(this.W, v.W);
+
+            return this;
+        }
+
         public Vector4 Clamp(Vector4 min, Vector4 max)
         {
-            // This function assumes Min < Max, if this assumption isn't true it will not operate correctlY
-            if (this.X < min.X)
-            {
-                this.X = min.X;
-            }
-            else if (this.X > max.X)
-            {
-                this.X = max.X;
-            }
+            // assumes min < max, componentwise
+            this.X = Mathf.Max(min.X, Mathf.Min(max.X, this.X));
+            this.Y = Mathf.Max(min.Y, Mathf.Min(max.Y, this.Y));
+            this.Z = Mathf.Max(min.Z, Mathf.Min(max.Z, this.Z));
+            this.W = Mathf.Max(min.W, Mathf.Min(max.W, this.W));
 
-            if (this.Y < min.Y)
-            {
-                this.Y = min.Y;
-            }
-            else if (this.Y > max.Y)
-            {
-                this.Y = max.Y;
-            }
-
-            if (this.Z < min.Z)
-            {
-                this.Z = min.Z;
-            }
-            else if (this.Z > max.Z)
-            {
-                this.Z = max.Z;
-            }
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public Vector4 Negate()
+        public Vector4 ClampScalar(float minVal, float maxVal)
         {
-            return this.MultiplyScalar(-1f);
+            this.X = Mathf.Max(minVal, Mathf.Min(maxVal, this.X));
+            this.Y = Mathf.Max(minVal, Mathf.Min(maxVal, this.Y));
+            this.Z = Mathf.Max(minVal, Mathf.Min(maxVal, this.Z));
+            this.W = Mathf.Max(minVal, Mathf.Min(maxVal, this.W));
+
+            return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vector"></param>
-        /// <returns></returns>
-        public float Dot(Vector4 vector)
+        public Vector4 ClampLength(float min, float max)
         {
-            return this.X * vector.X + this.Y * vector.Y + this.Z * vector.Z;
+            var length = this.Length();
+            return this.DivideScalar(length == 0 ? 1 : length).MultiplyScalar(Math.Max(min, Math.Min(max, length)));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        public float Length()
+        {
+            return Mathf.Sqrt(this.X * this.X + this.Y * this.Y + this.Z * this.Z + this.W * this.W);
+        }
+
         public float LengthSq()
         {
-            return this.X * this.X + this.Y * this.Y + this.Z * this.Z;
+            return this.X * this.X + this.Y * this.Y + this.Z * this.Z + this.W * this.W;
         }
 
-        public float LengthManhattan()
+        public float ManhattanLength()
         {
-            return Math.Abs(this.X) + Math.Abs(this.Y) + Math.Abs(this.Z);
+            return Math.Abs(this.X) + Math.Abs(this.Y) + Math.Abs(this.Z) + Math.Abs(this.W);
         }
 
         public Vector4 Normalize()
         {
-            return this.DivideScalar(this.Length);
+            var length = this.Length();
+            return this.DivideScalar(length == 0 ? 1 : length);
         }
 
-        public Vector4 Lerp(Vector4 Vector, float Alpha)
+        public Vector4 SetLength(float length)
         {
-            this.X += (Vector.X - this.X) * Alpha;
-            this.Y += (Vector.Y - this.Y) * Alpha;
-            this.Z += (Vector.Z - this.Z) * Alpha;
+            return this.Normalize().MultiplyScalar(length);
+        }
+
+        public Vector4 Lerp(Vector4 vector, float alpha)
+        {
+            this.X += (vector.X - this.X) * alpha;
+            this.Y += (vector.Y - this.Y) * alpha;
+            this.Z += (vector.Z - this.Z) * alpha;
+            this.W += (vector.W - this.W) * alpha;
 
             return this;
         }
 
-        ///
-        public Vector4 Cross(Vector4 Vector)
+        public Vector4 LerpVectors(Vector4 v1, Vector4 v2, float alpha)
         {
-            float X = this.X, Y = this.Y, Z = this.Z;
+            return this.SubVectors(v2, v1).MultiplyScalar(alpha).Add(v1);
+        }
 
-            this.X = Y * Vector.Z - Z * Vector.Y;
-            this.Y = Z * Vector.X - X * Vector.Z;
-            this.Z = X * Vector.Y - Y * Vector.X;
+        public Vector4 Floor()
+        {
+            this.X = Mathf.Floor(this.X);
+            this.Y = Mathf.Floor(this.Y);
+            this.Z = Mathf.Floor(this.Z);
+            this.W = Mathf.Floor(this.W);
 
             return this;
         }
 
-        public Vector4 CrossVectors(Vector4 V1, Vector4 V2)
+        public Vector4 Ceil()
         {
-            float aX = V1.X, aY = V1.Y, aZ = V1.Z;
-            float bX = V2.X, bY = V2.Y, bZ = V2.Z;
-
-            this.X = aY * bZ - aZ * bY;
-            this.Y = aZ * bX - aX * bZ;
-            this.Z = aX * bY - aY * bX;
+            this.X = Mathf.Ceiling(this.X);
+            this.Y = Mathf.Ceiling(this.Y);
+            this.Z = Mathf.Ceiling(this.Z);
+            this.W = Mathf.Ceiling(this.W);
 
             return this;
         }
 
-        //public float AngleTo(Vector4 Vector)
-        //{
-        //    var Theta = this.Dot(Vector) / (this.Length * Vector.Length);
-        //    return (float)System.Math.Acos(Utils.Clamp(Theta, -1, 1));
-        //}
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vector"></param>
-        /// <returns></returns>
-        public float DistanceTo(Vector4 vector)
+        public Vector4 Round()
         {
-            return (float)Math.Sqrt(this.DistanceToSquared(vector));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vector"></param>
-        /// <returns></returns>
-        public float DistanceToSquared(Vector4 vector)
-        {
-            var dX = this.X - vector.X;
-            var dY = this.Y - vector.Y;
-            var dZ = this.Z - vector.Z;
-
-            return dX * dX + dY * dY + dZ * dZ;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="matrix"></param>
-        /// <returns></returns>
-        public Vector4 SetFromMatrixPosition(Matrix4 matrix)
-        {
-            this.X = matrix.Elements[12];
-            this.Y = matrix.Elements[13];
-            this.Z = matrix.Elements[14];
-            return this;
-        }
-
-        //public Vector4 SetFromMatrixScale(Matrix3 Matrix)
-        //{
-        //    var sx = this.Set(Matrix.Elements[0], Matrix.Elements[1], Matrix.Elements[2]).Length;
-        //    var sy = this.Set(Matrix.Elements[4], Matrix.Elements[5], Matrix.Elements[6]).Length;
-        //    var sz = this.Set(Matrix.Elements[8], Matrix.Elements[9], Matrix.Elements[10]).Length;
-
-        //    this.X = sx;
-        //    this.Y = sy;
-        //    this.Z = sz;
-
-        //    return this;
-        //}
-
-        public Vector4 SetFromMatrixColumn(int Index, Matrix4 Matrix)
-        {
-            var Offset = Index * 4;
-
-            var MElements = Matrix.Elements;
-
-            this.X = MElements[Offset];
-            this.Y = MElements[Offset + 1];
-            this.Z = MElements[Offset + 2];
+            this.X = Mathf.Round(this.X);
+            this.Y = Mathf.Round(this.Y);
+            this.Z = Mathf.Round(this.Z);
+            this.W = Mathf.Round(this.W);
 
             return this;
         }
 
-        public bool Equals(Vector4 Vector)
+        public Vector4 RoundToZero()
         {
-            return ((Vector.X == this.X) && (Vector.Y == this.Y) && (Vector.Z == this.Z));
-        }
+            this.X = (this.X < 0) ? Mathf.Ceiling(this.X) : Mathf.Floor(this.X);
+            this.Y = (this.Y < 0) ? Mathf.Ceiling(this.Y) : Mathf.Floor(this.Y);
+            this.Z = (this.Z < 0) ? Mathf.Ceiling(this.Z) : Mathf.Floor(this.Z);
+            this.W = (this.W < 0) ? Mathf.Ceiling(this.W) : Mathf.Floor(this.W);
 
-        public Vector4 FromArray(float[] Source)
-        {
-            this.X = Source[0];
-            this.Y = Source[1];
-            this.Z = Source[2];
             return this;
         }
 
-        public float[] ToArray()
+        public Vector4 Negate()
         {
-            return new[] { this.X, this.Y, this.Z };
-        }
+            this.X = -this.X;
+            this.Y = -this.Y;
+            this.Z = -this.Z;
+            this.W = -this.W;
 
-        public Vector4 ProjectOnVector(Vector4 Vector)
-        {
-            var v1 = new Vector4();
-            v1.Copy(Vector).Normalize();
-            var dot = this.Dot(v1);
-            return this.Copy(v1).MultiplyScalar(dot);
-        }
-
-        public Vector4 ApplyEuler(Euler Euler)
-        {
-            this.ApplyQuaternion(new Quaternion().SetFromEuler(Euler));
             return this;
         }
 
-        //public Vector4 ApplyAxisAngle(Vector4 Axis, float Angle)
-        //{
-        //    var quaternion = new Quaternion();
-        //    this.ApplyQuaternion(quaternion.SetFromAxisAngle(Axis, Angle));
-        //    return this;
-        //}
-
-        public Vector4 ProjectOnPlane(Vector4 PlaneNormal)
+        public float Dot(Vector4 vector)
         {
-            var vector = new Vector4();
-            vector.Copy(this).ProjectOnVector(PlaneNormal);
-            return this - vector;
+            return this.X * vector.X + this.Y * vector.Y + this.Z * vector.Z + this.W * vector.W;
         }
+
+        public bool Equals(Vector4 vector)
+        {
+            return ((vector.X == this.X) && (vector.Y == this.Y) && (vector.Z == this.Z) && (vector.W == this.W));
+        }
+
+        public Vector4 FromArray(float[] array, int offset = 0)
+        {
+            this.X = array[offset];
+            this.Y = array[offset + 1];
+            this.Z = array[offset + 2];
+            this.Z = array[offset + 3];
+
+            return this;
+        }
+
+        public float[] ToArray(ref float[] array, int offset)
+        {
+            if (array == null)
+            {
+                array = new float[4];
+            }
+            if (array.Length < offset + 4)
+            {
+                Array.Resize(ref array, offset + 4);
+            }
+
+            array[offset] = this.X;
+            array[offset + 1] = this.Y;
+            array[offset + 2] = this.Z;
+            array[offset + 3] = this.W;
+
+            return array;
+        }
+
+        public Vector4 MultiplyScalar(float scalar)
+        {
+            this.X *= scalar;
+            this.Y *= scalar;
+            this.Z *= scalar;
+            this.W *= scalar;
+
+            return this;
+        }
+
+        public Vector4 Random()
+        {
+            this.X = Mathf.RandomF();
+            this.Y = Mathf.RandomF();
+            this.Z = Mathf.RandomF();
+            this.W = Mathf.RandomF();
+
+            return this;
+        }
+
+        public Vector4 FromBufferAttribute(BufferAttribute<float> attribute, int index)
+        {
+            this.X = attribute.GetX(index);
+            this.Y = attribute.GetY(index);
+            this.Z = attribute.GetZ(index);
+            this.W = attribute.GetW(index);
+
+            return this;
+        }
+
+        #endregion
+
+        #region Operator override
+
+        public static Vector4 operator +(Vector4 v1, Vector4 v2)
+        {
+            v1.X += v2.X;
+            v1.Y += v2.Y;
+            v1.Z += v2.Z;
+            v1.W += v2.W;
+
+            return v1;
+        }
+
+        public static Vector4 operator -(Vector4 v1, Vector4 v2)
+        {
+            v1.X -= v2.X;
+            v1.Y -= v2.Y;
+            v1.Z -= v2.Z;
+            v1.W -= v2.W;
+
+            return v1;
+        }
+
+        public static Vector4 operator *(Vector4 v1, Vector4 v2)
+        {
+            v1.X *= v2.X;
+            v1.Y *= v2.Y;
+            v1.Z *= v2.Z;
+            v1.W *= v2.W;
+
+            return v1;
+        }
+
+        public static Vector4 operator /(Vector4 v1, Vector4 v2)
+        {
+            v1.X /= v2.X;
+            v1.Y /= v2.Y;
+            v1.Z /= v2.Z;
+            return v1;
+        }
+
+        #endregion
+
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -56,54 +56,11 @@ namespace ThreeJs4Net.Core
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="matrix"></param>
-        public new Geometry ApplyMatrix4(Matrix4 matrix)
-        {
-            var normalMatrix = new Matrix3().GetNormalMatrix(matrix);
 
-            foreach (var vertex in this.Vertices)
-            {
-                vertex.ApplyMatrix4(matrix);
-            }
 
-            foreach (var face in this.Faces)
-            {
-                face.Normal.ApplyMatrix3(normalMatrix).Normalize();
 
-                foreach (Vector3 vertexNormal in face.VertexNormals)
-                {
-                    vertexNormal.ApplyMatrix3(normalMatrix).Normalize();
-                }
-            }
 
-            if (this.BoundingBox != null)
-            {
-                this.ComputeBoundingBox();
-            }
-
-            if (this.BoundingSphere != null)
-            {
-                this.ComputeBoundingSphere();
-            }
-
-            this.VerticesNeedUpdate = true;
-            this.NormalsNeedUpdate = true;
-
-            return this;
-        }
-
-        public Geometry Translate(float x, float y, float z)
-        {
-            // translate geometry
-            var m1 = new Matrix4().MakeTranslation(x, y, z);
-            this.ApplyMatrix4(m1);
-
-            return this;
-        }
-
+        #region --- Already in R116 ---
         public Geometry RotateX(float angle)
         {
             // rotate geometry around world x-axis
@@ -122,6 +79,15 @@ namespace ThreeJs4Net.Core
             return this.ApplyMatrix4(new Matrix4().MakeRotationZ(angle));
         }
 
+        public Geometry LookAt(Vector3 vector)
+        {
+            var obj = new Object3D();
+            obj.LookAt(vector);
+            obj.UpdateMatrix();
+            this.ApplyMatrix4(obj.Matrix);
+            return this;
+        }
+
         public Geometry Center()
         {
             this.ComputeBoundingBox();
@@ -129,21 +95,6 @@ namespace ThreeJs4Net.Core
             this.BoundingBox.GetCenter(offset).Negate();
             this.Translate(offset.X, offset.Y, offset.Z);
 
-            return this;
-        }
-
-
-        public Geometry Scale(float x, float y, float z)
-        {
-            return this.ApplyMatrix4(new Matrix4().MakeScale(x, y, z));
-        }
-
-        public Geometry LookAt(Vector3 vector)
-        {
-            var obj = new Object3D();
-            obj.LookAt(vector);
-            obj.UpdateMatrix();
-            this.ApplyMatrix4(obj.Matrix);
             return this;
         }
 
@@ -167,105 +118,6 @@ namespace ThreeJs4Net.Core
             this.ApplyMatrix4(matrix);
 
             return this;
-        }
-
-        public void ComputeFaceNormals()
-        {
-            var cb = new Vector3(); var ab = new Vector3();
-
-            foreach (var face in this.Faces)
-            {
-                var vA = this.Vertices[face.a];
-                var vB = this.Vertices[face.b];
-                var vC = this.Vertices[face.c];
-
-                cb.SubVectors(vC, vB);
-                ab.SubVectors(vA, vB);
-                cb.Cross(ab);
-
-                cb.Normalize();
-
-                face.Normal.Copy(cb);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="areaWeighted"></param>
-        public new void ComputeVertexNormals(bool areaWeighted = true)
-        {
-            var vertices = new Vector3[this.Vertices.Count];
-
-            for (int v = 0; v < vertices.Length; v++)
-            {
-                vertices[v] = new Vector3();
-            }
-
-            if (areaWeighted)
-            {
-                // vertex normals weighted by triangle areas
-                // http://www.iquilezles.org/www/articles/normals/normals.htm
-
-                var cb = new Vector3();
-                var ab = new Vector3();
-
-                foreach (var face in this.Faces)
-                {
-                    var vA = this.Vertices[face.a];
-                    var vB = this.Vertices[face.b];
-                    var vC = this.Vertices[face.c];
-
-                    cb.SubVectors(vC, vB);
-                    ab.SubVectors(vA, vB);
-                    cb.Cross(ab);
-
-                    vertices[face.a].Add(cb);
-                    vertices[face.b].Add(cb);
-                    vertices[face.c].Add(cb);
-                }
-            }
-            else
-            {
-                this.ComputeFaceNormals();
-
-                foreach (var face in this.Faces)
-                {
-                    vertices[face.a].Add(face.Normal);
-                    vertices[face.b].Add(face.Normal);
-                    vertices[face.c].Add(face.Normal);
-
-                }
-            }
-
-            for (int v = 0; v < this.Vertices.Count; v++)
-            {
-                vertices[v].Normalize();
-            }
-
-            foreach (var face in this.Faces)
-            {
-                var vertexNormals = face.VertexNormals;
-
-                if (vertexNormals.Count == 3)
-                {
-                    vertexNormals[0].Copy(vertices[face.a]);
-                    vertexNormals[1].Copy(vertices[face.b]);
-                    vertexNormals[2].Copy(vertices[face.c]);
-                }
-                else
-                {
-                    vertexNormals.Add(vertices[face.a].Clone());
-                    vertexNormals.Add(vertices[face.b].Clone());
-                    vertexNormals.Add(vertices[face.c].Clone());
-                }
-            }
-
-
-            if (this.Faces.Count > 0)
-            {
-                this.NormalsNeedUpdate = true;
-            }
         }
 
         public void ComputeFlatVertexNormals()
@@ -298,17 +150,6 @@ namespace ThreeJs4Net.Core
             }
         }
 
-
-        public void ComputeMorphNormals()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ComputeLineDistances()
-        {
-            throw new NotImplementedException();
-        }
-
         public override void ComputeBoundingBox()
         {
             if (this.BoundingBox == null)
@@ -331,6 +172,7 @@ namespace ThreeJs4Net.Core
 
             this.BoundingSphere.SetFromPoints(this.Vertices);
         }
+
 
         /// <summary>
         /// 
@@ -389,14 +231,14 @@ namespace ThreeJs4Net.Core
             foreach (var face in faces2)
             {
 
-                //var normal, color,
+                //var normal, Color,
                 //    faceVertexNormals = face.vertexNormals,
                 //    faceVertexColors = face.vertexColors;
 
                 var faceVertexNormals = face.VertexNormals;
                 var faceVertexColors = face.VertexColors;
 
-                var faceCopy = new Face3(face.a + vertexOffset, face.b + vertexOffset, face.c + vertexOffset);
+                var faceCopy = new Face3(face.A + vertexOffset, face.B + vertexOffset, face.C + vertexOffset);
                 faceCopy.Normal.Copy(face.Normal);
 
                 if (normalMatrix != null)
@@ -417,7 +259,7 @@ namespace ThreeJs4Net.Core
 
                 }
 
-                faceCopy.color = face.color;
+                faceCopy.Color = face.Color;
 
                 for (var j = 0; j < faceVertexColors.Length; j++)
                 {
@@ -461,7 +303,6 @@ namespace ThreeJs4Net.Core
             this.Merge((Geometry)mesh.Geometry, mesh.Matrix);
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -504,13 +345,13 @@ namespace ThreeJs4Net.Core
             {
                 var face = this.Faces[i];
 
-                face.a = changes[face.a];
-                face.b = changes[face.b];
-                face.c = changes[face.c];
+                face.A = changes[face.A];
+                face.B = changes[face.B];
+                face.C = changes[face.C];
 
-                var indices = new[] { face.a, face.b, face.c };
+                var indices = new[] { face.A, face.B, face.C };
 
-                // if any duplicate vertices are found in a Face3
+                // if any duplicate vertices are found in A Face3
                 // we have to remove the face as nothing can be saved
                 for (var n = 0; n < 3; n++)
                 {
@@ -562,6 +403,178 @@ namespace ThreeJs4Net.Core
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="areaWeighted"></param>
+        public new void ComputeVertexNormals(bool areaWeighted = true)
+        {
+            var vertices = new Vector3[this.Vertices.Count];
+
+            for (int v = 0; v < vertices.Length; v++)
+            {
+                vertices[v] = new Vector3();
+            }
+
+            if (areaWeighted)
+            {
+                // vertex normals weighted by triangle areas
+                // http://www.iquilezles.org/www/articles/normals/normals.htm
+
+                var cb = new Vector3();
+                var ab = new Vector3();
+
+                foreach (var face in this.Faces)
+                {
+                    var vA = this.Vertices[face.A];
+                    var vB = this.Vertices[face.B];
+                    var vC = this.Vertices[face.C];
+
+                    cb.SubVectors(vC, vB);
+                    ab.SubVectors(vA, vB);
+                    cb.Cross(ab);
+
+                    vertices[face.A].Add(cb);
+                    vertices[face.B].Add(cb);
+                    vertices[face.C].Add(cb);
+                }
+            }
+            else
+            {
+                this.ComputeFaceNormals();
+
+                foreach (var face in this.Faces)
+                {
+                    vertices[face.A].Add(face.Normal);
+                    vertices[face.B].Add(face.Normal);
+                    vertices[face.C].Add(face.Normal);
+
+                }
+            }
+
+            for (int v = 0; v < this.Vertices.Count; v++)
+            {
+                vertices[v].Normalize();
+            }
+
+            foreach (var face in this.Faces)
+            {
+                var vertexNormals = face.VertexNormals;
+
+                if (vertexNormals.Count == 3)
+                {
+                    vertexNormals[0].Copy(vertices[face.A]);
+                    vertexNormals[1].Copy(vertices[face.B]);
+                    vertexNormals[2].Copy(vertices[face.C]);
+                }
+                else
+                {
+                    vertexNormals.Add(vertices[face.A].Clone());
+                    vertexNormals.Add(vertices[face.B].Clone());
+                    vertexNormals.Add(vertices[face.C].Clone());
+                }
+            }
+
+
+            if (this.Faces.Count > 0)
+            {
+                this.NormalsNeedUpdate = true;
+            }
+        }
+
+        public Geometry Scale(float x, float y, float z)
+        {
+            return this.ApplyMatrix4(new Matrix4().MakeScale(x, y, z));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="matrix"></param>
+        public new Geometry ApplyMatrix4(Matrix4 matrix)
+        {
+            var normalMatrix = new Matrix3().GetNormalMatrix(matrix);
+
+            foreach (var vertex in this.Vertices)
+            {
+                vertex.ApplyMatrix4(matrix);
+            }
+
+            foreach (var face in this.Faces)
+            {
+                face.Normal.ApplyMatrix3(normalMatrix).Normalize();
+
+                foreach (Vector3 vertexNormal in face.VertexNormals)
+                {
+                    vertexNormal.ApplyMatrix3(normalMatrix).Normalize();
+                }
+            }
+
+            if (this.BoundingBox != null)
+            {
+                this.ComputeBoundingBox();
+            }
+
+            if (this.BoundingSphere != null)
+            {
+                this.ComputeBoundingSphere();
+            }
+
+            this.VerticesNeedUpdate = true;
+            this.NormalsNeedUpdate = true;
+
+            return this;
+        }
+
+        public Geometry Translate(float x, float y, float z)
+        {
+            // translate geometry
+            var m1 = new Matrix4().MakeTranslation(x, y, z);
+            this.ApplyMatrix4(m1);
+
+            return this;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #endregion
+
+
+        public void ComputeFaceNormals()
+        {
+            var cb = new Vector3(); var ab = new Vector3();
+
+            foreach (var face in this.Faces)
+            {
+                var vA = this.Vertices[face.A];
+                var vB = this.Vertices[face.B];
+                var vC = this.Vertices[face.C];
+
+                cb.SubVectors(vC, vB);
+                ab.SubVectors(vA, vB);
+                cb.Cross(ab);
+
+                cb.Normalize();
+
+                face.Normal.Copy(cb);
+            }
+        }
+
+        public void ComputeMorphNormals()
+        {
+            throw new NotImplementedException();
+        }
 
         private struct Hash
         {
@@ -697,9 +710,9 @@ namespace ThreeJs4Net.Core
         //                var srcVertexNormal = morphNormals[i].vertexNormals[j];
         //                var destVertexNormal = { };
 
-        //                destVertexNormal.a = srcVertexNormal.a.clone();
-        //                destVertexNormal.b = srcVertexNormal.b.clone();
-        //                destVertexNormal.c = srcVertexNormal.c.clone();
+        //                destVertexNormal.A = srcVertexNormal.A.clone();
+        //                destVertexNormal.B = srcVertexNormal.B.clone();
+        //                destVertexNormal.C = srcVertexNormal.C.clone();
 
         //                morphNormal.vertexNormals.push(destVertexNormal);
 

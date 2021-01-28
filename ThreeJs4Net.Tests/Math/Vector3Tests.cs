@@ -1,12 +1,9 @@
-﻿using Xunit;
+﻿using System;
+using ThreeJs4Net.Core;
 using ThreeJs4Net.Math;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ThreeJs4Net.Cameras;
-using ThreeJs4Net.Tests;
+using Xunit;
 
-namespace ThreeJs4Net.Math.Tests
+namespace ThreeJs4Net.Tests.Math
 {
     public class Vector3Tests : BaseTests
     {
@@ -92,8 +89,8 @@ namespace ThreeJs4Net.Math.Tests
             Assert.True(a.Length() == 0);
             a.SetLength(y);
             Assert.True(a.Length() == 0);
-            //a.SetLength();
-            //Assert.True(isNaN(a.Length()));
+            //A.SetLength();
+            //Assert.True(isNaN(A.Length()));
         }
 
         [Fact()]
@@ -238,7 +235,7 @@ namespace ThreeJs4Net.Math.Tests
             Assert.True(b.Y == y);
             Assert.True(b.Z == z);
 
-            // ensure that it is a true copy
+            // ensure that it is A true copy
             a.X = 0;
             a.Y = -1;
             a.Z = -2;
@@ -353,22 +350,22 @@ namespace ThreeJs4Net.Math.Tests
         [Fact()]
         public void ApplyMatrix4Test()
         {
-            //var a = new Vector3( x, y, z );
-            //var b = new Vector4( x, y, z, 1 );
+            //var A = new Vector3( x, y, z );
+            //var B = new Vector4( x, y, z, 1 );
 
             //var m = new Matrix4().MakeRotationX( Math.PI );
-            //a.ApplyMatrix4( m );
-            //b.ApplyMatrix4( m );
-            //Assert.True( a.X == b.X / b.w);
-            //Assert.True( a.Y == b.Y / b.w);
-            //Assert.True( a.Z == b.Z / b.w);
+            //A.ApplyMatrix4( m );
+            //B.ApplyMatrix4( m );
+            //Assert.True( A.X == B.X / B.w);
+            //Assert.True( A.Y == B.Y / B.w);
+            //Assert.True( A.Z == B.Z / B.w);
 
             //var m = new Matrix4().makeTranslation( 3, 2, 1 );
-            //a.ApplyMatrix4( m );
-            //b.ApplyMatrix4( m );
-            //Assert.True( a.X == b.X / b.w);
-            //Assert.True( a.Y == b.Y / b.w);
-            //Assert.True( a.Z == b.Z / b.w);
+            //A.ApplyMatrix4( m );
+            //B.ApplyMatrix4( m );
+            //Assert.True( A.X == B.X / B.w);
+            //Assert.True( A.Y == B.Y / B.w);
+            //Assert.True( A.Z == B.Z / B.w);
 
             //var m = new Matrix4().Set(
             //    1, 0, 0, 0,
@@ -376,11 +373,11 @@ namespace ThreeJs4Net.Math.Tests
             //    0, 0, 1, 0,
             //    0, 0, 1, 0
             //);
-            //a.ApplyMatrix4( m );
-            //b.ApplyMatrix4( m );
-            //Assert.True( a.X == b.X / b.w);
-            //Assert.True( a.Y == b.Y / b.w);
-            //Assert.True( a.Z == b.Z / b.w);
+            //A.ApplyMatrix4( m );
+            //B.ApplyMatrix4( m );
+            //Assert.True( A.X == B.X / B.w);
+            //Assert.True( A.Y == B.Y / B.w);
+            //Assert.True( A.Z == B.Z / B.w);
         }
 
         [Fact()]
@@ -432,19 +429,19 @@ namespace ThreeJs4Net.Math.Tests
         [Fact()]
         public void ProjectUnprojectTest()
         {
-            //var a = new Vector3( x, y, z );
+            //var A = new Vector3( x, y, z );
             //var camera = new PerspectiveCamera( 75, 16 / 9, (float)0.1, (float)300.0 );
             //var projected = new Vector3( (float)(-0.36653213611158914), (float)(-0.9774190296309043), (float)1.0506835611870624 );
 
-            //a.Project( camera );
-            //Assert.True( MathF.Abs( a.X - projected.X ) <= eps, "project: check x" );
-            //Assert.True( MathF.Abs( a.Y - projected.Y ) <= eps, "project: check y" );
-            //Assert.True( MathF.Abs( a.Z - projected.Z ) <= eps, "project: check z" );
+            //A.Project( camera );
+            //Assert.True( MathF.Abs( A.X - projected.X ) <= eps, "project: check x" );
+            //Assert.True( MathF.Abs( A.Y - projected.Y ) <= eps, "project: check y" );
+            //Assert.True( MathF.Abs( A.Z - projected.Z ) <= eps, "project: check z" );
 
-            //a.Unproject( camera );
-            //Assert.True( MathF.Abs( a.X - x ) <= eps, "unproject: check x" );
-            //Assert.True( MathF.Abs( a.Y - y ) <= eps, "unproject: check y" );
-            //Assert.True( MathF.Abs( a.Z - z ) <= eps, "unproject: check z" );
+            //A.Unproject( camera );
+            //Assert.True( MathF.Abs( A.X - x ) <= eps, "unproject: check x" );
+            //Assert.True( MathF.Abs( A.Y - y ) <= eps, "unproject: check y" );
+            //Assert.True( MathF.Abs( A.Z - z ) <= eps, "unproject: check z" );
         }
 
         [Fact()]
@@ -530,6 +527,22 @@ namespace ThreeJs4Net.Math.Tests
         [Fact()]
         public void RoundTest()
         {
+
+            //NOTE: Needs more tests. It looks like rounding in javascript is different from C#
+
+            //var a = new Vector3((float)-0.01, (float)0.5, (float)1.5);
+            //a.Round();
+
+            //Assert.Equal(System.Math.Round((float)0), a.X);
+            //Assert.Equal(System.Math.Round((float)0), a.Y);
+            //Assert.Equal(System.Math.Round((float)2), a.Z);
+
+            //a.SetX((float)0.6);
+            //a.SetY((float)-0.6);
+            //a.Round();
+            //Assert.Equal(System.Math.Round((float)1), a.X);
+            //Assert.Equal(System.Math.Round((float)-1), a.Y);
+
             Assert.True(false, "This test needs an implementation");
         }
 
@@ -905,5 +918,24 @@ namespace ThreeJs4Net.Math.Tests
         {
             Assert.True(false, "This test needs an implementation");
         }
+
+
+        [Fact()]
+        public void FromBufferAttributeTest()
+        {
+            var a = new Vector3();
+            var attr = new BufferAttribute<float>(new float[] { 1, 2, 3, 4, 5, 6 }, 3);
+
+            a.FromBufferAttribute(attr, 0);
+            Assert.Equal(1, a.X);
+            Assert.Equal(2, a.Y);
+            Assert.Equal(3, a.Z);
+
+            a.FromBufferAttribute(attr, 1);
+            Assert.Equal(4, a.X);
+            Assert.Equal(5, a.Y);
+            Assert.Equal(6, a.Z);
+        }
+
     }
 }
