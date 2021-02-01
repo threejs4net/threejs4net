@@ -186,7 +186,7 @@ namespace ThreeJs4Net.Core
             _viewMatrix.Copy(camera.MatrixWorldInverse = camera.MatrixWorld.GetInverse());
             _viewProjectionMatrix.MultiplyMatrices(camera.ProjectionMatrix, _viewMatrix);
 
-            _frustum.SetFromMatrix(_viewProjectionMatrix);
+            _frustum.SetFromProjectionMatrix(_viewProjectionMatrix);
 
 
 

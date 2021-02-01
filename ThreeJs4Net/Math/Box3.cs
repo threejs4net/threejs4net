@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using ThreeJs4Net.Core;
 
 namespace ThreeJs4Net.Math
 {
+    [DebuggerDisplay("Min ({Min}), Max ({Max})")]
     public class Box3 : IEquatable<Box3>
     {
         public static Box3 Empty()

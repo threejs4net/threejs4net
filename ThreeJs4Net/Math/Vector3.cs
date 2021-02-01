@@ -8,7 +8,7 @@ using ThreeJs4Net.Properties;
 
 namespace ThreeJs4Net.Math
 {
-    [DebuggerDisplay("X = {X}, Y = {Y}, Z = {Z}")]
+    [DebuggerDisplay("X= {X}, Y= {Y}, Z= {Z}")]
     public class Vector3 : IEquatable<Vector3>, INotifyPropertyChanged
     {
         public static Vector3 Infinity()
