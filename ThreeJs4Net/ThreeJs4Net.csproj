@@ -135,7 +135,7 @@
     <Compile Include="Materials\SpriteMaterial.cs" />
     <Compile Include="Materials\UniformLocation.cs" />
     <Compile Include="Math\Box3.cs" />
-    <Compile Include="Math\ColorNormalized.cs" />
+    <Compile Include="Math\Cylindrical.cs" />
     <Compile Include="Math\Euler.cs" />
     <Compile Include="Math\ExtensionMethods.cs" />
     <Compile Include="Math\Frustum.cs" />
