@@ -26,6 +26,7 @@ namespace ThreeJs4Net.Tests
         public Vector3 zero3 = new Vector3();
         public Vector3 one3 = new Vector3(1, 1, 1);
         public Vector3 two3 = new Vector3(2, 2, 2);
+        public Vector3 unit3 = new Vector3( 1, 0, 0 );
 
         public bool RoundEquals(Vector3 left, Vector3 right, int precision)
         {
