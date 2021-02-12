@@ -17,11 +17,6 @@ namespace ThreeJs4Net.Tests.Math
             Assert.True(a.Direction.Equals(one3));
         }
 
-        [Fact()]
-        public void RayTest1()
-        {
-            Assert.True(false, "This test needs an implementation");
-        }
 
         [Fact()]
         public void ApplyMatrix4Test()
@@ -171,11 +166,6 @@ namespace ThreeJs4Net.Tests.Math
 
         }
 
-        [Fact()]
-        public void DistanceToPlaneTest()
-        {
-            Assert.True(false, "This test needs an implementation");
-        }
 
         [Fact()]
         public void IntersectSphereTest()
@@ -369,12 +359,6 @@ namespace ThreeJs4Net.Tests.Math
             f.IntersectBox(box, point.Copy(posInf3));
             Assert.True(point.Equals(posInf3));
 
-        }
-
-        [Fact()]
-        public void IntersectsBoxTest()
-        {
-            Assert.True(false, "This test needs an implementation");
         }
 
         [Fact()]

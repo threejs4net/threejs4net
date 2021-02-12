@@ -16,22 +16,22 @@ namespace ThreeJs4Net.Tests.Math
         public void InstancingTest()
         {
             var a = new Plane();
-            Assert.True(a.Normal.X == 1, "Passed!");
-            Assert.True(a.Normal.Y == 0, "Passed!");
-            Assert.True(a.Normal.Z == 0, "Passed!");
-            Assert.True(a.Constant == 0, "Passed!");
+            Assert.True(a.Normal.X == 1);
+            Assert.True(a.Normal.Y == 0);
+            Assert.True(a.Normal.Z == 0);
+            Assert.True(a.Constant == 0);
 
             a = new Plane(one3.Clone(), 0);
-            Assert.True(a.Normal.X == 1, "Passed!");
-            Assert.True(a.Normal.Y == 1, "Passed!");
-            Assert.True(a.Normal.Z == 1, "Passed!");
-            Assert.True(a.Constant == 0, "Passed!");
+            Assert.True(a.Normal.X == 1);
+            Assert.True(a.Normal.Y == 1);
+            Assert.True(a.Normal.Z == 1);
+            Assert.True(a.Constant == 0);
 
             a = new Plane(one3.Clone(), 1);
-            Assert.True(a.Normal.X == 1, "Passed!");
-            Assert.True(a.Normal.Y == 1, "Passed!");
-            Assert.True(a.Normal.Z == 1, "Passed!");
-            Assert.True(a.Constant == 1, "Passed!");
+            Assert.True(a.Normal.X == 1);
+            Assert.True(a.Normal.Y == 1);
+            Assert.True(a.Normal.Z == 1);
+            Assert.True(a.Constant == 1);
 
         }
 
@@ -70,32 +70,32 @@ namespace ThreeJs4Net.Tests.Math
         public void SetTest()
         {
             var a = new Plane();
-            Assert.True(a.Normal.X == 1, "Passed!");
-            Assert.True(a.Normal.Y == 0, "Passed!");
-            Assert.True(a.Normal.Z == 0, "Passed!");
-            Assert.True(a.Constant == 0, "Passed!");
+            Assert.True(a.Normal.X == 1);
+            Assert.True(a.Normal.Y == 0);
+            Assert.True(a.Normal.Z == 0);
+            Assert.True(a.Constant == 0);
 
             var b = a.Clone().Set(new Vector3(x, y, z), w);
-            Assert.True(b.Normal.X == x, "Passed!");
-            Assert.True(b.Normal.Y == y, "Passed!");
-            Assert.True(b.Normal.Z == z, "Passed!");
-            Assert.True(b.Constant == w, "Passed!");
+            Assert.True(b.Normal.X == x);
+            Assert.True(b.Normal.Y == y);
+            Assert.True(b.Normal.Z == z);
+            Assert.True(b.Constant == w);
         }
 
         [Fact()]
         public void SetComponentsTest()
         {
             var a = new Plane();
-            Assert.True(a.Normal.X == 1, "Passed!");
-            Assert.True(a.Normal.Y == 0, "Passed!");
-            Assert.True(a.Normal.Z == 0, "Passed!");
-            Assert.True(a.Constant == 0, "Passed!");
+            Assert.True(a.Normal.X == 1);
+            Assert.True(a.Normal.Y == 0);
+            Assert.True(a.Normal.Z == 0);
+            Assert.True(a.Constant == 0);
 
             var b = a.Clone().SetComponents(x, y, z, w);
-            Assert.True(b.Normal.X == x, "Passed!");
-            Assert.True(b.Normal.Y == y, "Passed!");
-            Assert.True(b.Normal.Z == z, "Passed!");
-            Assert.True(b.Constant == w, "Passed!");
+            Assert.True(b.Normal.X == x);
+            Assert.True(b.Normal.Y == y);
+            Assert.True(b.Normal.Z == z);
+            Assert.True(b.Constant == w);
         }
 
         [Fact()]
@@ -104,8 +104,8 @@ namespace ThreeJs4Net.Tests.Math
             var normal = one3.Clone().Normalize();
             var a = new Plane().SetFromNormalAndCoplanarPoint(normal, zero3);
 
-            Assert.True(a.Normal.Equals(normal), "Passed!");
-            Assert.True(a.Constant == 0, "Passed!");
+            Assert.True(a.Normal.Equals(normal));
+            Assert.True(a.Constant == 0);
         }
 
         [Fact()]
@@ -130,9 +130,9 @@ namespace ThreeJs4Net.Tests.Math
             var a = new Plane(new Vector3(2, 0, 0), 2);
 
             a.Normalize();
-            Assert.True(a.Normal.Length() == 1, "Passed!");
-            Assert.True(a.Normal.Equals(new Vector3(1, 0, 0)), "Passed!");
-            Assert.True(a.Constant == 1, "Passed!");
+            Assert.True(a.Normal.Length() == 1);
+            Assert.True(a.Normal.Equals(new Vector3(1, 0, 0)));
+            Assert.True(a.Constant == 1);
 
         }
 
@@ -142,12 +142,12 @@ namespace ThreeJs4Net.Tests.Math
             var a = new Plane(new Vector3(2, 0, 0), -2);
 
             a.Normalize();
-            Assert.True(a.DistanceToPoint(new Vector3(4, 0, 0)) == 3, "Passed!");
-            Assert.True(a.DistanceToPoint(new Vector3(1, 0, 0)) == 0, "Passed!");
+            Assert.True(a.DistanceToPoint(new Vector3(4, 0, 0)) == 3);
+            Assert.True(a.DistanceToPoint(new Vector3(1, 0, 0)) == 0);
 
             a.Negate();
-            Assert.True(a.DistanceToPoint(new Vector3(4, 0, 0)) == -3, "Passed!");
-            Assert.True(a.DistanceToPoint(new Vector3(1, 0, 0)) == 0, "Passed!");
+            Assert.True(a.DistanceToPoint(new Vector3(4, 0, 0)) == -3);
+            Assert.True(a.DistanceToPoint(new Vector3(1, 0, 0)) == 0);
 
         }
 
@@ -158,8 +158,8 @@ namespace ThreeJs4Net.Tests.Math
             var point = new Vector3();
 
             a.Normalize().ProjectPoint(zero3.Clone(), point);
-            Assert.True(a.DistanceToPoint(point) == 0, "Passed!");
-            Assert.True(a.DistanceToPoint(new Vector3(4, 0, 0)) == 3, "Passed!");
+            Assert.True(a.DistanceToPoint(point) == 0);
+            Assert.True(a.DistanceToPoint(new Vector3(4, 0, 0)) == 3);
         }
 
         [Fact()]
@@ -169,12 +169,12 @@ namespace ThreeJs4Net.Tests.Math
 
             var b = new Sphere(new Vector3(2, 0, 0), 1);
 
-            Assert.True(a.DistanceToSphere(b) == 1, "Passed!");
+            Assert.True(a.DistanceToSphere(b) == 1);
 
             a.Set(new Vector3(1, 0, 0), 2);
-            Assert.True(a.DistanceToSphere(b) == 3, "Passed!");
+            Assert.True(a.DistanceToSphere(b) == 3);
             a.Set(new Vector3(1, 0, 0), -2);
-            Assert.True(a.DistanceToSphere(b) == -1, "Passed!");
+            Assert.True(a.DistanceToSphere(b) == -1);
 
         }
 
@@ -185,15 +185,15 @@ namespace ThreeJs4Net.Tests.Math
             var point = new Vector3();
 
             a.ProjectPoint(new Vector3(10, 0, 0), point);
-            Assert.True(point.Equals(zero3), "Passed!");
+            Assert.True(point.Equals(zero3));
             a.ProjectPoint(new Vector3(-10, 0, 0), point);
-            Assert.True(point.Equals(zero3), "Passed!");
+            Assert.True(point.Equals(zero3));
 
             a = new Plane(new Vector3(0, 1, 0), -1);
             a.ProjectPoint(new Vector3(0, 0, 0), point);
-            Assert.True(point.Equals(new Vector3(0, 1, 0)), "Passed!");
+            Assert.True(point.Equals(new Vector3(0, 1, 0)));
             a.ProjectPoint(new Vector3(0, 1, 0), point);
-            Assert.True(point.Equals(new Vector3(0, 1, 0)), "Passed!");
+            Assert.True(point.Equals(new Vector3(0, 1, 0)));
         }
 
         [Fact()]
@@ -204,18 +204,12 @@ namespace ThreeJs4Net.Tests.Math
 
             var l1 = new Line3(new Vector3(-10, 0, 0), new Vector3(10, 0, 0));
             a.IntersectLine(l1, point);
-            Assert.True(point.Equals(new Vector3(0, 0, 0)), "Passed!");
+            Assert.True(point.Equals(new Vector3(0, 0, 0)));
 
             a = new Plane(new Vector3(1, 0, 0), -3);
             a.IntersectLine(l1, point);
-            Assert.True(point.Equals(new Vector3(3, 0, 0)), "Passed!");
+            Assert.True(point.Equals(new Vector3(3, 0, 0)));
 
-        }
-
-        [Fact()]
-        public void IntersectsLineTest()
-        {
-            Assert.True(false, "This test needs an implementation");
         }
 
         [Fact()]
@@ -232,15 +226,15 @@ namespace ThreeJs4Net.Tests.Math
             var i = new Plane(new Vector3(1, 1, 1).Normalize(), -1.732f);
             var j = new Plane(new Vector3(1, 1, 1).Normalize(), -1.733f);
 
-            Assert.True(!b.IntersectsBox(a), "Passed!");
-            Assert.True(!c.IntersectsBox(a), "Passed!");
-            Assert.True(!d.IntersectsBox(a), "Passed!");
-            Assert.True(!e.IntersectsBox(a), "Passed!");
-            Assert.True(f.IntersectsBox(a), "Passed!");
-            Assert.True(g.IntersectsBox(a), "Passed!");
-            Assert.True(h.IntersectsBox(a), "Passed!");
-            Assert.True(i.IntersectsBox(a), "Passed!");
-            Assert.True(!j.IntersectsBox(a), "Passed!");
+            Assert.True(!b.IntersectsBox(a));
+            Assert.True(!c.IntersectsBox(a));
+            Assert.True(!d.IntersectsBox(a));
+            Assert.True(!e.IntersectsBox(a));
+            Assert.True(f.IntersectsBox(a));
+            Assert.True(g.IntersectsBox(a));
+            Assert.True(h.IntersectsBox(a));
+            Assert.True(i.IntersectsBox(a));
+            Assert.True(!j.IntersectsBox(a));
         }
 
         [Fact()]
@@ -251,9 +245,9 @@ namespace ThreeJs4Net.Tests.Math
             var c = new Plane(new Vector3(0, 1, 0), 1.25f);
             var d = new Plane(new Vector3(0, -1, 0), 1.25f);
 
-            Assert.True(b.IntersectsSphere(a), "Passed!");
-            Assert.True(!c.IntersectsSphere(a), "Passed!");
-            Assert.True(!d.IntersectsSphere(a), "Passed!");
+            Assert.True(b.IntersectsSphere(a));
+            Assert.True(!c.IntersectsSphere(a));
+            Assert.True(!d.IntersectsSphere(a));
 
         }
 
@@ -264,11 +258,11 @@ namespace ThreeJs4Net.Tests.Math
 
             var a = new Plane(new Vector3(1, 0, 0), 0);
             a.CoplanarPoint(point);
-            Assert.True(a.DistanceToPoint(point) == 0, "Passed!");
+            Assert.True(a.DistanceToPoint(point) == 0);
 
             a = new Plane(new Vector3(0, 1, 0), -1);
             a.CoplanarPoint(point);
-            Assert.True(a.DistanceToPoint(point) == 0, "Passed!");
+            Assert.True(a.DistanceToPoint(point) == 0);
 
         }
 
@@ -280,19 +274,13 @@ namespace ThreeJs4Net.Tests.Math
             var m = new Matrix4();
             m.MakeRotationZ(Mathf.PI * 0.5f);
 
-            Assert.True(comparePlane(a.Clone().ApplyMatrix4(m), new Plane(new Vector3(0, 1, 0), 0)), "Passed!");
+            Assert.True(comparePlane(a.Clone().ApplyMatrix4(m), new Plane(new Vector3(0, 1, 0), 0)));
 
             a = new Plane(new Vector3(0, 1, 0), -1);
-            Assert.True(comparePlane(a.Clone().ApplyMatrix4(m), new Plane(new Vector3(-1, 0, 0), -1)), "Passed!");
+            Assert.True(comparePlane(a.Clone().ApplyMatrix4(m), new Plane(new Vector3(-1, 0, 0), -1)));
 
             m.MakeTranslation(1, 1, 1);
-            Assert.True(comparePlane(a.Clone().ApplyMatrix4(m), a.Clone().Translate(new Vector3(1, 1, 1))), "Passed!");
-        }
-
-        [Fact()]
-        public void TranslateTest()
-        {
-            Assert.True(false, "This test needs an implementation");
+            Assert.True(comparePlane(a.Clone().ApplyMatrix4(m), a.Clone().Translate(new Vector3(1, 1, 1))));
         }
 
         [Fact()]
