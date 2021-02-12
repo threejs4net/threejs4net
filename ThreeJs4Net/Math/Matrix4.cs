@@ -42,16 +42,8 @@ namespace ThreeJs4Net.Math
 
         public float[] Elements
         {
-            get
-            {
-                return elements;
-            }
-            set
-            {
-                elements = value;
-
-                this.OnPropertyChanged();
-            }
+            get => elements;
+            set { elements = value; this.OnPropertyChanged(); }
         }
 
         /// <summary>
@@ -99,10 +91,6 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public Matrix4 MakeScale(float x, float y, float z)
         {
             Set(new float[]{x,0,0,0,
@@ -112,12 +100,6 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
         public Matrix4 Multiply(Matrix4 left, Matrix4 right = null)
         {
             if (right != null)
@@ -127,20 +109,6 @@ namespace ThreeJs4Net.Math
             }
 
             return this.MultiplyMatrices(this, left);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        public Matrix4 MultiplyMatrices(Matrix4 left, Matrix4 right)
-        {
-            var qq = left * right;
-
-            this.Set(qq.Elements);
-
-            return this;
         }
 
         public Matrix4 Identity()
@@ -862,7 +830,8 @@ namespace ThreeJs4Net.Math
             o[10] = a02 * b20 + a12 * b21 + a22 * b22;
             o[11] = a03 * b20 + a13 * b21 + a23 * b22;
 
-            if (a != o) { // If the source and destination differ, copy the unchanged last row
+            if (a != o)
+            { // If the source and destination differ, copy the unchanged last row
                 o[12] = a[12];
                 o[13] = a[13];
                 o[14] = a[14];
@@ -871,5 +840,20 @@ namespace ThreeJs4Net.Math
 
             return this;
         }
+
+        #region --- Already in R116 ---
+        public Matrix4 MultiplyMatrices(Matrix4 left, Matrix4 right)
+        {
+            this.Set((left * right).Elements);
+            return this;
+        }
+
+        public Matrix4 Premultiply(Matrix4 m)
+        {
+            return this.MultiplyMatrices(m, this);
+        }
+
+
+        #endregion
     }
 }

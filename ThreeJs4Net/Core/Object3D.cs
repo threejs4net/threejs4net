@@ -113,10 +113,96 @@ namespace ThreeJs4Net.Core
         #endregion
 
         #region --- Already in R116 ---
+        public void ApplyMatrix(Matrix4 matrix)
+        {
+            if (this.MatrixAutoUpdate)
+            {
+                this.UpdateMatrix();
+            }
+
+            this.Matrix.Premultiply(matrix);
+            this.Matrix.Decompose(this.Position, this.Quaternion, this.Scale);
+        }
+
+        public Object3D ApplyQuaternion(Quaternion quat)
+        {
+            this.Quaternion.PreMultiply(quat);
+            return this;
+        }
+
+
+        public virtual Vector3 GetWorldPosition(Vector3 target)
+        {
+            this.UpdateMatrixWorld(true);
+            return target.SetFromMatrixPosition(this.MatrixWorld);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public virtual Quaternion GetWorldQuaternion(Quaternion target)
+        {
+            var position = new Vector3();
+            var scale = new Vector3();
+            this.UpdateMatrixWorld(true);
+            this.MatrixWorld.Decompose(position, target, scale);
+            return target;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public virtual Vector3 GetWorldScale(Vector3 target)
+        {
+            var position = new Vector3();
+            var quaternion = new Quaternion();
+            this.UpdateMatrixWorld(true);
+            this.MatrixWorld.Decompose(position, quaternion, target);
+            return target;
+        }
+
+        /// <summary>
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public virtual Vector3 GetWorldDirection(Vector3 target)
+        {
+            if (target == null)
+            {
+                target = new Vector3();
+            }
+
+            this.UpdateMatrixWorld(true);
+            var e = this.MatrixWorld.elements;
+            return target.Set(e[8], e[9], e[10]).Normalize();
+        }
+
+        public Vector3 LocalToWorld(Vector3 vector)
+        {
+            return vector.ApplyMatrix4(this.MatrixWorld);
+        }
+
         public Object3D RotateOnAxis(Vector3 axis, float angle)
         {
             var q1 = new Quaternion().SetFromAxisAngle(axis, angle);
             this.Quaternion.Multiply(q1);
+            return this;
+        }
+
+
+        public Object3D RotateOnWorldAxis(Vector3 axis, float angle)
+        {
+            // rotate object on axis in world space
+            // axis is assumed to be normalized
+            // method assumes no rotated parent
+            var q1 = new Quaternion().SetFromAxisAngle(axis, angle);
+            this.Quaternion.PreMultiply(q1);
             return this;
         }
 
@@ -135,13 +221,45 @@ namespace ThreeJs4Net.Core
             return this.RotateOnAxis(Vector3.UnitZ(), angle);
         }
 
+        public void SetRotationFromAxisAngle(Vector3 axis, float angle)
+        {
+            // assumes axis is normalized
+            this.Quaternion.SetFromAxisAngle(axis, angle);
+        }
+
+        public void SetRotationFromEuler(Euler euler)
+        {
+            this.Quaternion.SetFromEuler(euler, true);
+        }
+
+        public void SetRotationFromMatrix(Matrix4 m)
+        {
+            // assumes the upper 3x3 of m is A pure rotation matrix (i.e, unscaled)
+            this.Quaternion.SetFromRotationMatrix(m);
+        }
+
+        public void SetRotationFromQuaternion(Quaternion q)
+        {
+            // assumes q is normalized
+            this.Quaternion.Copy(q);
+        }
+
+        public Object3D TranslateOnAxis(Vector3 axis, float distance)
+        {
+            // translate object by distance along axis in object space
+            // axis is assumed to be normalized
+            var v1 = new Vector3().Copy(axis).ApplyQuaternion(this.Quaternion);
+            this.Position.Add(v1.MultiplyScalar(distance));
+            return this;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="distance"></param>
         public Object3D TranslateX(float distance)
         {
-            return this.translateOnAxis(Vector3.UnitX(), distance);
+            return this.TranslateOnAxis(Vector3.UnitX(), distance);
         }
 
         /// <summary>
@@ -150,37 +268,14 @@ namespace ThreeJs4Net.Core
         /// <param name="distance"></param>
         public Object3D TranslateY(float distance)
         {
-            return this.translateOnAxis(Vector3.UnitY(), distance);
+            return this.TranslateOnAxis(Vector3.UnitY(), distance);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="distance"></param>
         public Object3D TranslateZ(float distance)
         {
-            return this.translateOnAxis(Vector3.UnitZ(), distance);
+            return this.TranslateOnAxis(Vector3.UnitZ(), distance);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="axis"></param>
-        /// <param name="distance"></param>
-        public Object3D translateOnAxis(Vector3 axis, float distance)
-        {
-            // translate object by distance along axis in object space
-            // axis is assumed to be normalized
-
-            var v1 = new Vector3();
-            v1.Copy(axis).ApplyQuaternion(this.Quaternion);
-            this.Position.Add(v1.MultiplyScalar(distance));
-            return this;
-        }
-
-        /// 
-        /// </summary>
-        /// <param name="callback"></param>
         public void Traverse(Action<Object3D> callback)
         {
             callback(this);
@@ -235,63 +330,6 @@ namespace ThreeJs4Net.Core
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public virtual Vector3 GetWorldPosition(Vector3 target)
-        {
-            this.UpdateMatrixWorld(true);
-            return target.SetFromMatrixPosition(this.MatrixWorld);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public virtual Quaternion GetWorldQuaternion(Quaternion target)
-        {
-            var position = new Vector3();
-            var scale = new Vector3();
-            this.UpdateMatrixWorld(true);
-            this.MatrixWorld.Decompose(position, target, scale);
-            return target;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public virtual Vector3 GetWorldScale(Vector3 target)
-        {
-            var position = new Vector3();
-            var quaternion = new Quaternion();
-            this.UpdateMatrixWorld(true);
-            this.MatrixWorld.Decompose(position, quaternion, target);
-            return target;
-        }
-
-        /// <summary>
-        /// 
-        /// 
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public virtual Vector3 GetWorldDirection(Vector3 target)
-        {
-            if (target == null)
-            {
-                target = new Vector3();
-            }
-
-            this.UpdateMatrixWorld(true);
-            var e = this.MatrixWorld.elements;
-            return target.Set(e[8], e[9], e[10]).Normalize();
-        }
-
         public virtual void UpdateWorldMatrix(bool updateParents, bool updateChildren)
         {
             var parent = this.Parent;
@@ -325,85 +363,17 @@ namespace ThreeJs4Net.Core
             }
         }
 
-
-
-
-
+        public Vector3 WorldToLocal(Vector3 vector)
+        {
+            return vector.ApplyMatrix4(new Matrix4().GetInverse(this.MatrixWorld));
+        }
         #endregion
 
-
-
-
-
-
-
-
-
-        public void ApplyMatrix(Matrix4 matrix)
-        {
-            throw new NotImplementedException();
-            //this.matrix.ultiplyMatrices(matrix, this.matrix);
-
-            //this.matrix.decompose(this.position, this.quaternion, this.scale);
-        }
-
-        public void SetRotationFromAxisAngle()
-        {
-            throw new NotImplementedException();
-            // assumes axis is normalized
-
-            //this.quaternion.setFromAxisAngle(axis, angle);
-        }
-
-        public void SetRotationFromEuler()
-        {
-            throw new NotImplementedException();
-            //this.quaternion.setFromEuler(euler, true);
-        }
-
-        public void SetRotationFromMatrix()
-        {
-            throw new NotImplementedException();
-            //// assumes the upper 3x3 of m is A pure rotation matrix (i.e, unscaled)
-
-            //this.quaternion.setFromRotationMatrix(m);
-        }
-
-        public void SetRotationFromQuaternion()
-        {
-            throw new NotImplementedException();
-            //// assumes q is normalized
-
-            //this.quaternion.copy(q);
-        }
-
-
-
-
-        public void TranslateOnAxis()
-        {
-            throw new NotImplementedException();
-        }
 
         public void Translate()
         {
             throw new NotImplementedException();
         }
-
-        public void localToWorld()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void worldToLocal()
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-
-        /// <summary>
 
 
         public virtual void LookAt(float x, float y, float z)
@@ -411,10 +381,6 @@ namespace ThreeJs4Net.Core
             this.LookAt(new Vector3(x, y, z));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vector"></param>
         public virtual void LookAt(Vector3 vector)
         {
             // This routine does not support objects with rotated and/or translated parent(s)
@@ -423,23 +389,11 @@ namespace ThreeJs4Net.Core
             this.Quaternion.SetFromRotationMatrix(m1);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="scene"></param>
-        /// <param name="camera"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
         public void Render(Scene scene, Camera camera, int width, int height)
         {
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="raycaster"></param>
-        /// <param name="intersects"></param>
         public virtual void Raycast(Raycaster raycaster, List<Intersect> intersects)
         {
             var inverseMatrix = new Matrix4();

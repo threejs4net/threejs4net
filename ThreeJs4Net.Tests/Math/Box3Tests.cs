@@ -32,19 +32,6 @@ namespace ThreeJs4Net.Tests.Math
             Assert.Equal(one3, a.Max);
         }
 
-
-        [Fact()]
-        public void EmptyTest()
-        {
-            Assert.True(false, "This test needs an implementation");
-        }
-
-        [Fact()]
-        public void Box3Test1()
-        {
-            Assert.True(false, "This test needs an implementation");
-        }
-
         [Fact()]
         public void ApplyMatrix4Test()
         {
@@ -491,11 +478,6 @@ namespace ThreeJs4Net.Tests.Math
         }
 
 
-        [Fact()]
-        public void SetFromPointsTest1()
-        {
-            Assert.True(false, "This test needs an implementation");
-        }
 
         [Fact()]
         public void SetFromCenterAndSizeTest()
@@ -528,12 +510,6 @@ namespace ThreeJs4Net.Tests.Math
             Assert.Equal(newCenter, centerA);
             Assert.Equal(newSize, sizeA);
             Assert.NotEqual(b, a);
-        }
-
-        [Fact()]
-        public void SetFromObjectTest()
-        {
-            Assert.True(false, "This test needs an implementation");
         }
 
         [Fact()]
@@ -592,18 +568,6 @@ namespace ThreeJs4Net.Tests.Math
             Assert.True(!a.Equals(b));
 
             Assert.False(a.Equals(null));
-        }
-
-        [Fact()]
-        public void EqualsTest1()
-        {
-            Assert.True(false, "This test needs an implementation");
-        }
-
-        [Fact()]
-        public void GetHashCodeTest()
-        {
-            Assert.True(false, "This test needs an implementation");
         }
     }
 }

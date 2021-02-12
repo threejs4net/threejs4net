@@ -134,6 +134,7 @@
     <Compile Include="Materials\ShaderMaterial.cs" />
     <Compile Include="Materials\SpriteMaterial.cs" />
     <Compile Include="Materials\UniformLocation.cs" />
+    <Compile Include="Math\Box2.cs" />
     <Compile Include="Math\Box3.cs" />
     <Compile Include="Math\Cylindrical.cs" />
     <Compile Include="Math\Euler.cs" />
