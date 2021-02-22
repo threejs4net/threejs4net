@@ -65,6 +65,7 @@
     <Compile Include="Core\Projector.cs" />
     <Compile Include="Core\Raycaster.cs" />
     <Compile Include="Core\WebGlObject.cs" />
+    <Compile Include="Examples\Jsm\Math\OBB.cs" />
     <Compile Include="Extras\FontUtils.cs" />
     <Compile Include="Geometries\BoxGeometry.cs" />
     <Compile Include="Geometries\WireframeGeometry.cs" />
@@ -370,6 +371,7 @@
     <Folder Include="Animation\" />
     <Folder Include="Audio\" />
     <Folder Include="Complement\" />
+    <Folder Include="Examples\Jsm\Geometries\" />
     <Folder Include="Extras\Core\" />
     <Folder Include="Extras\Helpers\" />
     <Folder Include="Math\Interpolants\" />

@@ -42,7 +42,7 @@ namespace ThreeJs4Net.Math
         internal static int Pow(int x, int y){ return (int)System.Math.Pow(x,y); }
         internal static float Pow(float x, float y) { return (float)System.Math.Pow(x, y); }
 
-        internal static int Round(float value, MidpointRounding midpoint = MidpointRounding.ToEven) { return (int)System.Math.Round(value, midpoint);}
+        public static int Round(float value, MidpointRounding midpoint = MidpointRounding.ToEven) { return (int)System.Math.Round(value, midpoint);}
         
         internal static int Floor(float value){return (int)System.Math.Floor(value);}
         internal static int Ceiling(float value) { return (int)System.Math.Ceiling(value); }
