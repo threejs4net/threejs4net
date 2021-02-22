@@ -26,6 +26,7 @@ namespace ThreeJs4Net.Core
 
         protected static int BufferGeometryIdCount;
 
+        public List<BufferGeometryGroups> groups = new List<BufferGeometryGroups>();
         public List<string> AttributesKeys { get; set; }
         public IList<Offset> Drawcalls = new List<Offset>();
         public IList<Offset> Offsets; // backwards compatibility
@@ -502,5 +503,22 @@ namespace ThreeJs4Net.Core
                 normal.needsUpdate = true;
             }
         }
+
+        public void AddGroup(int start, int count, int materialIndex = 0)
+        {
+            this.groups.Add(new BufferGeometryGroups()
+            {
+                Start = start,
+                Count = count,
+                MaterialIndex = materialIndex
+            });
+        }
+    }
+
+    public class BufferGeometryGroups
+    {
+        public int Start { get; set; }
+        public int Count { get; set; }
+        public int MaterialIndex { get; set; }
     }
 }

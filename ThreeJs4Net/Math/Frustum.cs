@@ -1,12 +1,9 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using ThreeJs4Net.Core;
+﻿using ThreeJs4Net.Core;
 using ThreeJs4Net.Extras.Objects;
-using ThreeJs4Net.Properties;
 
 namespace ThreeJs4Net.Math
 {
-    public class Frustum : INotifyPropertyChanged
+    public class Frustum
     {
         public Plane[] Planes = new Plane[6];
 
@@ -172,13 +169,5 @@ namespace ThreeJs4Net.Math
         }
 
         #endregion
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

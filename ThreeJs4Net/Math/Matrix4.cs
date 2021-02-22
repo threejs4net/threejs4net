@@ -946,8 +946,28 @@ namespace ThreeJs4Net.Math
         {
             return this.MultiplyMatrices(m, this);
         }
-
-
         #endregion
+
+        #region --- Already in R125 ---
+        public Matrix4 MakeRotationAxis(Vector3 axis, float angle)
+        {
+            // Based on http://www.gamedev.net/reference/articles/article1199.asp
+            var c = Mathf.Cos(angle);
+            var s = Mathf.Sin(angle);
+            var t = 1 - c;
+            float x = axis.X, y = axis.Y, z = axis.Z;
+            float tx = t * x, ty = t * y;
+
+            this.Set(
+                tx * x + c, tx * y - s * z, tx * z + s * y, 0,
+                tx * y + s * z, ty * y + c, ty * z - s * x, 0,
+                tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
+                0, 0, 0, 1
+            );
+
+            return this;
+        }
+        #endregion
+
     }
 }

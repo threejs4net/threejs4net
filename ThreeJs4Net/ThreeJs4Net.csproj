@@ -66,6 +66,12 @@
     <Compile Include="Core\Raycaster.cs" />
     <Compile Include="Core\WebGlObject.cs" />
     <Compile Include="Examples\Jsm\Math\OBB.cs" />
+    <Compile Include="Extras\Core\Curve.cs" />
+    <Compile Include="Extras\Core\CurvePath.cs" />
+    <Compile Include="Extras\Core\Path.cs" />
+    <Compile Include="Extras\Core\Shape.cs" />
+    <Compile Include="Extras\Curves\EllipseCurve.cs" />
+    <Compile Include="Extras\Curves\LineCurve.cs" />
     <Compile Include="Extras\FontUtils.cs" />
     <Compile Include="Geometries\BoxGeometry.cs" />
     <Compile Include="Geometries\WireframeGeometry.cs" />
@@ -142,6 +148,7 @@
     <Compile Include="Math\ExtensionMethods.cs" />
     <Compile Include="Math\Frustum.cs" />
     <Compile Include="Math\HSLColor.cs" />
+    <Compile Include="Math\IVector.cs" />
     <Compile Include="Math\Line3.cs" />
     <Compile Include="Math\Mathf.cs" />
     <Compile Include="Math\MathUtils.cs" />
@@ -372,7 +379,6 @@
     <Folder Include="Audio\" />
     <Folder Include="Complement\" />
     <Folder Include="Examples\Jsm\Geometries\" />
-    <Folder Include="Extras\Core\" />
     <Folder Include="Extras\Helpers\" />
     <Folder Include="Math\Interpolants\" />
   </ItemGroup>
