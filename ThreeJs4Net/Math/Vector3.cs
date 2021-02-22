@@ -9,7 +9,7 @@ using ThreeJs4Net.Properties;
 namespace ThreeJs4Net.Math
 {
     [DebuggerDisplay("X= {X}, Y= {Y}, Z= {Z}")]
-    public class Vector3 : IEquatable<Vector3>, INotifyPropertyChanged
+    public class Vector3 : IEquatable<Vector3>, INotifyPropertyChanged, IVector<Vector3>
     {
         public static Vector3 Infinity()
         {
@@ -232,7 +232,7 @@ namespace ThreeJs4Net.Math
         /// </summary>
         /// <param name="index"></param>
         /// <param name="value"></param>
-        public void SetComponent(int index, float value)
+        public Vector3 SetComponent(int index, float value)
         {
             switch (index)
             {
@@ -249,6 +249,8 @@ namespace ThreeJs4Net.Math
                 default:
                     throw new IndexOutOfRangeException($"Index {index} is out of bounds");
             }
+
+            return this;
         }
 
         /// <summary>

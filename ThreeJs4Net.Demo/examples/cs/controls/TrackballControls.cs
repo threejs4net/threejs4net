@@ -273,7 +273,7 @@ namespace ThreeJs4Net.Demo.examples.cs.controls
 
             mouseChange.Copy(_panEnd).Sub(_panStart);
 
-   			if ( mouseChange.LengthSq > 0 )
+   			if ( mouseChange.LengthSq() > 0 )
    			{
    			    mouseChange.MultiplyScalar(_eye.Length() * this.PanSpeed);
 
