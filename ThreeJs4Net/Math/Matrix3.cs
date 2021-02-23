@@ -15,7 +15,7 @@ namespace ThreeJs4Net.Math
         /// <summary>
         /// 
         /// </summary>
-        public Matrix3() 
+        public Matrix3()
         { }
 
         /// <summary>
@@ -56,10 +56,10 @@ namespace ThreeJs4Net.Math
         public Matrix3 Copy(Matrix3 matrix)
         {
             this.Set(new[] {
-				matrix.Elements[0], matrix.Elements[3], matrix.Elements[6],
-				matrix.Elements[1], matrix.Elements[4], matrix.Elements[7],
-				matrix.Elements[2], matrix.Elements[5], matrix.Elements[8]
-			});
+                matrix.Elements[0], matrix.Elements[3], matrix.Elements[6],
+                matrix.Elements[1], matrix.Elements[4], matrix.Elements[7],
+                matrix.Elements[2], matrix.Elements[5], matrix.Elements[8]
+            });
 
             return this;
         }
@@ -125,9 +125,9 @@ namespace ThreeJs4Net.Math
         {
             var te = this.Elements;
 
-            te[ 0 ] = n11; te[ 1 ] = n21; te[ 2 ] = n31;
-            te[ 3 ] = n12; te[ 4 ] = n22; te[ 5 ] = n32;
-            te[ 6 ] = n13; te[ 7 ] = n23; te[ 8 ] = n33;
+            te[0] = n11; te[1] = n21; te[2] = n31;
+            te[3] = n12; te[4] = n22; te[5] = n32;
+            te[6] = n13; te[7] = n23; te[8] = n33;
 
             this.OnPropertyChanged();
 
@@ -277,7 +277,7 @@ namespace ThreeJs4Net.Math
         public Matrix3 GetNormalMatrix(Matrix4 matrix)
         {
             this.GetInverse(matrix).Transpose();
-            
+
             return this;
         }
 
@@ -329,6 +329,64 @@ namespace ThreeJs4Net.Math
         public Matrix3 Clone()
         {
             return new Matrix3(this.ToArray());
+        }
+
+
+        public Matrix3 ExtractBasis(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis)
+        {
+            xAxis.SetFromMatrix3Column(this, 0);
+            yAxis.SetFromMatrix3Column(this, 1);
+            zAxis.SetFromMatrix3Column(this, 2);
+
+            return this;
+        }
+
+        public Matrix3 SetFromMatrix4(Matrix4 m)
+        {
+            var me = m.elements;
+
+            this.Set(
+                me[0], me[4], me[8],
+                me[1], me[5], me[9],
+                me[2], me[6], me[10]
+            );
+
+            return this;
+        }
+
+        public Matrix3 MultiplyMatrices(Matrix3 a, Matrix3 b)
+        {
+            var ae = a.Elements;
+            var be = b.Elements;
+            var te = this.Elements;
+
+            float a11 = ae[0], a12 = ae[3], a13 = ae[6];
+            float a21 = ae[1], a22 = ae[4], a23 = ae[7];
+            float a31 = ae[2], a32 = ae[5], a33 = ae[8];
+
+            float b11 = be[0], b12 = be[3], b13 = be[6];
+            float b21 = be[1], b22 = be[4], b23 = be[7];
+            float b31 = be[2], b32 = be[5], b33 = be[8];
+
+            te[0] = a11 * b11 + a12 * b21 + a13 * b31;
+            te[3] = a11 * b12 + a12 * b22 + a13 * b32;
+            te[6] = a11 * b13 + a12 * b23 + a13 * b33;
+
+            te[1] = a21 * b11 + a22 * b21 + a23 * b31;
+            te[4] = a21 * b12 + a22 * b22 + a23 * b32;
+            te[7] = a21 * b13 + a22 * b23 + a23 * b33;
+
+            te[2] = a31 * b11 + a32 * b21 + a33 * b31;
+            te[5] = a31 * b12 + a32 * b22 + a33 * b32;
+            te[8] = a31 * b13 + a32 * b23 + a33 * b33;
+
+            return this;
+        }
+
+
+        public Matrix3 Multiply(Matrix3 m)
+        {
+            return this.MultiplyMatrices(this, m);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

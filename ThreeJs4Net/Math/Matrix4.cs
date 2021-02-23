@@ -841,6 +841,100 @@ namespace ThreeJs4Net.Math
             return this;
         }
 
+        public float Determinant()
+        {
+            var te = this.Elements;
+
+            float n11 = te[0], n12 = te[4], n13 = te[8], n14 = te[12];
+            float n21 = te[1], n22 = te[5], n23 = te[9], n24 = te[13];
+            float n31 = te[2], n32 = te[6], n33 = te[10], n34 = te[14];
+            float n41 = te[3], n42 = te[7], n43 = te[11], n44 = te[15];
+
+            //TODO: make this more efficient
+            //( based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm )
+
+            return (
+                n41 * (
+                    +n14 * n23 * n32
+                    - n13 * n24 * n32
+                    - n14 * n22 * n33
+                    + n12 * n24 * n33
+                    + n13 * n22 * n34
+                    - n12 * n23 * n34
+                ) +
+                n42 * (
+                    +n11 * n23 * n34
+                    - n11 * n24 * n33
+                    + n14 * n21 * n33
+                    - n13 * n21 * n34
+                    + n13 * n24 * n31
+                    - n14 * n23 * n31
+                ) +
+                n43 * (
+                    +n11 * n24 * n32
+                    - n11 * n22 * n34
+                    - n14 * n21 * n32
+                    + n12 * n21 * n34
+                    + n14 * n22 * n31
+                    - n12 * n24 * n31
+                ) +
+                n44 * (
+                    -n13 * n22 * n31
+                    - n11 * n23 * n32
+                    + n11 * n22 * n33
+                    + n13 * n21 * n32
+                    - n12 * n21 * n33
+                    + n12 * n23 * n31
+                )
+
+            );
+
+        }
+
+        public Matrix4 Invert()
+        {
+            // based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+            var te = this.elements;
+            float n11 = te[0], n21 = te[1], n31 = te[2], n41 = te[3];
+            float n12 = te[4], n22 = te[5], n32 = te[6], n42 = te[7];
+            float n13 = te[8], n23 = te[9], n33 = te[10], n43 = te[11];
+            float n14 = te[12], n24 = te[13], n34 = te[14], n44 = te[15];
+
+            float t11 = n23 * n34 * n42 - n24 * n33 * n42 + n24 * n32 * n43 - n22 * n34 * n43 - n23 * n32 * n44 + n22 * n33 * n44;
+            float t12 = n14 * n33 * n42 - n13 * n34 * n42 - n14 * n32 * n43 + n12 * n34 * n43 + n13 * n32 * n44 - n12 * n33 * n44;
+            float t13 = n13 * n24 * n42 - n14 * n23 * n42 + n14 * n22 * n43 - n12 * n24 * n43 - n13 * n22 * n44 + n12 * n23 * n44;
+            float t14 = n14 * n23 * n32 - n13 * n24 * n32 - n14 * n22 * n33 + n12 * n24 * n33 + n13 * n22 * n34 - n12 * n23 * n34;
+
+            float det = n11 * t11 + n21 * t12 + n31 * t13 + n41 * t14;
+
+            if (det == 0) return this.Set(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+            float detInv = 1 / det;
+
+            te[0] = t11 * detInv;
+            te[1] = (n24 * n33 * n41 - n23 * n34 * n41 - n24 * n31 * n43 + n21 * n34 * n43 + n23 * n31 * n44 - n21 * n33 * n44) * detInv;
+            te[2] = (n22 * n34 * n41 - n24 * n32 * n41 + n24 * n31 * n42 - n21 * n34 * n42 - n22 * n31 * n44 + n21 * n32 * n44) * detInv;
+            te[3] = (n23 * n32 * n41 - n22 * n33 * n41 - n23 * n31 * n42 + n21 * n33 * n42 + n22 * n31 * n43 - n21 * n32 * n43) * detInv;
+
+            te[4] = t12 * detInv;
+            te[5] = (n13 * n34 * n41 - n14 * n33 * n41 + n14 * n31 * n43 - n11 * n34 * n43 - n13 * n31 * n44 + n11 * n33 * n44) * detInv;
+            te[6] = (n14 * n32 * n41 - n12 * n34 * n41 - n14 * n31 * n42 + n11 * n34 * n42 + n12 * n31 * n44 - n11 * n32 * n44) * detInv;
+            te[7] = (n12 * n33 * n41 - n13 * n32 * n41 + n13 * n31 * n42 - n11 * n33 * n42 - n12 * n31 * n43 + n11 * n32 * n43) * detInv;
+
+            te[8] = t13 * detInv;
+            te[9] = (n14 * n23 * n41 - n13 * n24 * n41 - n14 * n21 * n43 + n11 * n24 * n43 + n13 * n21 * n44 - n11 * n23 * n44) * detInv;
+            te[10] = (n12 * n24 * n41 - n14 * n22 * n41 + n14 * n21 * n42 - n11 * n24 * n42 - n12 * n21 * n44 + n11 * n22 * n44) * detInv;
+            te[11] = (n13 * n22 * n41 - n12 * n23 * n41 - n13 * n21 * n42 + n11 * n23 * n42 + n12 * n21 * n43 - n11 * n22 * n43) * detInv;
+
+            te[12] = t14 * detInv;
+            te[13] = (n13 * n24 * n31 - n14 * n23 * n31 + n14 * n21 * n33 - n11 * n24 * n33 - n13 * n21 * n34 + n11 * n23 * n34) * detInv;
+            te[14] = (n14 * n22 * n31 - n12 * n24 * n31 - n14 * n21 * n32 + n11 * n24 * n32 + n12 * n21 * n34 - n11 * n22 * n34) * detInv;
+            te[15] = (n12 * n23 * n31 - n13 * n22 * n31 + n13 * n21 * n32 - n11 * n23 * n32 - n12 * n21 * n33 + n11 * n22 * n33) * detInv;
+
+            return this;
+        }
+
+
         #region --- Already in R116 ---
         public Matrix4 MultiplyMatrices(Matrix4 left, Matrix4 right)
         {
@@ -852,8 +946,28 @@ namespace ThreeJs4Net.Math
         {
             return this.MultiplyMatrices(m, this);
         }
-
-
         #endregion
+
+        #region --- Already in R125 ---
+        public Matrix4 MakeRotationAxis(Vector3 axis, float angle)
+        {
+            // Based on http://www.gamedev.net/reference/articles/article1199.asp
+            var c = Mathf.Cos(angle);
+            var s = Mathf.Sin(angle);
+            var t = 1 - c;
+            float x = axis.X, y = axis.Y, z = axis.Z;
+            float tx = t * x, ty = t * y;
+
+            this.Set(
+                tx * x + c, tx * y - s * z, tx * z + s * y, 0,
+                tx * y + s * z, ty * y + c, ty * z - s * x, 0,
+                tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
+                0, 0, 0, 1
+            );
+
+            return this;
+        }
+        #endregion
+
     }
 }

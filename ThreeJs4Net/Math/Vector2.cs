@@ -11,7 +11,7 @@ namespace ThreeJs4Net.Math
     using Math = System.Math;
 
     [DebuggerDisplay("X = {X}, Y = {Y}")]
-    public class Vector2 : IEquatable<Vector2>
+    public class Vector2 : IEquatable<Vector2>, IVector<Vector2>
     {
         public float Width
         {
