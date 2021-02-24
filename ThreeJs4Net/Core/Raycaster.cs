@@ -33,8 +33,9 @@ namespace ThreeJs4Net.Core
         {
         }
 
-        public Raycaster(Vector3 origin, Vector3 direction)
+        public Raycaster(Vector3 origin, Vector3 direction, float near = 0, float? far = null)
         {
+            far ??= float.NegativeInfinity;
             this.Ray = new Ray(origin, direction);
             // direction is assumed to be normalized (for accurate distance calculations)
         }
@@ -45,8 +46,6 @@ namespace ThreeJs4Net.Core
             {
                 object3d.Raycast(raycaster, intersects);
             }
-
-            object3d.Raycast(raycaster, intersects);
 
             if (recursive)
             {

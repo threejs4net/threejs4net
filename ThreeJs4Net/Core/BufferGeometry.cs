@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ThreeJs4Net.Materials;
 using ThreeJs4Net.Math;
 using ThreeJs4Net.Renderers.Shaders;
@@ -512,6 +513,22 @@ namespace ThreeJs4Net.Core
                 Count = count,
                 MaterialIndex = materialIndex
             });
+        }
+
+        public BufferGeometry SetFromPoints(IEnumerable<Vector3> points)
+        {
+            var position = new List<float>();
+
+            foreach (var point in points)
+            {
+                position.Add(point.X);
+                position.Add(point.Y);
+                position.Add(point.Z);
+            }
+
+            this.SetAttribute("position", new BufferAttribute<float>(position.ToArray(), 3));
+
+            return this;
         }
     }
 

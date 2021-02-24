@@ -581,68 +581,6 @@ namespace ThreeJs4Net.Objects
                 //}
 
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // Checking boundingSphere distance to ray
-            if (geometry.BoundingSphere == null)
-            {
-                geometry.ComputeBoundingSphere();
-            }
-
-            sphere = geometry.BoundingSphere;
-            sphere.ApplyMatrix4(this.MatrixWorld);
-
-            if (!raycaster.Ray.IntersectsSphere(sphere))
-            {
-                return;
-            }
-
-            // Check boundingBox before continuing
-            inverseMatrix = this.MatrixWorld.GetInverse();
-
-            ray = new Ray();
-            ray.Copy(raycaster.Ray).ApplyMatrix4(inverseMatrix);
-
-            if (geometry.BoundingBox != null)
-            {
-                if (!ray.IntersectsBox(geometry.BoundingBox))
-                {
-                    return;
-                }
-            }
-
-            // We are within the boundingbox or sphere
-
-            var bufferGeometry = geometry as BufferGeometry;
-            if (bufferGeometry != null)
-            {
-                this.Raycast(raycaster, ray, bufferGeometry, ref intersects);
-            }
-            else if (geometry is Geometry)
-            {
-                this.Raycast(raycaster, ray, geometry as Geometry, ref intersects);
-            }
-
         }
 
         private Intersect CheckIntersection(Object3D object3d, Material material, Raycaster raycaster, Ray ray, Vector3 pA, Vector3 pB, Vector3 pC, Vector3 point)

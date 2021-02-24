@@ -9,6 +9,8 @@ namespace ThreeJs4Net.Math
 {
     public class Matrix4 : ICloneable, INotifyPropertyChanged
     {
+        private Vector3 _v1 = new Vector3();
+
         [NotNull]
         public float[] elements = new float[16];
 
@@ -166,23 +168,52 @@ namespace ThreeJs4Net.Math
 
             return te;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vector31"></param>
-        /// <param name="quaternion"></param>
-        /// <param name="vector32"></param>
-        public void Decompose(Vector3 vector31, Quaternion quaternion, Vector3 vector32)
+        
+        public Matrix4 Decompose(Vector3 position, Quaternion quaternion, Vector3 scale) 
         {
-            throw new NotImplementedException();
+            var _m1 = new Matrix4();
+            var te = this.elements;
+
+            var sx = this._v1.Set( te[ 0 ], te[ 1 ], te[ 2 ] ).Length();
+            var sy = this._v1.Set( te[ 4 ], te[ 5 ], te[ 6 ] ).Length();
+            var sz = this._v1.Set( te[ 8 ], te[ 9 ], te[ 10 ] ).Length();
+
+            // if determine is negative, we need to invert one scale
+            var det = this.Determinant();
+            if ( det < 0 ) sx = - sx;
+
+            position.X = te[ 12 ];
+            position.Y = te[ 13 ];
+            position.Z = te[ 14 ];
+
+            // scale the rotation part
+            _m1.Copy( this );
+
+            var invSX = 1 / sx;
+            var invSY = 1 / sy;
+            var invSZ = 1 / sz;
+
+            _m1.elements[ 0 ] *= invSX;
+            _m1.elements[ 1 ] *= invSX;
+            _m1.elements[ 2 ] *= invSX;
+
+            _m1.elements[ 4 ] *= invSY;
+            _m1.elements[ 5 ] *= invSY;
+            _m1.elements[ 6 ] *= invSY;
+
+            _m1.elements[ 8 ] *= invSZ;
+            _m1.elements[ 9 ] *= invSZ;
+            _m1.elements[ 10 ] *= invSZ;
+
+            quaternion.SetFromRotationMatrix( _m1 );
+
+            scale.X = sx;
+            scale.Y = sy;
+            scale.Z = sz;
+
+            return this;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="m"></param>
-        /// <returns></returns>
         public Matrix4 ExtractRotation(Matrix4 m)
         {
 
