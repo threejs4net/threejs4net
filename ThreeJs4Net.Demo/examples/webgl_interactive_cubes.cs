@@ -44,33 +44,33 @@ namespace ThreeJs4Net.Demo.examples
             base.Load(control);
 
             camera = new PerspectiveCamera(70, control.Width / (float)control.Height, 1, 10000);
-            
+
             scene = new Scene();
- 
-            var light = new DirectionalLight( Color.White, 1 );
-            light.Position = new Vector3( 1, 1, 1 ).Normalize();
+
+            var light = new DirectionalLight(Color.White, 1);
+            light.Position = new Vector3(1, 1, 1).Normalize();
             scene.Add(light);
 
-			var geometry = new BoxGeometry( 20, 20, 20 );
+            var geometry = new BoxGeometry(20, 20, 20);
 
-			for ( var i = 0; i < 2000; i ++ )
-			{
-			    var object3D = new Mesh(geometry, new MeshLambertMaterial() { Color = new Color().Random() });
+            for (var i = 0; i < 2000; i++)
+            {
+                var object3D = new Mesh(geometry, new MeshLambertMaterial() { Color = new Color().Random() });
 
-				object3D.Position.X = Mat.Random() * 800 - 400;
-				object3D.Position.Y = Mat.Random() * 800 - 400;
-				object3D.Position.Z = Mat.Random() * 800 - 400;
+                object3D.Position.X = Mat.Random() * 800 - 400;
+                object3D.Position.Y = Mat.Random() * 800 - 400;
+                object3D.Position.Z = Mat.Random() * 800 - 400;
 
-				object3D.Rotation.X = Mat.Random() * 2 * (float)System.Math.PI;
-				object3D.Rotation.Y = Mat.Random() * 2 * (float)System.Math.PI;
-				object3D.Rotation.Z = Mat.Random() * 2 * (float)System.Math.PI;
+                object3D.Rotation.X = Mat.Random() * 2 * (float)System.Math.PI;
+                object3D.Rotation.Y = Mat.Random() * 2 * (float)System.Math.PI;
+                object3D.Rotation.Z = Mat.Random() * 2 * (float)System.Math.PI;
 
-				object3D.Scale.X = Mat.Random() + 0.5f;
-				object3D.Scale.Y = Mat.Random() + 0.5f;
-				object3D.Scale.Z = Mat.Random() + 0.5f;
+                object3D.Scale.X = Mat.Random() + 0.5f;
+                object3D.Scale.Y = Mat.Random() + 0.5f;
+                object3D.Scale.Z = Mat.Random() + 0.5f;
 
-			    scene.Add(object3D);
-			}
+                scene.Add(object3D);
+            }
 
             raycaster = new Raycaster();
 
@@ -101,7 +101,7 @@ namespace ThreeJs4Net.Demo.examples
         public override void MouseMove(Size clientSize, Point here)
         {
             // Normalize mouse position
-            mouse.X =  (here.X / (float)clientSize.Width)  * 2 - 1;
+            mouse.X = (here.X / (float)clientSize.Width) * 2 - 1;
             mouse.Y = -(here.Y / (float)clientSize.Height) * 2 + 1;
         }
 
@@ -112,14 +112,14 @@ namespace ThreeJs4Net.Demo.examples
         /// </summary>
         public override void Render()
         {
-			theta += 0.1f;
+            theta += 0.1f;
 
             camera.Position.X = radius * (float)System.Math.Sin(Mat.DegToRad(theta));
             camera.Position.Y = radius * (float)System.Math.Sin(Mat.DegToRad(theta));
             camera.Position.Z = radius * (float)System.Math.Cos(Mat.DegToRad(theta));
             camera.LookAt(scene.Position);
 
-			// find intersections
+            // find intersections
 
             var vector = new Vector3(mouse.X, mouse.Y, 1).Unproject(camera);
 
@@ -127,11 +127,12 @@ namespace ThreeJs4Net.Demo.examples
 
             var intersects = raycaster.IntersectObjects(scene.Children);
 
-            if ( intersects.Count > 0 ) {
+            if (intersects.Count > 0)
+            {
 
-                if ( INTERSECTED != intersects[ 0 ].Object3D )
+                if (INTERSECTED != intersects[0].Object3D)
                 {
-                    if (INTERSECTED != null) 
+                    if (INTERSECTED != null)
                         ((MeshLambertMaterial)INTERSECTED.Material).Emissive = currentHex;
 
                     INTERSECTED = intersects[0].Object3D;
@@ -139,7 +140,9 @@ namespace ThreeJs4Net.Demo.examples
                     ((MeshLambertMaterial)INTERSECTED.Material).Emissive = Color.Red;
                 }
 
-            } else {
+            }
+            else
+            {
                 if (INTERSECTED != null)
                     ((MeshLambertMaterial)INTERSECTED.Material).Emissive = currentHex;
                 INTERSECTED = null;

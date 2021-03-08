@@ -168,44 +168,44 @@ namespace ThreeJs4Net.Math
 
             return te;
         }
-        
-        public Matrix4 Decompose(Vector3 position, Quaternion quaternion, Vector3 scale) 
+
+        public Matrix4 Decompose(Vector3 position, Quaternion quaternion, Vector3 scale)
         {
             var _m1 = new Matrix4();
             var te = this.elements;
 
-            var sx = this._v1.Set( te[ 0 ], te[ 1 ], te[ 2 ] ).Length();
-            var sy = this._v1.Set( te[ 4 ], te[ 5 ], te[ 6 ] ).Length();
-            var sz = this._v1.Set( te[ 8 ], te[ 9 ], te[ 10 ] ).Length();
+            var sx = this._v1.Set(te[0], te[1], te[2]).Length();
+            var sy = this._v1.Set(te[4], te[5], te[6]).Length();
+            var sz = this._v1.Set(te[8], te[9], te[10]).Length();
 
             // if determine is negative, we need to invert one scale
             var det = this.Determinant();
-            if ( det < 0 ) sx = - sx;
+            if (det < 0) sx = -sx;
 
-            position.X = te[ 12 ];
-            position.Y = te[ 13 ];
-            position.Z = te[ 14 ];
+            position.X = te[12];
+            position.Y = te[13];
+            position.Z = te[14];
 
             // scale the rotation part
-            _m1.Copy( this );
+            _m1.Copy(this);
 
             var invSX = 1 / sx;
             var invSY = 1 / sy;
             var invSZ = 1 / sz;
 
-            _m1.elements[ 0 ] *= invSX;
-            _m1.elements[ 1 ] *= invSX;
-            _m1.elements[ 2 ] *= invSX;
+            _m1.elements[0] *= invSX;
+            _m1.elements[1] *= invSX;
+            _m1.elements[2] *= invSX;
 
-            _m1.elements[ 4 ] *= invSY;
-            _m1.elements[ 5 ] *= invSY;
-            _m1.elements[ 6 ] *= invSY;
+            _m1.elements[4] *= invSY;
+            _m1.elements[5] *= invSY;
+            _m1.elements[6] *= invSY;
 
-            _m1.elements[ 8 ] *= invSZ;
-            _m1.elements[ 9 ] *= invSZ;
-            _m1.elements[ 10 ] *= invSZ;
+            _m1.elements[8] *= invSZ;
+            _m1.elements[9] *= invSZ;
+            _m1.elements[10] *= invSZ;
 
-            quaternion.SetFromRotationMatrix( _m1 );
+            quaternion.SetFromRotationMatrix(_m1);
 
             scale.X = sx;
             scale.Y = sy;
@@ -978,6 +978,40 @@ namespace ThreeJs4Net.Math
             return this.MultiplyMatrices(m, this);
         }
         #endregion
+
+        public float[] ToArray(ref float[] array, int offset = 0)
+        {
+            array ??= new float[16];
+
+            if (array.Length < offset + 4)
+            {
+                Array.Resize(ref array, offset + 4);
+            }
+
+            var te = this.elements;
+
+            array[offset] = te[0];
+            array[offset + 1] = te[1];
+            array[offset + 2] = te[2];
+            array[offset + 3] = te[3];
+
+            array[offset + 4] = te[4];
+            array[offset + 5] = te[5];
+            array[offset + 6] = te[6];
+            array[offset + 7] = te[7];
+
+            array[offset + 8] = te[8];
+            array[offset + 9] = te[9];
+            array[offset + 10] = te[10];
+            array[offset + 11] = te[11];
+
+            array[offset + 12] = te[12];
+            array[offset + 13] = te[13];
+            array[offset + 14] = te[14];
+            array[offset + 15] = te[15];
+
+            return array;
+        }
 
         #region --- Already in R125 ---
         public Matrix4 MakeRotationAxis(Vector3 axis, float angle)

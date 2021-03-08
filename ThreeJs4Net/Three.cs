@@ -91,6 +91,17 @@ namespace ThreeJs4Net
         public static int MixOperation = 1;
         public static int AddOperation = 2;
 
+
+        // Texture Encodings
+        public static int LinearEncoding = 1;
+        public static int sRGBEncoding = 2;
+        public static int GammaEncoding = 3;
+        public static int RGBEEncoding = 4;
+        public static int LogLuvEncoding = 5;
+        public static int RGBM7Encoding = 6;
+        public static int RGBM16Encoding = 7;
+        public static int RGBDEncoding = 8;
+
         // Mapping modes
 
 

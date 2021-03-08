@@ -19,9 +19,9 @@ namespace ThreeJs4Net.Math
         public static float Acos(float value) { return (float)System.Math.Acos(value); }
         public static float Asin(float value) { return (float)System.Math.Asin(value); }
         public static float Atan(float value) { return (float)System.Math.Atan(value); }
-        public static float Atan2(float y, float x) { return (float)System.Math.Atan2(y,x); }
+        public static float Atan2(float y, float x) { return (float)System.Math.Atan2(y, x); }
 
-        public static float Clamp(float x, float a, float b) {return ( x < a ) ? a : ( ( x > b ) ? b : x );}
+        public static float Clamp(float x, float a, float b) { return (x < a) ? a : ((x > b) ? b : x); }
 
         public static float DegreesToRadians(float degree) { return degree * Tau / 360; }
         public static float RadiansToDegrees(float radians) { return radians * 360 / Tau; }
@@ -37,17 +37,18 @@ namespace ThreeJs4Net.Math
         public static float Max(float a, float b) { return System.Math.Max(a, b); }
 
 
-        public static bool IsPowerOfTwo(int value) { return ( value & ( value - 1 ) ) == 0 && value != 0; }
+        public static bool IsPowerOfTwo(int value) { return (value & (value - 1)) == 0 && value != 0; }
 
-        internal static int Pow(int x, int y){ return (int)System.Math.Pow(x,y); }
+        internal static int Pow(int x, int y) { return (int)System.Math.Pow(x, y); }
         internal static float Pow(float x, float y) { return (float)System.Math.Pow(x, y); }
 
-        public static int Round(float value, MidpointRounding midpoint = MidpointRounding.ToEven) { return (int)System.Math.Round(value, midpoint);}
-        
-        internal static int Floor(float value){return (int)System.Math.Floor(value);}
+        public static int Round(float value, MidpointRounding midpoint = MidpointRounding.ToEven) { return (int)System.Math.Round(value, midpoint); }
+        public static int Round(float value, int decimals) { return (int)System.Math.Round(value, decimals); }
+
+        internal static int Floor(float value) { return (int)System.Math.Floor(value); }
         internal static int Ceiling(float value) { return (int)System.Math.Ceiling(value); }
 
-        internal static float Log(float value) { return (float)System.Math.Log(value);}
+        internal static float Log(float value) { return (float)System.Math.Log(value); }
 
         public static Random Random = new Random();
 
@@ -74,47 +75,48 @@ namespace ThreeJs4Net.Math
 
             var s = new Vector3[]{
                 new Vector3( center.X - half, center.Y + half, center.Z - half ),
-		        new Vector3( center.X - half, center.Y + half, center.Z + half ),
-		        new Vector3( center.X - half, center.Y - half, center.Z + half ),
-		        new Vector3( center.X - half, center.Y - half, center.Z - half ),
-		        new Vector3( center.X + half, center.Y - half, center.Z - half ),
-		        new Vector3( center.X + half, center.Y - half, center.Z + half ),
-		        new Vector3( center.X + half, center.Y + half, center.Z + half ),
-		        new Vector3( center.X + half, center.Y + half, center.Z - half )
+                new Vector3( center.X - half, center.Y + half, center.Z + half ),
+                new Vector3( center.X - half, center.Y - half, center.Z + half ),
+                new Vector3( center.X - half, center.Y - half, center.Z - half ),
+                new Vector3( center.X + half, center.Y - half, center.Z - half ),
+                new Vector3( center.X + half, center.Y - half, center.Z + half ),
+                new Vector3( center.X + half, center.Y + half, center.Z + half ),
+                new Vector3( center.X + half, center.Y + half, center.Z - half )
             };
 
             var vec = new List<Vector3>()
             {
-		        s[ v0 ],
-		        s[ v1 ],
-		        s[ v2 ],
-		        s[ v3 ],
-		        s[ v4 ],
-		        s[ v5 ],
-		        s[ v6 ],
-		        s[ v7 ]
+                s[ v0 ],
+                s[ v1 ],
+                s[ v2 ],
+                s[ v3 ],
+                s[ v4 ],
+                s[ v5 ],
+                s[ v6 ],
+                s[ v7 ]
             };
 
             // Recurse iterations
-	        if( --iterations >= 0 ) {
-		        var tmp = new List<Vector3>();
-                tmp.AddRange(Hilbert3D ( vec[ 0 ], half, iterations, v0, v3, v4, v7, v6, v5, v2, v1 ) );
-		        tmp.AddRange(Hilbert3D ( vec[ 1 ], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3 ) );
-		        tmp.AddRange(Hilbert3D ( vec[ 2 ], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3 ) );
-		        tmp.AddRange(Hilbert3D ( vec[ 3 ], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5 ) );
-		        tmp.AddRange(Hilbert3D ( vec[ 4 ], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5 ) );
-		        tmp.AddRange(Hilbert3D ( vec[ 5 ], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7 ) );
-		        tmp.AddRange(Hilbert3D ( vec[ 6 ], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7 ) );
-		        tmp.AddRange(Hilbert3D ( vec[ 7 ], half, iterations, v6, v5, v2, v1, v0, v3, v4, v7 ) );
+            if (--iterations >= 0)
+            {
+                var tmp = new List<Vector3>();
+                tmp.AddRange(Hilbert3D(vec[0], half, iterations, v0, v3, v4, v7, v6, v5, v2, v1));
+                tmp.AddRange(Hilbert3D(vec[1], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3));
+                tmp.AddRange(Hilbert3D(vec[2], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3));
+                tmp.AddRange(Hilbert3D(vec[3], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5));
+                tmp.AddRange(Hilbert3D(vec[4], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5));
+                tmp.AddRange(Hilbert3D(vec[5], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7));
+                tmp.AddRange(Hilbert3D(vec[6], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7));
+                tmp.AddRange(Hilbert3D(vec[7], half, iterations, v6, v5, v2, v1, v0, v3, v4, v7));
                 return tmp; // Return recursive call
-	        }
+            }
 
             return vec; // Return complete Hilbert Curve.
         }
 
         public static float Fit(float value, float oldMin, float oldMax, float newMin, float newMax)
         {
-            if(oldMin > oldMax) 
+            if (oldMin > oldMax)
             {
                 var tmp = oldMin;
                 oldMin = oldMax;

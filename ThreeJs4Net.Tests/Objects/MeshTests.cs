@@ -1,12 +1,9 @@
-﻿using Xunit;
-using ThreeJs4Net.Objects;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ThreeJs4Net.Geometries;
+﻿using ThreeJs4Net.Geometries;
 using ThreeJs4Net.Materials;
+using ThreeJs4Net.Objects;
+using Xunit;
 
-namespace ThreeJs4Net.Objects.Tests
+namespace ThreeJs4Net.Tests.Objects
 {
     public class MeshTests
     {

@@ -44,20 +44,6 @@ namespace ThreeJs4Net.Core
             this.Offsets = this.Drawcalls;
         }
 
-        public BufferAttribute<uint> GetIndex()
-        {
-            return this.Index;
-        }
-
-        public void SetIndex(BufferAttribute<uint> index)
-        {
-            this.Index = index;
-        }
-
-
-
-
-
 
         #region --- Already in R116 ---
 
@@ -106,6 +92,16 @@ namespace ThreeJs4Net.Core
             }
 
             return null;
+        }
+
+        public BufferAttribute<uint> GetIndex()
+        {
+            return this.Index;
+        }
+
+        public void SetIndex(BufferAttribute<uint> index)
+        {
+            this.Index = index;
         }
 
         public BufferGeometry DeleteAttribute(string name)

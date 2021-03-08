@@ -1,12 +1,8 @@
-﻿using Xunit;
-using ThreeJs4Net.Core;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ThreeJs4Net.Core;
 using ThreeJs4Net.Math;
-using ThreeJs4Net.Tests;
+using Xunit;
 
-namespace ThreeJs4Net.Core.Tests
+namespace ThreeJs4Net.Tests.Core
 {
     public class RaycasterTests : BaseTests
     {
