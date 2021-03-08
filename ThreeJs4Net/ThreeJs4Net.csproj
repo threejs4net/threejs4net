@@ -139,6 +139,7 @@
     <Compile Include="Materials\PointCloudMaterial.cs" />
     <Compile Include="Materials\RawShaderMaterial.cs" />
     <Compile Include="Materials\ShaderMaterial.cs" />
+    <Compile Include="Materials\PointsMaterial.cs" />
     <Compile Include="Materials\SpriteMaterial.cs" />
     <Compile Include="Materials\UniformLocation.cs" />
     <Compile Include="Math\Box2.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Objects\LineStrip.cs" />
     <Compile Include="Objects\LOD.cs" />
     <Compile Include="Objects\Mesh.cs" />
+    <Compile Include="Objects\Points.cs" />
     <Compile Include="Objects\PointCloud.cs" />
     <Compile Include="Objects\Skeleton.cs" />
     <Compile Include="Objects\SkinnedMesh.cs" />

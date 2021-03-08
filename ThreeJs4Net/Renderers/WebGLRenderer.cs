@@ -2433,134 +2433,6 @@ namespace ThreeJs4Net.Renderers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="object3D"></param>
-        /// <returns></returns>
-        private int AllocateBones(Object3D object3D)
-        {
-            if (this.supportsBoneTextures && null != object3D && /*null != object3D.skeleton && object3D.skeleton.useVertexTexture*/ false)
-            {
-
-                return 1024;
-
-            }
-            else
-            {
-
-                // default for when object is not specified
-                // ( for example when prebuilding shader
-                //   to be used with multiple objects )
-                //
-                //  - leave some extra space for other uniformsLocation
-                //  - limit here is ANGLE's 254 max uniform vectors
-                //    (up to 54 should be safe)
-
-                var nVertexUniforms = 0;
-                GL.GetInteger(GetPName.MaxVertexUniformVectors, out nVertexUniforms);
-                var nVertexMatrices = System.Math.Floor((nVertexUniforms - 20) / 4.0);
-
-                var maxBones = (int)nVertexMatrices;
-
-                if (object3D != null && object3D is SkinnedMesh)
-                {
-                    throw new NotImplementedException();
-                    //maxBones = Math.Min(object3D.skeleton.bones.Count, maxBones);
-
-                    //if (maxBones < object3D.skeleton.bones.length)
-                    //{
-
-                    //    //Trace.TraceError( 'WebGLRenderer: too many bones - ' + object.skeleton.bones.length + ', this GPU supports just ' + maxBones + ' (try OpenGL instead of ANGLE)' );
-
-                    //}
-
-                }
-
-                return maxBones;
-
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="lights"></param>
-        /// <returns></returns>
-        private static LightCountInfo AllocateLights(IEnumerable<Light> lights)
-        {
-            var dirLights = 0;
-            var pointLights = 0;
-            var spotLights = 0;
-            var hemiLights = 0;
-
-            foreach (var light in lights)
-            {
-                if (light.Visible == false)
-                {
-                    continue;
-                }
-
-                if (light is ILightShadow && ((ILightShadow)light).onlyShadow)
-                {
-                    continue;
-                }
-
-                if (light is DirectionalLight)
-                {
-                    dirLights++;
-                }
-                if (light is PointLight)
-                {
-                    pointLights++;
-                }
-                if (light is SpotLight)
-                {
-                    spotLights++;
-                }
-                if (light is HemisphereLight)
-                {
-                    hemiLights++;
-                }
-            }
-
-            LightCountInfo lci;
-            lci.directional = dirLights;
-            lci.point = pointLights;
-            lci.spot = spotLights;
-            lci.hemi = hemiLights;
-
-            return lci;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="lights"></param>
-        /// <returns></returns>
-        private static int AllocateShadows(IEnumerable<Light> lights)
-        {
-            var maxShadows = 0;
-
-            foreach (var light in lights)
-            {
-                if (!light.CastShadow)
-                {
-                    continue;
-                }
-
-                if (light is SpotLight)
-                {
-                    maxShadows++;
-                }
-                if (light is DirectionalLight && !((DirectionalLight)light).shadowCascade)
-                {
-                    maxShadows++;
-                }
-            }
-            return maxShadows;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="material"></param>
         /// <returns></returns>
         private static bool materialNeedsSmoothNormals(Material material)
@@ -6701,5 +6573,113 @@ namespace ThreeJs4Net.Renderers
             }
         }
         #endregion
+
+
+        #region --- R071 --------------------------
+        private int AllocateBones(Object3D object3D)
+        {
+            if (this.supportsBoneTextures && null != object3D && /*null != object3D.skeleton && object3D.skeleton.useVertexTexture*/ false)
+            {
+                return 1024;
+            }
+            else
+            {
+                // default for when object is not specified
+                // ( for example when prebuilding shader
+                //   to be used with multiple objects )
+                //
+                //  - leave some extra space for other uniformsLocation
+                //  - limit here is ANGLE's 254 max uniform vectors
+                //    (up to 54 should be safe)
+
+                GL.GetInteger(GetPName.MaxVertexUniformVectors, out var nVertexUniforms);
+                var nVertexMatrices = System.Math.Floor((nVertexUniforms - 20) / 4.0);
+
+                var maxBones = (int)nVertexMatrices;
+
+                if (object3D is SkinnedMesh)
+                {
+                    //throw new NotImplementedException();
+                    maxBones = Mathf.Min(object3D.Skeleton.Bones.Count, maxBones);
+
+                    if (maxBones < object3D.Skeleton.Bones.Count)
+                    {
+                        throw new Exception($"WebGLRenderer: too many bones - {object3D.Skeleton.Bones.Count}, this GPU supports just {maxBones} (try OpenGL instead of ANGLE)");
+                    }
+                }
+                return maxBones;
+            }
+        }
+
+        private static int AllocateShadows(IEnumerable<Light> lights)
+        {
+            var maxShadows = 0;
+
+            foreach (var light in lights)
+            {
+                if (!light.CastShadow)
+                {
+                    continue;
+                }
+
+                if (light is SpotLight)
+                {
+                    maxShadows++;
+                }
+                if (light is DirectionalLight && !((DirectionalLight)light).shadowCascade)
+                {
+                    maxShadows++;
+                }
+            }
+            return maxShadows;
+        }
+
+        private static LightCountInfo AllocateLights(IEnumerable<Light> lights)
+        {
+            var dirLights = 0;
+            var pointLights = 0;
+            var spotLights = 0;
+            var hemiLights = 0;
+
+            foreach (var light in lights)
+            {
+                if (light.Visible == false)
+                {
+                    continue;
+                }
+
+                if (light is ILightShadow && ((ILightShadow)light).onlyShadow)
+                {
+                    continue;
+                }
+
+                if (light is DirectionalLight)
+                {
+                    dirLights++;
+                }
+                if (light is PointLight)
+                {
+                    pointLights++;
+                }
+                if (light is SpotLight)
+                {
+                    spotLights++;
+                }
+                if (light is HemisphereLight)
+                {
+                    hemiLights++;
+                }
+            }
+
+            LightCountInfo lci;
+            lci.directional = dirLights;
+            lci.point = pointLights;
+            lci.spot = spotLights;
+            lci.hemi = hemiLights;
+
+            return lci;
+        }
+        #endregion 
+
     }
 }

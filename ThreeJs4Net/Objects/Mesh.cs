@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using ThreeJs4Net.Core;
 using ThreeJs4Net.Materials;
@@ -25,12 +26,9 @@ namespace ThreeJs4Net.Objects
 
     public class Mesh : Object3D
     {
+        public List<float> MorphTargetInfluences;
+        public Dictionary<string, float> MorphTargetDictionary;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="geometry"></param>
-        /// <param name="material"></param>
         public Mesh(BaseGeometry geometry = null, Material material = null)
         {
             this.type = "Mesh";
@@ -41,58 +39,56 @@ namespace ThreeJs4Net.Objects
             UpdateMorphTargets();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         protected Mesh()
         {
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="other"></param>
         protected Mesh(Mesh other)
             : base(other)
         {
 
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns></returns>
-        public override object Clone()
-        {
-            return new Mesh(this);
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
+
         public void UpdateMorphTargets()
         {
-            //if (null != this.geometry.MorphTargets && this.geometry.MorphTargets.count > 0)
-            //{
-            //    this.MorphTargetBase = - 1;
-            //    this.MorphTargetForcedOrder.Clear();
-            //    this.MorphTargetInfluences.Clear();
-            //    this.MorphTargetDictionary.Clear();
+            //string m, ml, name;
 
-            //    foreach (var m in this.geometry.MorphTargets)
+            //if (this.Geometry is BufferGeometry)
+            //{
+            //    var geometry = (BufferGeometry)this.Geometry;
+            //    var morphAttributes = geometry.morphAttributes;
+            //    var keys = Object.keys(morphAttributes);
+
+            //    if (keys.length > 0)
             //    {
-            //        this.MorphTargetInfluences.Add(0);
-            //        this.MorphTargetDictionary[this.geometry.MorphTargets[m].name] = m;
+            //        var morphAttribute = morphAttributes[keys[0]];
+            //        if (morphAttribute !== undefined)
+            //        {
+            //            this.morphTargetInfluences = [];
+            //            this.morphTargetDictionary = { };
+
+            //            for (m = 0, ml = morphAttribute.length; m < ml; m++)
+            //            {
+            //                name = morphAttribute[m].name || String(m);
+            //                this.morphTargetInfluences.push(0);
+            //                this.morphTargetDictionary[name] = m;
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    var geometry = (Geometry)this.Geometry;
+            //    var morphTargets = geometry.MorphTargets;
+            //    if (morphTargets != null && morphTargets.Count > 0)
+            //    {
+            //        throw new Exception("THREE.Mesh.updateMorphTargets() no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.");
             //    }
             //}
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="raycaster"></param>
-        /// <param name="ray"></param>
-        /// <param name="geometry"></param>
-        /// <param name="intersects"></param>
         private void Raycast(Raycaster raycaster, Ray ray, Geometry geometry, ref List<Intersect> intersects)
         {
             if (this.Material == null)
@@ -411,7 +407,7 @@ namespace ThreeJs4Net.Objects
                 //!!var morphTargetsRelative = bufGeometry.morphTargetsRelative;
                 var uv = bufGeometry.GetAttribute<float>("uv");
                 var uv2 = bufGeometry.GetAttribute<float>("uv2");
-                //!!var groups = bufGeometry.groups;
+                var groups = bufGeometry.groups;
                 var drawRange = bufGeometry.DrawRange;
                 //var i, j, il, jl;
                 //var group, groupMaterial;
@@ -455,13 +451,13 @@ namespace ThreeJs4Net.Objects
                         start = Mathf.Max(0, drawRange.Start);
                         end = Mathf.Min(index.Count, (drawRange.Start + drawRange.Count));
 
-                        for (int i = start; i < end; i+=3)
+                        for (int i = start; i < end; i += 3)
                         {
                             var a = (int)index.GetX(i);
                             var b = (int)index.GetX(i + 1);
                             var c = (int)index.GetX(i + 2);
 
-                            var intersection = CheckBufferGeometryIntersection(this, this.Material, raycaster, ray, position, 
+                            var intersection = CheckBufferGeometryIntersection(this, this.Material, raycaster, ray, position,
                                 null /*morphPosition*/, null /*morphTargetsRelative*/, uv, uv2, a, b, c);
 
                             if (intersection != null)
@@ -518,7 +514,7 @@ namespace ThreeJs4Net.Objects
                             var a = i;
                             var b = i + 1;
                             var c = i + 2;
-                            var intersection = CheckBufferGeometryIntersection(this, this.Material, raycaster, ray, position, 
+                            var intersection = CheckBufferGeometryIntersection(this, this.Material, raycaster, ray, position,
                                 null /*morphPosition*/, null /*morphTargetsRelative*/, uv, uv2, a, b, c);
 
                             if (intersection != null)
@@ -581,101 +577,32 @@ namespace ThreeJs4Net.Objects
                 //}
 
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            // Checking boundingSphere distance to ray
-            if (geometry.BoundingSphere == null)
-            {
-                geometry.ComputeBoundingSphere();
-            }
-
-            sphere = geometry.BoundingSphere;
-            sphere.ApplyMatrix4(this.MatrixWorld);
-
-            if (!raycaster.Ray.IntersectsSphere(sphere))
-            {
-                return;
-            }
-
-            // Check boundingBox before continuing
-            inverseMatrix = this.MatrixWorld.GetInverse();
-
-            ray = new Ray();
-            ray.Copy(raycaster.Ray).ApplyMatrix4(inverseMatrix);
-
-            if (geometry.BoundingBox != null)
-            {
-                if (!ray.IntersectsBox(geometry.BoundingBox))
-                {
-                    return;
-                }
-            }
-
-            // We are within the boundingbox or sphere
-
-            var bufferGeometry = geometry as BufferGeometry;
-            if (bufferGeometry != null)
-            {
-                this.Raycast(raycaster, ray, bufferGeometry, ref intersects);
-            }
-            else if (geometry is Geometry)
-            {
-                this.Raycast(raycaster, ray, geometry as Geometry, ref intersects);
-            }
-
         }
 
-        private Intersect CheckIntersection(Object3D object3d, Material material, Raycaster raycaster, Ray ray, Vector3 pA, Vector3 pB, Vector3 pC, Vector3 point)
+
+        #region --- Already in R116 ---
+        public Mesh Copy(Mesh source)
         {
-            Vector3 intersect = null;
+            base.Copy(source);
 
-            intersect = material.Side == Three.BackSide
-                ? ray.IntersectTriangle(pC, pB, pA, true, point)
-                : ray.IntersectTriangle(pA, pB, pC, material.Side != Three.DoubleSide, point);
+            //NOTE: MIGRATION IS PENDING FOR MORPH
+            //if (source.morphTargetInfluences !== undefined)
+            //{
+            //    this.morphTargetInfluences = source.morphTargetInfluences.slice();
+            //}
 
-            if (intersect == null)
-            {
-                return null;
-            }
+            //if (source.morphTargetDictionary !== undefined)
+            //{
+            //    this.morphTargetDictionary = Object.assign( { }, source.morphTargetDictionary );
+            //}
 
-            var intersectionPointWorld = new Vector3().Copy(point);
-            intersectionPointWorld.ApplyMatrix4(object3d.MatrixWorld);
-
-            var distance = raycaster.Ray.Origin.DistanceTo(intersectionPointWorld);
-
-            if (distance < raycaster.Near || distance > raycaster.Far)
-            {
-                return null;
-            }
-
-            return new Intersect()
-            {
-                Distance = distance,
-                Point = intersectionPointWorld.Clone(),
-                Object3D = object3d
-            };
+            return this;
         }
 
+        public override object Clone()
+        {
+            return new Mesh().Copy(this);
+        }
 
         private Intersect CheckBufferGeometryIntersection(Object3D object3D, Material material, Raycaster raycaster, Ray ray, BufferAttribute<float> position, Vector3 morphPosition,
             object morphTargetsRelative, BufferAttribute<float> uv, BufferAttribute<float> uv2, int a, int b, int c)
@@ -762,6 +689,38 @@ namespace ThreeJs4Net.Objects
 
             return intersection;
         }
+
+        private Intersect CheckIntersection(Object3D object3d, Material material, Raycaster raycaster, Ray ray, Vector3 pA, Vector3 pB, Vector3 pC, Vector3 point)
+        {
+            Vector3 intersect = null;
+
+            intersect = material.Side == Three.BackSide
+                ? ray.IntersectTriangle(pC, pB, pA, true, point)
+                : ray.IntersectTriangle(pA, pB, pC, material.Side != Three.DoubleSide, point);
+
+            if (intersect == null)
+            {
+                return null;
+            }
+
+            var intersectionPointWorld = new Vector3().Copy(point);
+            intersectionPointWorld.ApplyMatrix4(object3d.MatrixWorld);
+
+            var distance = raycaster.Ray.Origin.DistanceTo(intersectionPointWorld);
+
+            if (distance < raycaster.Near || distance > raycaster.Far)
+            {
+                return null;
+            }
+
+            return new Intersect()
+            {
+                Distance = distance,
+                Point = intersectionPointWorld.Clone(),
+                Object3D = object3d
+            };
+        }
+        #endregion
     }
 }
 

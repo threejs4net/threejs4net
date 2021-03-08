@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using ThreeJs4Net.Math;
 
 namespace ThreeJs4Net.Core
@@ -33,15 +34,6 @@ namespace ThreeJs4Net.Core
             this.MaterialIndex = 0;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="c"></param>
-        /// <param name="normal"></param>
-        /// <param name="color"></param>
-        /// <param name="materialIndex"></param>
         public Face3(int a, int b, int c, Vector3 normal, Color color, int materialIndex = 0)
         {
             this.A = a;
@@ -49,6 +41,18 @@ namespace ThreeJs4Net.Core
             this.C = c;
             this.Normal = normal;
             this.Color = color;
+            this.MaterialIndex = materialIndex;
+        }
+
+        public Face3(int a, int b, int c, IEnumerable<Vector3> normals, IEnumerable<Color> colors, int materialIndex = 0)
+        {
+            this.A = a;
+            this.B = b;
+            this.C = c;
+            this.Normal = new Vector3();
+            this.VertexNormals = normals.ToList();
+            this.Color = Color.White;
+            this.VertexColors = colors.ToArray();
             this.MaterialIndex = materialIndex;
         }
 

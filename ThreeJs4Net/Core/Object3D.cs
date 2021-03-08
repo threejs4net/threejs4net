@@ -42,7 +42,7 @@ namespace ThreeJs4Net.Core
         public Material Material;
         public List<Material> Materials;
         public Layers Layers = new Layers();
-
+        public Skeleton Skeleton;
         public IList<Object3D> Children = new List<Object3D>();
         public int id = Object3DIdCount++;
         public bool MatrixAutoUpdate = true;

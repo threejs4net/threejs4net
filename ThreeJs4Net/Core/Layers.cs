@@ -10,6 +10,11 @@ namespace ThreeJs4Net.Core
 {
     public class Layers
     {
+        public Layers()
+        {
+            this.Mask = 1 | 0;
+        }
+
         #region --- Already in R116 ---
         public long Mask { get; set; }
 

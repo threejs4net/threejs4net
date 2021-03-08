@@ -34,5 +34,6 @@ namespace ThreeJs4Net.Materials
 
             this.SetValues( parameters );
         }
+
     }
 }

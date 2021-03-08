@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using ThreeJs4Net.Math;
 
 namespace ThreeJs4Net.Core
@@ -99,6 +100,20 @@ namespace ThreeJs4Net.Core
             }
         }
         #endregion
+    }
 
+    public interface IMorphTarget {
+        public string Name { get; set; }
+        public List<Vector3> Vertices { get; set; }
+    }
+
+    public interface IMorphNormals {
+        public string Name { get; set; }
+        public List<Vector3> Normals { get; set; }
+    }
+    
+    public interface IMorphColor {
+        public string Name { get; set; }
+        public List<Color> Colors { get; set; }
     }
 }

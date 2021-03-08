@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
+using OpenTK.Graphics.ES11;
 using ThreeJs4Net.Math;
 using ThreeJs4Net.Objects;
 
@@ -535,18 +537,130 @@ namespace ThreeJs4Net.Core
             return this;
         }
 
+        public Geometry FromBufferGeometry(BufferGeometry geometry)
+        {
+            var indices = geometry.Index?.Array;
+            var attributes = geometry.Attributes;
 
+            if (attributes["position"] == null)
+            {
+                throw new Exception("THREE.Geometry.fromBufferGeometry(): Position attribute required for conversion.");
+            }
 
+            var positions = geometry.GetAttribute<float>("position").Array;
+            var normals = geometry.GetAttribute<float>("normal") != null ? geometry.GetAttribute<float>("normal").Array : null;
+            var colors = geometry.GetAttribute<Color>("color") != null ? geometry.GetAttribute<Color>("color").Array : null;
+            //TODO: var uvs = geometry.GetAttribute<Vector2>("uv") != null ? geometry.GetAttribute<Vector2>("uv").Array : null;
+            //TODO: var uvs2 = geometry.GetAttribute<Vector2>("uv2") != null ? geometry.GetAttribute<Vector2>("uv2").Array : null;
 
+            //TODO: if (uvs2 != null) this.FaceVertexUvs[1] = new List<List<Vector2>>();
 
+            for (var i = 0; i < positions.Length; i += 3)
+            {
+                this.Vertices.Add(new Vector3().FromArray(positions, i));
+                if (colors != null)
+                {
+                    //TODO: Implement Colors from Array this.Colors.Add(new Color().fromArray(colors, i));
+                }
+            }
 
+            void addFace(int a, int b, int c, int materialIndex)
+            {
+                var vertexColors = (colors == null) ? new List<Color>() : new List<Color>() {
+                    this.Colors[a],
+                    this.Colors[b],
+                    this.Colors[c]
+                };
 
+                IEnumerable<Vector3> vertexNormals = (normals == null) ? new List<Vector3>() : new List<Vector3>() {
+                    new Vector3().FromArray(normals, a * 3),
+                    new Vector3().FromArray(normals, b * 3),
+                    new Vector3().FromArray(normals, c * 3)
+                };
 
+                var face = new Face3(a, b, c, vertexNormals, vertexColors, materialIndex);
 
+                this.Faces.Add(face);
 
+                //TODO: 
+                //if (uvs != null)
+                //{
+                //    var uvsFloat = uvs.ToArray();
+                //    this.FaceVertexUvs[0].Add(new List<Vector2>() {
+                //        new Vector2().FromArray(uvs.ToArray, a * 2),
+                //        new Vector2().FromArray(uvs, b * 2),
+                //        new Vector2().FromArray(uvs, c * 2)
+                //    });
+                //}
 
+                //TODO: 
+                //if (uvs2 !== undefined)
+                //{
 
+                //    scope.faceVertexUvs[1].push([
+                //        new Vector2().fromArray(uvs2, a* 2),
+                //        new Vector2().fromArray(uvs2, b* 2),
+                //        new Vector2().fromArray(uvs2, c* 2)
+                //    ] );
 
+                //}
+            }
+
+            var groups = geometry.groups;
+
+            if (groups.Count > 0)
+            {
+                for (var i = 0; i < groups.Count; i++)
+                {
+                    var group = groups[i];
+                    var start = group.Start;
+                    var count = group.Count;
+
+                    for (var j = start; j < start + count; j += 3)
+                    {
+                        if (indices != null)
+                        {
+                            addFace((int)indices[j], (int)indices[j + 1], (int)indices[j + 2], group.MaterialIndex);
+                        }
+                        else
+                        {
+                            addFace(j, j + 1, j + 2, group.MaterialIndex);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (indices != null)
+                {
+                    for (var i = 0; i < indices.Length; i += 3)
+                    {
+                        addFace((int)indices[i], (int)indices[i + 1], (int)indices[i + 2], 0);
+                    }
+                }
+                else
+                {
+                    for (var i = 0; i < positions.Length / 3; i += 3)
+                    {
+                        addFace(i, i + 1, i + 2, 0);
+                    }
+                }
+            }
+
+            this.ComputeFaceNormals();
+
+            if (geometry.BoundingBox != null)
+            {
+                this.BoundingBox = geometry.BoundingBox.Clone();
+            }
+
+            if (geometry.BoundingSphere != null)
+            {
+                this.BoundingSphere = geometry.BoundingSphere.Clone();
+            }
+
+            return this;
+        }
 
         #endregion
 
