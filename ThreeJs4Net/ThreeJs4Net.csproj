@@ -74,6 +74,7 @@
     <Compile Include="Extras\Curves\LineCurve.cs" />
     <Compile Include="Extras\FontUtils.cs" />
     <Compile Include="Geometries\BoxGeometry.cs" />
+    <Compile Include="Geometries\TubeBufferGeometry.cs" />
     <Compile Include="Geometries\WireframeGeometry.cs" />
     <Compile Include="Geometries\TubeGeometry.cs" />
     <Compile Include="Geometries\TorusKnotGeometry.cs" />

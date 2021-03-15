@@ -27,6 +27,39 @@ namespace ThreeJs4Net.Tests.Core
             return true;
         }
 
+        private bool CompareUvs(float[] uvs, Vector2[] u)
+        {
+            return (
+                uvs[0] == u[0].X && uvs[1] == u[0].Y &&
+                uvs[2] == u[1].X && uvs[3] == u[1].Y &&
+                uvs[4] == u[2].X && uvs[5] == u[2].Y
+            );
+        }
+
+        private bool ComparePositions(float[] pos, Vector3[] v)
+        {
+            return (
+                pos[0] == v[0].X && pos[1] == v[0].Y && pos[2] == v[0].Z &&
+                pos[3] == v[1].X && pos[4] == v[1].Y && pos[5] == v[1].Z &&
+                pos[6] == v[2].X && pos[7] == v[2].Y && pos[8] == v[2].Z
+            );
+        }
+
+        private Box3 GetBBForVertices(float[] vertices)
+        {
+            var geometry = new BufferGeometry();
+            geometry.SetAttribute("position", new BufferAttribute<float>(vertices, 3));
+            geometry.ComputeBoundingBox();
+            return geometry.BoundingBox;
+        }
+
+        private Sphere GetBSForVertices(float[] vertices)
+        {
+            var geometry = new BufferGeometry();
+            geometry.SetAttribute("position", new BufferAttribute<float>(vertices, 3));
+            geometry.ComputeBoundingSphere();
+            return geometry.BoundingSphere;
+        }
 
         private BufferAttribute<float> GetNormalsForVertices(float[] vertices)
         {
@@ -40,9 +73,8 @@ namespace ThreeJs4Net.Tests.Core
         #endregion
 
         [Fact()]
-        public void BufferGeometryTest()
+        public void AddGroupTest()
         {
-            Assert.True(false, "This test needs an implementation");
         }
 
         [Fact()]
@@ -171,8 +203,8 @@ namespace ThreeJs4Net.Tests.Core
             copy.ComputeBoundingSphere();
 
             copy.RotateX(10);
-            copy.Translate(2,3,3);
-            copy.Scale(1,2,3);
+            copy.Translate(2, 3, 3);
+            copy.Scale(1, 2, 3);
 
             copy.ComputeBoundingBox();
             copy.ComputeBoundingSphere();
