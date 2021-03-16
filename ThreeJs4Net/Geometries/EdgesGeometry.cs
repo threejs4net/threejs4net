@@ -25,9 +25,6 @@ namespace ThreeJs4Net.Geometries
 			var thresholdDot = Mathf.Cos(MathUtils.DEG2RAD * thresholdAngle);
 			int[] edge = new int[2];
 			IDictionary<string, Dictionary<string, int>> edges = new Dictionary<string, Dictionary<string, int>>();
-			int edge1;
-			int edge2;
-			string key;
 			string[] keys = { "A", "B", "C" };
 
 			// prepare source geometry
@@ -48,12 +45,12 @@ namespace ThreeJs4Net.Geometries
 
 				for (int j = 0; j < 3; j++)
 				{
-					edge1 = (int)face.GetType().GetField(keys[j]).GetValue(face);
-					edge2 = (int)face.GetType().GetField(keys[(j + 1) % 3]).GetValue(face);
+					var edge1 = keys[j] == "A" ? face.A : keys[j] == "B" ? face.B : face.C;
+					var edge2 = keys[(j + 1) % 3] == "A" ? face.A : keys[(j + 1) % 3] == "B" ? face.B : face.C;
 					edge[0] = Mathf.Min(edge1, edge2);
 					edge[1] = Mathf.Max(edge1, edge2);
 
-					key = edge[0].ToString() + ',' + edge[1].ToString();
+					string key = $"{edge[0]},{edge[1]}";
 
 					if (!edges.ContainsKey(key))
 					{
