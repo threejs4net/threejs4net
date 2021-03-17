@@ -66,6 +66,7 @@
     <Compile Include="Core\Raycaster.cs" />
     <Compile Include="Core\WebGlObject.cs" />
     <Compile Include="Examples\Jsm\Math\OBB.cs" />
+    <Compile Include="Examples\Jsm\Utils\BufferGeometryUtils.cs" />
     <Compile Include="Extras\Core\Curve.cs" />
     <Compile Include="Extras\Core\CurvePath.cs" />
     <Compile Include="Extras\Core\Path.cs" />
