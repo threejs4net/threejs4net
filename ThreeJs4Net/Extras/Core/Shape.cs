@@ -1,117 +1,62 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ThreeJs4Net.Math;
 
-//namespace ThreeJs4Net.Extras.Core
-//{
-//    public class Shape
-//    {
-//        public Shape(object points)
-//        {
-            
-//        }
-//    }
-//}
-//function Shape( points ) {
+namespace ThreeJs4Net.Extras.Core
+{
+    public class Shape : Path
+    {
+        public Guid uuid;
+        public List<Path> holes;
 
-//	Path.call( this, points );
+        public Shape(IEnumerable<Vector2> points = null) : base(points)
+        {
+            this.uuid = Guid.NewGuid();
+            this.holes = new List<Path>();
+        }
 
-//	this.uuid = MathUtils.generateUUID();
+        public List<Vector2[]> GetPointsHoles(int divisions)
+        {
+            List<Vector2[]> holesPts = new List<Vector2[]>();
+            for (var i = 0; i < this.holes.Count; i++)
+            {
+                holesPts.Add(this.holes[i].GetPoints(divisions).ToArray());
+            }
 
-//	this.type = 'Shape';
+            return holesPts;
+        }
 
-//	this.holes = [];
+        // get points of shape and holes (keypoints based on segments parameter)
+        public ShapePoints ExtractPoints(int divisions)
+        {
+            return new ShapePoints
+            {
+                shape = this.GetPoints(divisions),
+                holes = this.GetPointsHoles(divisions)
+            };
+        }
 
-//}
+        //public Shape Copy(Shape source)
+        //{
+        //    base.Copy(source);
 
-//Shape.prototype = Object.assign( Object.create( Path.prototype ), {
+        //    this.holes = new List<Path>();
 
-//	constructor: Shape,
+        //    for (var i = 0; i < source.holes.Count; i++)
+        //    {
+        //        var hole = source.holes[i];
+        //        this.holes.Add(hole.Clone());
+        //    }
+        //    return this;
+        //}
+    }
 
-//	getPointsHoles: function ( divisions ) {
-
-//		var holesPts = [];
-
-//		for ( var i = 0, l = this.holes.length; i < l; i ++ ) {
-
-//			holesPts[ i ] = this.holes[ i ].getPoints( divisions );
-
-//		}
-
-//		return holesPts;
-
-//	},
-
-//	// get points of shape and holes (keypoints based on segments parameter)
-
-//	extractPoints: function ( divisions ) {
-
-//		return {
-
-//			shape: this.getPoints( divisions ),
-//			holes: this.getPointsHoles( divisions )
-
-//		};
-
-//	},
-
-//	copy: function ( source ) {
-
-//		Path.prototype.copy.call( this, source );
-
-//		this.holes = [];
-
-//		for ( var i = 0, l = source.holes.length; i < l; i ++ ) {
-
-//			var hole = source.holes[ i ];
-
-//			this.holes.push( hole.clone() );
-
-//		}
-
-//		return this;
-
-//	},
-
-//	toJSON: function () {
-
-//		var data = Path.prototype.toJSON.call( this );
-
-//		data.uuid = this.uuid;
-//		data.holes = [];
-
-//		for ( var i = 0, l = this.holes.length; i < l; i ++ ) {
-
-//			var hole = this.holes[ i ];
-//			data.holes.push( hole.toJSON() );
-
-//		}
-
-//		return data;
-
-//	},
-
-//	fromJSON: function ( json ) {
-
-//		Path.prototype.fromJSON.call( this, json );
-
-//		this.uuid = json.uuid;
-//		this.holes = [];
-
-//		for ( var i = 0, l = json.holes.length; i < l; i ++ ) {
-
-//			var hole = json.holes[ i ];
-//			this.holes.push( new Path().fromJSON( hole ) );
-
-//		}
-
-//		return this;
-
-//	}
-
-//} );
-
-
-//export { Shape };
+    public class ShapePoints
+    {
+        public List<Vector2> shape;
+        public List<Vector2[]> holes;
+    }
+}
