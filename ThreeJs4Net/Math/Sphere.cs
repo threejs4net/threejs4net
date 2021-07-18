@@ -86,13 +86,13 @@ namespace ThreeJs4Net.Math
         {
             return (this.Radius <= 0);
         }
+
+        public bool ContainsPoint(Vector3 point)
+        {
+            return (point.DistanceToSquared(this.Center) <= (this.Radius * this.Radius));
+        }
+
         /*
-                public void containsPoint ( point ) {
-
-                    return ( point.distanceToSquared( this.center ) <= ( this.radius * this.radius ) );
-
-                }
-
                 public void distanceToPoint ( point ) {
 
                     return ( point.distanceTo( this.center ) - this.radius );

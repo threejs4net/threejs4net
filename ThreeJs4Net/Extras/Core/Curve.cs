@@ -6,9 +6,9 @@ namespace ThreeJs4Net.Extras.Core
 {
     public abstract class Curve<T> where T : IVector<T>
     {
-        private int arcLengthDivisions = 200;
-        private List<float> CacheArcLengths = null;
-        private bool NeedsUpdate = false;
+        protected int arcLengthDivisions = 200;
+        protected List<float> cacheArcLengths = null;
+        protected bool needsUpdate = false;
 
         public abstract T GetPoint(float t, T optionalTarget);
 
@@ -21,10 +21,9 @@ namespace ThreeJs4Net.Extras.Core
         public List<T> GetPoints(int divisions = 5)
         {
             var points = new List<T>();
-            var v = default(T);
             for (float d = 0; d <= divisions; d++)
             {
-                points.Add(this.GetPoint(d / divisions, v));
+                points.Add(this.GetPoint(d / divisions, default(T)));
             }
 
             return points;
@@ -36,7 +35,7 @@ namespace ThreeJs4Net.Extras.Core
 
             for (var d = 0; d <= divisions; d++)
             {
-                points.Add(this.GetPointAt(d / divisions, default(T)));
+                points.Add(this.GetPointAt((float)d / divisions, default(T)));
             }
 
             return points;
@@ -48,32 +47,28 @@ namespace ThreeJs4Net.Extras.Core
             return lengths[lengths.Count - 1];
         }
 
-        public List<float> GetLengths(int divisions = -1)
+        public List<float> GetLengths(int? divisions = null)
         {
-            if (divisions == -1)
+            int lDivisions = divisions ?? this.arcLengthDivisions;
+
+            if (this.cacheArcLengths != null && (this.cacheArcLengths.Count == lDivisions + 1) && !this.needsUpdate)
             {
-                divisions = this.arcLengthDivisions;
+                return this.cacheArcLengths;
             }
 
-            if (this.CacheArcLengths != null && (this.CacheArcLengths.Count == divisions + 1) && !this.NeedsUpdate)
-            {
-                return this.CacheArcLengths;
-            }
-
-            this.NeedsUpdate = false;
+            this.needsUpdate = false;
 
             var cache = new List<float>();
 
             T current;
             T last = this.GetPoint(0, default(T));
-            float p, sum = 0;
+            float sum = 0;
 
             cache.Add(0);
 
-            for (p = 1; p <= divisions; p++)
+            for (float p = 1; p <= lDivisions; p++)
             {
-
-                current = this.GetPoint(p / divisions, default(T));
+                current = this.GetPoint(p / lDivisions, default(T));
                 if (current is Vector2 v2)
                 {
                     sum += v2.DistanceTo(last as Vector2);
@@ -85,32 +80,32 @@ namespace ThreeJs4Net.Extras.Core
 
                 cache.Add(sum);
                 last = current;
-
             }
 
-            this.CacheArcLengths = cache;
+            this.cacheArcLengths = cache;
 
             return cache; // { sums: cache, sum: sum }; Sum is in the last element.
         }
 
         public void UdateArcLengths()
         {
-            this.NeedsUpdate = true;
+            this.needsUpdate = true;
             this.GetLengths();
         }
 
         // Given u ( 0 .. 1 ), get a t to find p. This gives you points which are equidistant
 
-        public float GetUtoTmapping(float u, float distance = -1)
+        #region --> GetUtoTmapping
+        public float GetUtoTmapping(float u, float? distance = null)
         {
             var arcLengths = this.GetLengths();
             var i = 0;
             var il = arcLengths.Count;
             float targetArcLength; // The targeted u distance value to get
 
-            if (distance != -1)
+            if (distance != null && distance != 0)
             {
-                targetArcLength = distance;
+                targetArcLength = (float)distance;
             }
             else
             {
@@ -119,7 +114,6 @@ namespace ThreeJs4Net.Extras.Core
 
             // binary search for the index with largest value smaller than target u distance
             int low = 0, high = il - 1;
-            float comparison;
 
             while (low <= high)
             {
@@ -127,7 +121,7 @@ namespace ThreeJs4Net.Extras.Core
                                (high - low) /
                                2); // less likely to overflow, though probably not issue here, JS doesn't really have integers, all numbers are floats
 
-                comparison = arcLengths[i] - targetArcLength;
+                var comparison = arcLengths[i] - targetArcLength;
                 if (comparison < 0)
                 {
                     low = i + 1;
@@ -145,6 +139,7 @@ namespace ThreeJs4Net.Extras.Core
 
             i = high;
 
+            //if (Mathf.Abs(arcLengths[i]-targetArcLength) <= MathUtils.EPS5)
             if (arcLengths[i] == targetArcLength)
             {
                 return i / (il - 1);
@@ -162,13 +157,15 @@ namespace ThreeJs4Net.Extras.Core
             var t = (i + segmentFraction) / (il - 1);
 
             return t;
-        }
+        } 
+        #endregion
 
         // Returns a unit vector tangent at t
         // In case any sub curve does not implement its tangent derivation,
         // 2 points a small delta apart will be used to find its gradient
         // which seems to give a reasonable approximation
 
+        #region --> GetTangent
         public virtual T GetTangent(float t, T optionalTarget)
         {
             float delta = (float)0.0001;
@@ -197,13 +194,17 @@ namespace ThreeJs4Net.Extras.Core
 
             return tangent;
         }
+        #endregion
 
+        #region --> GetTangentAt
         public T GetTangentAt(float u, T optionalTarget)
         {
-            var t = this.GetUtoTmapping(u, -1);
+            var t = this.GetUtoTmapping(u, null);
             return this.GetTangent(t, optionalTarget);
         }
+        #endregion
 
+        #region ##> ComputeFrenetFrames
         private TenetFrames ComputeFrenetFrames(int segments, bool closed)
         {
             if (!(default(T) is Vector3))
@@ -310,7 +311,8 @@ namespace ThreeJs4Net.Extras.Core
                 normals = normals,
                 binormals = binormals
             };
-        }
+        } 
+        #endregion
 
         public virtual Curve<T> Clone()
         {
