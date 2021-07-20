@@ -12,6 +12,7 @@ namespace ThreeJs4Net.Math
         public const float PI = Tau / 2;
         public const float NaturalLog2 = 0.69314718056f;
 
+        public static float Sign(float value) { return (float)System.Math.Sign(value); }
         public static float Cos(float value) { return (float)System.Math.Cos(value); }
         public static float Sin(float value) { return (float)System.Math.Sin(value); }
         public static float Tan(float value) { return (float)System.Math.Tan(value); }

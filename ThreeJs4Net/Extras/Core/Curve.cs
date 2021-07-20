@@ -205,7 +205,7 @@ namespace ThreeJs4Net.Extras.Core
         #endregion
 
         #region ##> ComputeFrenetFrames
-        private TenetFrames ComputeFrenetFrames(int segments, bool closed)
+        public TenetFrames ComputeFrenetFrames(int segments, bool closed)
         {
             if (!(default(T) is Vector3))
             {
@@ -326,7 +326,7 @@ namespace ThreeJs4Net.Extras.Core
             return this;
         }
 
-        private class TenetFrames
+        public class TenetFrames
         {
             public List<Vector3> tangents;
             public List<Vector3> normals;
