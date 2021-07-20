@@ -1,57 +1,47 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using ThreeJs4Net.Core;
 using ThreeJs4Net.Extras;
 using ThreeJs4Net.Extras.Core;
 using ThreeJs4Net.Math;
-using ThreeJs4Net.Renderers.Shaders;
 
 namespace ThreeJs4Net.Geometries
 {
     public class ExtrudeGeometry : Geometry
     {
-        //this.parameters = {
-        //shapes: shapes,
-        //	options: options
-        //};
-
         public ExtrudeGeometry(Shape[] shapes, Hashtable options = null)
         {
-            this.FromBufferGeometry(new ExtrudeBufferGeometry(shapes, options));
-            this.MergeVertices();
         }
     }
 
 
-    public class ExtrudeBufferGeometry : BufferGeometry
+    public sealed class ExtrudeBufferGeometry : BufferGeometry
     {
         private Dictionary<string, object> parameters = new Dictionary<string, object>();
-        private Hashtable options;
-        private List<float> verticesArray;
-        private List<float> uvArray;
+        private readonly Hashtable _options = new Hashtable();
+        private readonly List<float> _verticesArray = new List<float>();
+        private readonly List<float> _uvArray = new List<float>();
 
         public ExtrudeBufferGeometry(Shape[] shapes, Hashtable options = null) : base()
         {
-            this.options = options;
+            this._options = options ?? this._options;
+
             //parameters.Add("shapes", shapes);
             //         parameters.Add("shapes", options);
 
+            _verticesArray = new List<float>();
+            _uvArray = new List<float>();
 
-            var verticesArray = new List<float>();
-            var uvArray = new List<float>();
-
-            for (var i = 0; i < shapes.Length; i++)
+            foreach (var shape in shapes)
             {
-                var shape = shapes[i];
                 AddShape(shape);
             }
 
             // build geometry
-            this.SetAttribute("position", new BufferAttribute<float>(verticesArray.ToArray(), 3));
-            this.SetAttribute("uv", new BufferAttribute<float>(uvArray.ToArray(), 2));
+            this.SetAttribute("position", new BufferAttribute<float>(_verticesArray.ToArray(), 3));
+            this.SetAttribute("uv", new BufferAttribute<float>(_uvArray.ToArray(), 2));
             this.ComputeVertexNormals();
         }
 
@@ -60,33 +50,31 @@ namespace ThreeJs4Net.Geometries
             var placeholder = new List<float>();
 
             // options
+            var curveSegments = _options.ContainsKey("curveSegments") ? (int) _options["curveSegments"] : 12;
+            var steps = _options.ContainsKey("steps") ? (int) _options["steps"] : 1;
+            var depth = _options.ContainsKey("depth") ? (int) _options["depth"] : 100;
+            var bevelEnabled = _options.ContainsKey("bevelEnabled") ? (bool) _options["bevelEnabled"] : true;
+            var bevelThickness = _options.ContainsKey("bevelThickness") ? (int) _options["bevelThickness"] : 6;
+            var bevelSize = _options.ContainsKey("bevelSize") ? (int) _options["bevelSize"] : bevelThickness - 2;
+            var bevelOffset = _options.ContainsKey("bevelOffset") ? (int) _options["bevelOffset"] : 0;
+            var bevelSegments = _options.ContainsKey("bevelSegments") ? (int) _options["bevelSegments"] : 3;
 
-            var curveSegments = options.ContainsKey("curveSegments") ? (int)options["curveSegments"] : 12;
-            var steps = options.ContainsKey("steps") ? (int)options["steps"] : 1;
-            var depth = options.ContainsKey("depth") ? (int)options["depth"] : 100;
+            var extrudePath = _options["extrudePath"] as Curve<Vector3>;
 
-            var bevelEnabled = options.ContainsKey("bevelEnabled") ? (bool)options["bevelEnabled"] : true;
-            var bevelThickness = options.ContainsKey("bevelThickness") ? (int)options["bevelThickness"] : 6;
-            var bevelSize = options.ContainsKey("bevelSize") ? (int)options["bevelSize"] : bevelThickness - 2;
-            var bevelOffset = options.ContainsKey("bevelOffset") ? (int)options["bevelOffset"] : 0;
-            var bevelSegments = options.ContainsKey("bevelSegments") ? (int)options["bevelSegments"] : 3;
-
-            Curve<Vector3> extrudePath = options["extrudePath"] as Curve<Vector3>;
-
-            var uvgen = options.ContainsKey("UVGenerator") ? options["UVGenerator"] : WorldUVGenerator;
+            IUVGenerator uvgen = _options.ContainsKey("UVGenerator") ? (IUVGenerator)_options["UVGenerator"] : new WorldUVGenerator();
 
             // deprecated options
-            if (options.ContainsKey("amount"))
+            if (_options.ContainsKey("amount"))
             {
-                depth = (int)options["amount"];
+                depth = (int) _options["amount"];
             }
 
-            List<Vector3> extrudePts = new List<Vector3>();
-            bool extrudeByPath = false;
-            Curve<Vector3>.TenetFrames splineTube = new Curve<Vector3>.TenetFrames;
-            Vector3 binormal = new Vector3();
-            Vector3 normal = new Vector3();
-            Vector3 position2 = new Vector3();
+            var extrudePts = new List<Vector3>();
+            var extrudeByPath = false;
+            var splineTube = new Curve<Vector3>.TenetFrames();
+            var binormal = new Vector3();
+            var normal = new Vector3();
+            var position2 = new Vector3();
 
             if (extrudePath != null)
             {
@@ -114,8 +102,8 @@ namespace ThreeJs4Net.Geometries
             }
 
             // Variables initialization
-            var ahole = new List<Vector2>();
-            //var hl; // looping of holes
+            List<Vector2> ahole;
+
             var shapePoints = shape.ExtractPoints(curveSegments);
             var vertices = shapePoints.shape;
             var holes = shapePoints.holes;
@@ -130,7 +118,6 @@ namespace ThreeJs4Net.Geometries
                     ahole = holes[h].ToList();
                     if (ShapeUtils.isClockWise(ahole))
                     {
-                        var temp = ahole;
                         ahole.Reverse();
                         holes[h] = ahole.ToArray();
                     }
@@ -140,9 +127,9 @@ namespace ThreeJs4Net.Geometries
             var faces = ShapeUtils.TriangulateShape(vertices.ToArray(), holes);
             /* Vertices */
             var contour = vertices; // vertices has all points but contour has only points of circumference
-            for (var h = 0; h < holes.Count; h++)
+            foreach (var t in holes)
             {
-                ahole = holes[h].ToList();
+                ahole = t.ToList();
                 vertices.AddRange(ahole);
             }
 
@@ -152,9 +139,11 @@ namespace ThreeJs4Net.Geometries
                 {
                     throw new Exception("THREE.ExtrudeGeometry: vec does not exist");
                 }
+
                 return vec.Clone().MultiplyScalar(size).Add(pt);
             }
 
+            float bs;
             //var b, bs, t, z, face, vert;
             var vlen = vertices.Count;
             var flen = faces.Count;
@@ -202,8 +191,8 @@ namespace ThreeJs4Net.Geometries
                     // scaling factor for v_prev to intersection point
 
                     var sf = ((ptNextShift_x - ptPrevShift_x) * v_next_y -
-                            (ptNextShift_y - ptPrevShift_y) * v_next_x) /
-                        (v_prev_x * v_next_y - v_prev_y * v_next_x);
+                              (ptNextShift_y - ptPrevShift_y) * v_next_x) /
+                             (v_prev_x * v_next_y - v_prev_y * v_next_x);
 
                     // vector from inPt to intersection point
 
@@ -266,6 +255,7 @@ namespace ThreeJs4Net.Geometries
                         shrink_by = Mathf.Sqrt(v_prev_lensq / 2);
                     }
                 }
+
                 return new Vector2(v_trans_x / shrink_by, v_trans_y / shrink_by);
             }
 
@@ -274,7 +264,7 @@ namespace ThreeJs4Net.Geometries
             var i = 0;
             var il = contour.Count;
             var j = il - 1;
-            var k = i + 1;
+            var k = 1;
             for (i = 0; i < contour.Count; i++, j++, k++)
             {
                 if (j == il) j = 0;
@@ -282,10 +272,11 @@ namespace ThreeJs4Net.Geometries
 
                 //  (j)---(i)---(k)
                 // console.log('i,j,k', i, j , k)
-                contourMovements[i] = getBevelVec(contour[i], contour[j], contour[k]);
+                contourMovements.Add(getBevelVec(contour[i], contour[j], contour[k]));
             }
 
-            var holesMovements = [];
+            var holesMovements = new List<List<Vector2>>();
+            ;
             List<Vector2> oneHoleMovements;
             List<Vector2> verticesMovements = new List<Vector2>();
             verticesMovements.AddRange(contourMovements);
@@ -302,7 +293,7 @@ namespace ThreeJs4Net.Geometries
                     oneHoleMovements[i] = getBevelVec(ahole[i], ahole[j], ahole[k]);
                 }
 
-                holesMovements.push(oneHoleMovements);
+                holesMovements.Add(oneHoleMovements);
                 verticesMovements.AddRange(oneHoleMovements);
             }
 
@@ -312,7 +303,7 @@ namespace ThreeJs4Net.Geometries
                 //for ( b = bevelSegments; b > 0; b -- ) {
                 var t = b / bevelSegments;
                 var z = bevelThickness * Mathf.Cos(t * Mathf.PI / 2);
-                var bs = bevelSize * Mathf.Sin(t * Mathf.PI / 2) + bevelOffset;
+                bs = (float)(bevelSize * Mathf.Sin(t * Mathf.PI / 2) + bevelOffset);
 
                 // contract shape
                 for (i = 0, il = contour.Count; i < il; i++)
@@ -334,7 +325,7 @@ namespace ThreeJs4Net.Geometries
                 }
             }
 
-            float bs = bevelSize + bevelOffset;
+            bs = bevelSize + bevelOffset;
 
             // Back facing vertices
 
@@ -413,15 +404,15 @@ namespace ThreeJs4Net.Geometries
 
             /* Faces */
             // Top and bottom faces
-            buildLidFaces();
+            BuildLidFaces();
             // Sides faces
-            buildSideFaces();
+            BuildSideFaces();
 
 
             /////  Internal functions
-            void buildLidFaces()
+            void BuildLidFaces()
             {
-                var start = verticesArray.Count / 3;
+                var start = _verticesArray.Count / 3;
                 if (bevelEnabled)
                 {
                     var layer = 0; // steps + 1
@@ -432,6 +423,7 @@ namespace ThreeJs4Net.Geometries
                         var face = faces[i];
                         f3(face[2] + offset, face[1] + offset, face[0] + offset);
                     }
+
                     layer = steps + bevelSegments * 2;
                     offset = vlen * layer;
                     // Top faces
@@ -458,37 +450,40 @@ namespace ThreeJs4Net.Geometries
                     }
                 }
 
-                scope.addGroup(start, verticesArray.Count / 3 - start, 0);
+                this.AddGroup(start, _verticesArray.Count / 3 - start, 0);
             }
 
             // Create faces for the z-sides of the shape
 
-            void buildSideFaces()
+            void BuildSideFaces()
             {
-                var start = verticesArray.Count / 3;
+                var start = _verticesArray.Count / 3;
                 var layeroffset = 0;
-                sidewalls(contour, layeroffset);
+                Sidewalls(contour, layeroffset);
                 layeroffset += contour.Count;
 
                 for (var h = 0; h < holes.Count; h++)
                 {
                     ahole = holes[h].ToList();
-                    sidewalls(ahole, layeroffset);
+                    Sidewalls(ahole, layeroffset);
                     //, true
                     layeroffset += ahole.Count;
                 }
 
-                scope.addGroup(start, verticesArray.Count / 3 - start, 1);
+                this.AddGroup(start, _verticesArray.Count / 3 - start, 1);
             }
 
-            void sidewalls(List<Vector2> contour, int layeroffset)
+            void Sidewalls(List<Vector2> contour, int layeroffset)
             {
                 var i = contour.Count;
                 while (--i >= 0)
                 {
                     j = i;
                     k = i - 1;
-                    if (k < 0) k = contour.Count - 1;
+                    if (k < 0)
+                    {
+                        k = contour.Count - 1;
+                    }
                     //console.log('b', i,j, i-1, k,vertices.length);
                     var s = 0;
                     var sl = steps + bevelSegments * 2;
@@ -519,8 +514,8 @@ namespace ThreeJs4Net.Geometries
                 addVertex(b);
                 addVertex(c);
 
-                var nextIndex = verticesArray.Count / 3;
-                var uvs = uvgen.generateTopUV(scope, verticesArray, nextIndex - 3, nextIndex - 2, nextIndex - 1);
+                var nextIndex = _verticesArray.Count / 3;
+                var uvs = uvgen.GenerateTopUV(this, _verticesArray, nextIndex - 3, nextIndex - 2, nextIndex - 1);
 
                 addUV(uvs[0]);
                 addUV(uvs[1]);
@@ -535,8 +530,9 @@ namespace ThreeJs4Net.Geometries
                 addVertex(b);
                 addVertex(c);
                 addVertex(d);
-                var nextIndex = verticesArray.Count / 3;
-                var uvs = uvgen.generateSideWallUV(scope, verticesArray, nextIndex - 6, nextIndex - 3, nextIndex - 2, nextIndex - 1);
+                var nextIndex = _verticesArray.Count / 3;
+                var uvs = uvgen.GenerateSideWallUV(this, _verticesArray, nextIndex - 6, nextIndex - 3, nextIndex - 2,
+                    nextIndex - 1);
                 addUV(uvs[0]);
                 addUV(uvs[1]);
                 addUV(uvs[3]);
@@ -547,99 +543,81 @@ namespace ThreeJs4Net.Geometries
 
             void addVertex(int index)
             {
-                verticesArray.Add(placeholder[index * 3 + 0]);
-                verticesArray.Add(placeholder[index * 3 + 1]);
-                verticesArray.Add(placeholder[index * 3 + 2]);
+                _verticesArray.Add(placeholder[index * 3 + 0]);
+                _verticesArray.Add(placeholder[index * 3 + 1]);
+                _verticesArray.Add(placeholder[index * 3 + 2]);
             }
 
             void addUV(Vector2 vector2)
             {
-                uvArray.Add(vector2.X);
-                uvArray.Add(vector2.Y);
+                _uvArray.Add(vector2.X);
+                _uvArray.Add(vector2.Y);
+            }
+        }
+    }
+
+    public interface IUVGenerator
+    {
+        Vector2[] GenerateTopUV(BaseGeometry geometry, List<float> vertices, int indexA, int indexB, int indexC);
+        Vector2[] GenerateSideWallUV(BaseGeometry geometry, List<float> vertices, int indexA, int indexB, int indexC, int indexD);
+    }
+
+    public class WorldUVGenerator : IUVGenerator
+    {
+        public Vector2[] GenerateTopUV(BaseGeometry geometry, List<float> vertices, int indexA, int indexB, int indexC)
+        {
+            var a_x = vertices[indexA * 3];
+            var a_y = vertices[indexA * 3 + 1];
+            var b_x = vertices[indexB * 3];
+            var b_y = vertices[indexB * 3 + 1];
+            var c_x = vertices[indexC * 3];
+            var c_y = vertices[indexC * 3 + 1];
+
+            return new Vector2[]
+            {
+                new Vector2(a_x, a_y),
+                new Vector2(b_x, b_y),
+                new Vector2(c_x, c_y)
+            };
+        }
+
+        public Vector2[] GenerateSideWallUV(BaseGeometry geometry, List<float> vertices, int indexA, int indexB, int indexC, int indexD)
+        {
+
+            var a_x = vertices[indexA * 3];
+            var a_y = vertices[indexA * 3 + 1];
+            var a_z = vertices[indexA * 3 + 2];
+            var b_x = vertices[indexB * 3];
+            var b_y = vertices[indexB * 3 + 1];
+            var b_z = vertices[indexB * 3 + 2];
+            var c_x = vertices[indexC * 3];
+            var c_y = vertices[indexC * 3 + 1];
+            var c_z = vertices[indexC * 3 + 2];
+            var d_x = vertices[indexD * 3];
+            var d_y = vertices[indexD * 3 + 1];
+            var d_z = vertices[indexD * 3 + 2];
+
+            if (Mathf.Abs(a_y - b_y) < 0.01)
+            {
+                return new Vector2[]
+                {
+                    new Vector2(a_x, 1 - a_z),
+                    new Vector2(b_x, 1 - b_z),
+                    new Vector2(c_x, 1 - c_z),
+                    new Vector2(d_x, 1 - d_z)
+                };
+            }
+            else
+            {
+                return new Vector2[]
+                {
+                    new Vector2(a_y, 1 - a_z),
+                    new Vector2(b_y, 1 - b_z),
+                    new Vector2(c_y, 1 - c_z),
+                    new Vector2(d_y, 1 - d_z)
+                };
             }
         }
     }
 }
-
-//}
-
-
-//var WorldUVGenerator = {
-
-//	generateTopUV: function(geometry, vertices, indexA, indexB, indexC) {
-
-//	var a_x = vertices[indexA * 3];
-//	var a_y = vertices[indexA * 3 + 1];
-//	var b_x = vertices[indexB * 3];
-//	var b_y = vertices[indexB * 3 + 1];
-//	var c_x = vertices[indexC * 3];
-//	var c_y = vertices[indexC * 3 + 1];
-
-//	return [
-//		new Vector2(a_x, a_y),
-//		new Vector2(b_x, b_y),
-//		new Vector2(c_x, c_y)
-//	];
-
-//},
-
-//	generateSideWallUV: function(geometry, vertices, indexA, indexB, indexC, indexD) {
-
-//	var a_x = vertices[indexA * 3];
-//	var a_y = vertices[indexA * 3 + 1];
-//	var a_z = vertices[indexA * 3 + 2];
-//	var b_x = vertices[indexB * 3];
-//	var b_y = vertices[indexB * 3 + 1];
-//	var b_z = vertices[indexB * 3 + 2];
-//	var c_x = vertices[indexC * 3];
-//	var c_y = vertices[indexC * 3 + 1];
-//	var c_z = vertices[indexC * 3 + 2];
-//	var d_x = vertices[indexD * 3];
-//	var d_y = vertices[indexD * 3 + 1];
-//	var d_z = vertices[indexD * 3 + 2];
-
-//	if (Math.abs(a_y - b_y) < 0.01)
-//	{
-//		return [
-//			new Vector2(a_x, 1 - a_z),
-//			new Vector2(b_x, 1 - b_z),
-//			new Vector2(c_x, 1 - c_z),
-//			new Vector2(d_x, 1 - d_z)
-//		];
-//	}
-//	else
-//	{
-//		return [
-//			new Vector2(a_y, 1 - a_z),
-//			new Vector2(b_y, 1 - b_z),
-//			new Vector2(c_y, 1 - c_z),
-//			new Vector2(d_y, 1 - d_z)
-//		];
-//	}
-//}
-//};
-
-//function toJSON(shapes, options, data )
-//{
-//	data.shapes = [];
-//	if (Array.isArray(shapes))
-//	{
-//		for (var i = 0, l = shapes.length; i < l; i++)
-//		{
-//			var shape = shapes[i];
-//			data.shapes.push(shape.uuid);
-//		}
-//	}
-//	else
-//	{
-//		data.shapes.push(shapes.uuid);
-//	}
-//	//
-//	if (options.extrudePath !== undefined) data.options.extrudePath = options.extrudePath.toJSON();
-//	return data;
-//}
-
-
-//export
-//{ ExtrudeGeometry, ExtrudeBufferGeometry };
 
