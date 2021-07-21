@@ -52,11 +52,11 @@ namespace ThreeJs4Net.Geometries
             // options
             var curveSegments = _options.ContainsKey("curveSegments") ? (int) _options["curveSegments"] : 12;
             var steps = _options.ContainsKey("steps") ? (int) _options["steps"] : 1;
-            var depth = _options.ContainsKey("depth") ? (int) _options["depth"] : 100;
+            var depth = _options.ContainsKey("depth") ? (float) _options["depth"] : 100;
             var bevelEnabled = _options.ContainsKey("bevelEnabled") ? (bool) _options["bevelEnabled"] : true;
-            var bevelThickness = _options.ContainsKey("bevelThickness") ? (int) _options["bevelThickness"] : 6;
-            var bevelSize = _options.ContainsKey("bevelSize") ? (int) _options["bevelSize"] : bevelThickness - 2;
-            var bevelOffset = _options.ContainsKey("bevelOffset") ? (int) _options["bevelOffset"] : 0;
+            var bevelThickness = _options.ContainsKey("bevelThickness") ? (float) _options["bevelThickness"] : 6;
+            var bevelSize = _options.ContainsKey("bevelSize") ? (float) _options["bevelSize"] : bevelThickness - 2;
+            var bevelOffset = _options.ContainsKey("bevelOffset") ? (float) _options["bevelOffset"] : 0;
             var bevelSegments = _options.ContainsKey("bevelSegments") ? (int) _options["bevelSegments"] : 3;
 
             var extrudePath = _options["extrudePath"] as Curve<Vector3>;
@@ -277,7 +277,7 @@ namespace ThreeJs4Net.Geometries
 
             var holesMovements = new List<List<Vector2>>();
             ;
-            List<Vector2> oneHoleMovements;
+            List<Vector2> oneHoleMovements = new List<Vector2>();
             List<Vector2> verticesMovements = new List<Vector2>();
             verticesMovements.AddRange(contourMovements);
 
@@ -290,7 +290,7 @@ namespace ThreeJs4Net.Geometries
                     if (j == il) j = 0;
                     if (k == il) k = 0;
                     //  (j)---(i)---(k)
-                    oneHoleMovements[i] = getBevelVec(ahole[i], ahole[j], ahole[k]);
+                    oneHoleMovements.Add(getBevelVec(ahole[i], ahole[j], ahole[k]));
                 }
 
                 holesMovements.Add(oneHoleMovements);

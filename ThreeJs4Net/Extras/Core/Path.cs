@@ -14,6 +14,11 @@ namespace ThreeJs4Net.Extras.Core
     {
         public Vector2 CurrentPoint;
 
+        public Path() : base()
+        {
+            CurrentPoint = new Vector2();
+        }
+
         public Path(IEnumerable<Vector2> points) : base()
         {
             CurrentPoint = new Vector2();
@@ -109,7 +114,7 @@ namespace ThreeJs4Net.Extras.Core
             return this;
         }
 
-        public Path Absellipse(float aX, float aY, float xRadius, float yRadius, float aStartAngle, float aEndAngle, bool aClockwise, float aRotation)
+        public Path Absellipse(float aX, float aY, float xRadius, float yRadius, float aStartAngle, float aEndAngle, bool aClockwise , float aRotation = 0)
         {
             var curve = new EllipseCurve(aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation);
             if (this.Curves.Count > 0)
