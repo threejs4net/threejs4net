@@ -81,6 +81,7 @@
     <Compile Include="Extras\Curves\LineCurve.cs" />
     <Compile Include="Extras\Curves\CubicBezierCurve.cs" />
     <Compile Include="Extras\Curves\QuadraticBezierCurve.cs" />
+    <Compile Include="Extras\Earcut2.cs" />
     <Compile Include="Extras\Earcut.cs" />
     <Compile Include="Extras\FontUtils.cs" />
     <Compile Include="Extras\ShapeUtils.cs" />

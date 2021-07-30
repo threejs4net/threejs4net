@@ -12,6 +12,12 @@ namespace ThreeJs4Net.Extras.Core
         public Guid uuid;
         public List<Path> holes;
 
+        public Shape() : base()
+        {
+            this.uuid = Guid.NewGuid();
+            this.holes = new List<Path>();
+        }
+
         public Shape(IEnumerable<Vector2> points = null) : base(points)
         {
             this.uuid = Guid.NewGuid();

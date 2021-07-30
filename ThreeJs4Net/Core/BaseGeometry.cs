@@ -47,6 +47,7 @@ namespace ThreeJs4Net.Core
         public List<Renderers.Shaders.Attribute> __webglCustomAttributesList;
         public bool __inittedArrays;
         public float[] __lineDistanceArray;
+        public object UserData;
 
         public bool __webglInit { get; set; }
 
