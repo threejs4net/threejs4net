@@ -6,253 +6,270 @@ namespace ThreeJs4Net.Geometries
 {
     public class PolyhedronGeometry : Geometry
     {
-        public struct UserData
+        public float Radius { get; }
+        public float Detail { get; }
+
+        public List<float> Vertices;
+        public List<int> Indices;
+
+        public PolyhedronGeometry(List<float> vertices, List<int> indices, float radius, float detail)
         {
-            public int index;
-            public Vector2 uv;
+            Vertices = vertices ?? new List<float>();
+            Indices = indices ?? new List<int>();
+            Radius = radius;
+            Detail = detail;
+
+            if (radius == 0) radius = 1;
+
+            FromBufferGeometry(new PolyhedronBufferGeometry(vertices, indices, radius, detail));
+            MergeVertices();
         }
+    }
 
+    public class PolyhedronBufferGeometry : BufferGeometry
+    {
+        public float Radius { get; }
+        public float Detail { get; }
 
-        public float Radius;
+        public List<float> Vertices;
+        public List<int> Indices;
+        private List<float> VertexBuffer = new List<float>();
+        private List<float> UvBuffer = new List<float>();
 
-        public float Detail;
-
-        private Vector3 _centroid;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        protected PolyhedronGeometry()
+        public PolyhedronBufferGeometry(List<float> vertices, List<int> indices, float radius = 1, float detail = 0)
         {
-            this.type = "PolyhedronGeometry";
-        }
+            Vertices = vertices ?? new List<float>();
+            Indices = indices ?? new List<int>();
+            Radius = radius;
+            Detail = detail;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vertices"></param>
-        /// <param name="indices"></param>
-        /// <param name="radius"></param>
-        /// <param name="detail"></param>
-        public PolyhedronGeometry(IList<float> vertices, IList<int> indices, float radius, float detail)
-        {
-            this.Construct(vertices, indices, radius, detail);
-        }
+            if (radius == 0) radius = 1;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="vertices"></param>
-        /// <param name="indices"></param>
-        /// <param name="radius"></param>
-        /// <param name="detail"></param>
-        protected void Construct(IList<float> vertices, IList<int> indices, float radius, float detail)
-        {
-            var i = 0; var j = 0; var l = 0;
+            Subdivide(detail);
+            ApplyRadius(radius);
 
-            for (i = 0; i < vertices.Count; i += 3)
+            GenerateUVs();
+
+            SetAttribute("position", new BufferAttribute<float>(VertexBuffer.ToArray(), 3));
+            SetAttribute("normal", new BufferAttribute<float>(VertexBuffer.ToArray(), 3));
+            SetAttribute("uv", new BufferAttribute<float>(UvBuffer.ToArray(), 2));
+
+            if (detail == 0)
             {
-                this.Prepare(new Vector3(vertices[i], vertices[i + 1], vertices[i + 2]));
+                ComputeVertexNormals();
             }
-
-            var faces = new List<Face3>();
-
-            for (i = 0, j = 0, l = indices.Count; i < l; i += 3, j++)
+            else
             {
-                var v1 = this.Vertices[indices[i + 0]];
-                var v2 = this.Vertices[indices[i + 1]];
-                var v3 = this.Vertices[indices[i + 2]];
-
-                var face = new Face3(((UserData)v1.UserData).index, ((UserData)v2.UserData).index, ((UserData)v3.UserData).index);
-                face.VertexNormals.Add((Vector3)v1.Clone());
-                face.VertexNormals.Add((Vector3)v2.Clone());
-                face.VertexNormals.Add((Vector3)v3.Clone());
-
-                faces.Add(face);
+                NormalizeNormals();
             }
-
-            _centroid = new Vector3();
-
-            for (i = 0; i < faces.Count; i++)
-            {
-                Subdivide(faces[i], detail);
-            }
-
-            // Handle case when face straddles the seam
-
-            for (i = 0; i < this.FaceVertexUvs[0].Count; i++)
-            {
-                var uvs = this.FaceVertexUvs[0][i];
-
-                var x0 = uvs[0].X;
-                var x1 = uvs[1].X;
-                var x2 = uvs[2].X;
-
-                var max = System.Math.Max(x0, System.Math.Max(x1, x2));
-                var min = System.Math.Min(x0, System.Math.Min(x1, x2));
-
-                if (max > 0.9 && min < 0.1)
-                { // 0.9 is somewhat arbitrary
-                    if (x0 < 0.2) uvs[0].X += 1;
-                    if (x1 < 0.2) uvs[1].X += 1;
-                    if (x2 < 0.2) uvs[2].X += 1;
-                }
-            }
-
-            // Apply radius
-
-            for (i = 0; i < this.Vertices.Count; i++)
-            {
-                this.Vertices[i].MultiplyScalar(radius);
-            }
-
-            // Merge vertices
-
-            this.MergeVertices();
-
-            this.ComputeFaceNormals();
-
-            this.BoundingSphere = new Sphere(new Vector3(), radius);
         }
 
-        /// <summary>
-        /// Project vector onto sphere's surface
-        /// </summary>
-        /// <param name="vector"></param>
-        /// <returns></returns>
-        private Vector3 Prepare(Vector3 vector) 
+        private void Subdivide(float vDetail)
         {
-            var vertex = (Vector3)(vector.Normalize().Clone());
-            this.Vertices.Add(vertex);
-            //vertex.index = this.Vertices.Count - 1;
+            var a = new Vector3();
+            var b = new Vector3();
+            var c = new Vector3();
 
-            // Texture coords are equivalent to map coords, calculate angle and convert to fraction of A circle.
-
-            var u = Azimuth( vector ) / 2 / System.Math.PI + 0.5;
-            var v = Inclination(vector) / System.Math.PI + 0.5;
-            //vertex.uv = new Vector2((float)u, (float)(1.0f - v));
-
-            vertex.UserData = new UserData() { index = this.Vertices.Count - 1, uv = new Vector2((float)u, (float)(1.0f - v)) };
-
-            return vertex;
-        }
-
-
-        /// <summary>
-        /// Approximate A curved face with recursively sub-divided triangles.
-        /// </summary>
-        /// <param name="v1"></param>
-        /// <param name="v2"></param>
-        /// <param name="v3"></param>
-        private void Make(Vector3 v1, Vector3 v2, Vector3 v3)
-        {
-            var face = new Face3(((UserData)v1.UserData).index, ((UserData)v2.UserData).index, ((UserData)v3.UserData).index);
-            face.VertexNormals.Add((Vector3)v1.Clone());
-            face.VertexNormals.Add((Vector3)v2.Clone());
-            face.VertexNormals.Add((Vector3)v3.Clone());
-            this.Faces.Add(face);
-
-            _centroid.Copy(v1).Add(v2).Add(v3).DivideScalar(3);
-
-            var azi = Azimuth(_centroid);
-
-            this.FaceVertexUvs[0].Add(new List<Vector2> 
+            // iterate over all faces and apply a subdivison with the given detail value
+            for (var i = 0; i < Indices.Count; i += 3)
             {
-                CorrectUV( ((UserData)v1.UserData).uv, v1, azi), 
-                CorrectUV( ((UserData)v2.UserData).uv, v2, azi),
-                CorrectUV( ((UserData)v2.UserData).uv, v3, azi) 
-            });
+                // get the vertices of the face
+                GetVertexByIndex(Indices[i + 0], a);
+                GetVertexByIndex(Indices[i + 1], b);
+                GetVertexByIndex(Indices[i + 2], c);
+
+                // perform subdivision
+                SubdivideFace(a, b, c, vDetail);
+            }
         }
-        
 
-        /// <summary>
-        /// Analytically subdivide A face to the required detail level.
-        /// </summary>
-        /// <param name="face"></param>
-        /// <param name="detail"></param>
-        private void Subdivide(Face3 face, float detail ) 
+        private void SubdivideFace(Vector3 a, Vector3 b, Vector3 c, float vDetail)
         {
-            var cols = System.Math.Pow(2, detail);
-            var cells = System.Math.Pow(4, detail);
-            var a = Prepare(this.Vertices[face.A]);
-            var b = Prepare(this.Vertices[face.B]);
-            var c = Prepare(this.Vertices[face.C]);
+            float cols = (float)System.Math.Pow(2, vDetail);
 
+            // we use this multidimensional array as a data structure for creating the subdivision
             var v = new List<List<Vector3>>();
+            int i, j;
 
-            // Construct all of the vertices for this subdivision.
-
-            for ( var i = 0 ; i <= cols; i ++ )
+            // construct all of the vertices for this subdivision
+            for (i = 0; i <= cols; i++)
             {
                 v.Add(new List<Vector3>());
 
-                var aj = Prepare((Vector3)a.Clone()).Lerp(c, i / (float)cols);
-                var bj = Prepare((Vector3)b.Clone()).Lerp(c, i / (float)cols);
-                var rows = cols - i;
+                var aj = a.Clone().Lerp(c, i / cols);
+                var bj = b.Clone().Lerp(c, i / cols);
+                float rows = cols - i;
 
-                for ( var j = 0; j <= rows; j ++) 
+                for (j = 0; j <= rows; j++)
                 {
-                    if ( j == 0 && i == cols )
+                    if (j == 0 && i == cols)
                     {
                         v[i].Add(aj);
-                    } else
+                    }
+                    else
                     {
-                        v[i].Add(Prepare(((Vector3)aj.Clone()).Lerp(bj, j / (float)rows)));
+                        v[i].Add(aj.Clone().Lerp(bj, j / rows));
                     }
                 }
             }
 
-            // Construct all of the faces.
-            
-            for ( var i = 0; i < cols ; i ++ ) 
+            // construct all of the faces
+            for (i = 0; i < cols; i++)
             {
-                for ( var j = 0; j < 2 * (cols - i) - 1; j ++ )
+                for (j = 0; j < 2 * (cols - i) - 1; j++)
                 {
-                    var k = (int)System.Math.Floor(j / 2.0f);
-                    if ( j % 2 == 0 )
+                    var k = Mathf.Floor((float)j / 2);
+
+                    if (j % 2 == 0)
                     {
-                        Make(v[i][k + 1], v[i + 1][k], v[i][k]);
-                    } else
+                        PushVertex(v[i][k + 1]);
+                        PushVertex(v[i + 1][k]);
+                        PushVertex(v[i][k]);
+                    }
+                    else
                     {
-                        Make(v[i][k + 1], v[i + 1][k + 1], v[i + 1][k]);
+                        PushVertex(v[i][k + 1]);
+                        PushVertex(v[i + 1][k + 1]);
+                        PushVertex(v[i + 1][k]);
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Angle around the Y axis, counter-clockwise when looking from above.
-        /// </summary>
-        /// <param name="vector"></param>
-        /// <returns></returns>
-        private float Azimuth(Vector3 vector ) {
-            return (float)System.Math.Atan2( vector.Z, - vector.X );
+        private void ApplyRadius(float vRadius)
+        {
+            var vertex = new Vector3();
+
+            // iterate over the entire buffer and apply the radius to each vertex
+            for (var i = 0; i < VertexBuffer.Count; i += 3)
+            {
+                vertex.X = VertexBuffer[i + 0];
+                vertex.Y = VertexBuffer[i + 1];
+                vertex.Z = VertexBuffer[i + 2];
+
+                vertex.Normalize().MultiplyScalar(vRadius);
+
+                VertexBuffer[i + 0] = vertex.X;
+                VertexBuffer[i + 1] = vertex.Y;
+                VertexBuffer[i + 2] = vertex.Z;
+            }
         }
-        
-        /// <summary>
-        /// Angle above the XZ plane.
-        /// </summary>
-        /// <param name="vector"></param>
-        /// <returns></returns>
+
+        private void GenerateUVs()
+        {
+            var vertex = new Vector3();
+
+            for (var i = 0; i < VertexBuffer.Count; i += 3)
+            {
+                vertex.X = VertexBuffer[i + 0];
+                vertex.Y = VertexBuffer[i + 1];
+                vertex.Z = VertexBuffer[i + 2];
+
+                var u = (float)(Azimuth(vertex) / 2 / (Mathf.PI + 0.5));
+                var v = (float)(Inclination(vertex) / (Mathf.PI + 0.5));
+                UvBuffer.Add(u);
+                UvBuffer.Add(1 - v);
+            }
+
+            CorrectUVs();
+            CorrectSeam();
+        }
+
+        private void CorrectSeam()
+        {
+            // handle case when face straddles the seam, see #3269
+
+            for (var i = 0; i < UvBuffer.Count; i += 6)
+            {
+                // uv data of a single face
+                var x0 = UvBuffer[i + 0];
+                var x1 = UvBuffer[i + 2];
+                var x2 = UvBuffer[i + 4];
+                var max = Mathf.Max(x0, Mathf.Max(x1, x2));
+                var min = Mathf.Min(x0, Mathf.Min(x1, x2));
+
+                // 0.9 is somewhat arbitrary
+                if (max > 0.9 && min < 0.1)
+                {
+                    if (x0 < 0.2) UvBuffer[i + 0] += 1;
+                    if (x1 < 0.2) UvBuffer[i + 2] += 1;
+                    if (x2 < 0.2) UvBuffer[i + 4] += 1;
+                }
+            }
+        }
+        private void PushVertex(Vector3 vertex)
+        {
+            VertexBuffer.Add(vertex.X);
+            VertexBuffer.Add(vertex.Y);
+            VertexBuffer.Add(vertex.Z);
+        }
+
+        private void GetVertexByIndex(int index, Vector3 vertex)
+        {
+            var stride = index * 3;
+
+            vertex.X = Vertices[stride + 0];
+            vertex.Y = Vertices[stride + 1];
+            vertex.Z = Vertices[stride + 2];
+        }
+
+        private void CorrectUVs()
+        {
+            var a = new Vector3();
+            var b = new Vector3();
+            var c = new Vector3();
+
+            var centroid = new Vector3();
+
+            var uvA = new Vector2();
+            var uvB = new Vector2();
+            var uvC = new Vector2();
+
+            for (int i = 0, j = 0; i < VertexBuffer.Count; i += 9, j += 6)
+            {
+                a.Set(VertexBuffer[i + 0], VertexBuffer[i + 1], VertexBuffer[i + 2]);
+                b.Set(VertexBuffer[i + 3], VertexBuffer[i + 4], VertexBuffer[i + 5]);
+                c.Set(VertexBuffer[i + 6], VertexBuffer[i + 7], VertexBuffer[i + 8]);
+
+                uvA.Set(UvBuffer[j + 0], UvBuffer[j + 1]);
+                uvB.Set(UvBuffer[j + 2], UvBuffer[j + 3]);
+                uvC.Set(UvBuffer[j + 4], UvBuffer[j + 5]);
+
+                centroid.Copy(a).Add(b).Add(c).DivideScalar(3);
+
+                var azi = Azimuth(centroid);
+
+                CorrectUV(uvA, j + 0, a, azi);
+                CorrectUV(uvB, j + 2, b, azi);
+                CorrectUV(uvC, j + 4, c, azi);
+            }
+        }
+
+        private void CorrectUV(Vector2 uv, int stride, Vector3 vector, float azimuth)
+        {
+            if (azimuth < 0 && uv.X == 1)
+            {
+                UvBuffer[stride] = uv.X - 1;
+            }
+
+            if (vector.X == 0 && vector.Z == 0)
+            {
+                UvBuffer[stride] = (float)(azimuth / 2 / Mathf.PI + 0.5);
+            }
+        }
+
+        // Angle around the Y axis, counter-clockwise when looking from above.
+
+        private float Azimuth(Vector3 vector)
+        {
+            return Mathf.Atan2(vector.Z, -vector.X);
+        }
+
+
+        // Angle above the XZ plane.
         private float Inclination(Vector3 vector)
         {
-            return (float)System.Math.Atan2(-vector.Y, System.Math.Sqrt((vector.X * vector.X) + (vector.Z * vector.Z)));
+            return Mathf.Atan2(-vector.Y, Mathf.Sqrt((vector.X * vector.X) + (vector.Z * vector.Z)));
         }
-        
-        /// <summary>
-        /// Texture fixing helper. Spheres have some odd behaviours.
-        /// </summary>
-        /// <param name="uv"></param>
-        /// <param name="vector"></param>
-        /// <param name="azimuth"></param>
-        /// <returns></returns>
-        private Vector2 CorrectUV(Vector2 uv, Vector3 vector, float azimuth )
-        {
-            if ( ( azimuth < 0 ) && ( uv.X == 1 ) ) uv = new Vector2( uv.X - 1, uv.Y );
-            if ((vector.X == 0) && (vector.Z == 0)) uv = new Vector2(azimuth / 2.0f / (float)System.Math.PI + 0.5f, uv.Y);
-            return (Vector2)uv.Clone();
-        }
-
-
     }
 }

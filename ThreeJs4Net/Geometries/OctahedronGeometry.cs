@@ -1,21 +1,34 @@
-﻿namespace ThreeJs4Net.Geometries
+﻿using System.Collections.Generic;
+using ThreeJs4Net.Core;
+
+namespace ThreeJs4Net.Geometries
 {
-    public class OctahedronGeometry : PolyhedronGeometry
+    public class OctahedronGeometry : Geometry
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="radius"></param>
-        /// <param name="detail"></param>
-        public OctahedronGeometry(float radius, float detail)
+        public OctahedronGeometry(float radius = 1, float detail = 0)
         {
-            var vertices = new float[] { 1, 0, 0, -1, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 1, 0, 0, -1 };
+            FromBufferGeometry(new OctahedronBufferGeometry(radius, detail));
+            MergeVertices();
+        }
+    }
 
-            var indices = new int[] { 0, 2, 4, 0, 4, 3, 0, 3, 5, 0, 5, 2, 1, 2, 5, 1, 5, 3, 1, 3, 4, 1, 4, 2 };
+    public class OctahedronBufferGeometry : PolyhedronBufferGeometry
+    {
+        private new static List<float> Vertices { get; } = new List<float>
+        {
+                1, 0, 0, -1, 0, 0,  0, 1, 0,
+                0, -1, 0, 0, 0, 1,  0, 0, - 1
+            };
 
-            this.Construct(vertices, indices, radius, detail);
+        private new static List<int> Indices { get; } = new List<int>
+        {
+                0, 2, 4,    0, 4, 3,    0, 3, 5,
+                0, 5, 2,    1, 2, 5,    1, 5, 3,
+                1, 3, 4,    1, 4, 2
+            };
 
-            this.type = "OctahedronGeometry";
+        public OctahedronBufferGeometry(float radius = 1, float detail = 0) : base(Vertices, Indices, radius, detail)
+        {
         }
     }
 }

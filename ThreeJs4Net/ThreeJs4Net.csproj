@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A7A80271-A3A6-4E0C-8E6B-25E4E985A11C}</ProjectGuid>
+    <ProjectGuid>{652F4D1C-6F45-4A98-BD61-E9441E86F9DB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ThreeJs4Net</RootNamespace>
