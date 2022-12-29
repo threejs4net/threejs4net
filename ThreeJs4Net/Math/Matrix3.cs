@@ -49,17 +49,18 @@ namespace ThreeJs4Net.Math
         }
 
         /// <summary>
-        /// 
+        /// Copy the values of the current matrix to the given one.
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
         public Matrix3 Copy(Matrix3 matrix)
         {
-            this.Set(new[] {
-                matrix.Elements[0], matrix.Elements[3], matrix.Elements[6],
-                matrix.Elements[1], matrix.Elements[4], matrix.Elements[7],
-                matrix.Elements[2], matrix.Elements[5], matrix.Elements[8]
-            });
+            var te = this.Elements;
+            var me = matrix.Elements;
+
+            te[0] = me[0]; te[1] = me[1]; te[2] = me[2];
+            te[3] = me[3]; te[4] = me[4]; te[5] = me[5];
+            te[6] = me[6]; te[7] = me[7]; te[8] = me[8];
 
             return this;
         }
