@@ -100,6 +100,42 @@ namespace ThreeJs4Net.Math
             return array;
         }
 
+        public Matrix3 Invert()
+        {
+            var te = Elements;
+
+            var n11 = te[0]; var n21 = te[1]; var n31 = te[2];
+            var n12 = te[3]; var n22 = te[4]; var n32 = te[5];
+            var n13 = te[6]; var n23 = te[7]; var n33 = te[8];
+
+            var t11 = n33 * n22 - n32 * n23;
+            var t12 = n32 * n13 - n33 * n12;
+            var t13 = n23 * n12 - n22 * n13;
+
+            var det = n11 * t11 + n21 * t12 + n31 * t13;
+
+            if (det == 0)
+            {
+                return this.Set(0, 0, 0, 0, 0, 0, 0, 0, 0);
+            }
+
+            var detInv = 1 / det;
+
+            te[0] = t11 * detInv;
+            te[1] = (n31 * n23 - n33 * n21) * detInv;
+            te[2] = (n32 * n21 - n31 * n22) * detInv;
+
+            te[3] = t12 * detInv;
+            te[4] = (n33 * n11 - n31 * n13) * detInv;
+            te[5] = (n31 * n12 - n32 * n11) * detInv;
+
+            te[6] = t13 * detInv;
+            te[7] = (n21 * n13 - n23 * n11) * detInv;
+            te[8] = (n22 * n11 - n21 * n12) * detInv;
+
+            return this;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -335,7 +371,7 @@ namespace ThreeJs4Net.Math
         /// <returns></returns>
         public Matrix3 Clone()
         {
-            return new Matrix3(this.ToArray());
+            return new Matrix3().Copy(this);
         }
 
 
