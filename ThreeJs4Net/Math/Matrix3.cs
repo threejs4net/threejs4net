@@ -10,18 +10,14 @@ namespace ThreeJs4Net.Math
     public class Matrix3 : INotifyPropertyChanged
     {
 
-        public float[] Elements;
+        public float[] Elements = new float[9];
 
         /// <summary>
         /// 
         /// </summary>
         public Matrix3()
         {
-            Elements = new float[] {
-                1, 0, 0,
-                0, 1, 0,
-                0, 0, 1
-            };
+            Identity();
         }
 
         /// <summary>
@@ -190,9 +186,7 @@ namespace ThreeJs4Net.Math
 
         public Matrix3 Identity()
         {
-            Set(new float[]{1,0,0,
-                            0,1,0,
-                            0,0,1});
+            Set(1, 0, 0, 0, 1, 0, 0, 0, 1);
 
             return this;
         }
