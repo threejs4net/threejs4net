@@ -27,15 +27,6 @@ namespace ThreeJs4Net.Math
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="values"></param>
-        public Matrix3(float[] values)
-        {
-            this.Set(values);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float Determinant
         {
             get
