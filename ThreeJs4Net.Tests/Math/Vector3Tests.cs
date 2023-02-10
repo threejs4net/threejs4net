@@ -766,7 +766,23 @@ namespace ThreeJs4Net.Tests.Math
         [Fact()]
         public void SetFromMatrix3ColumnTest()
         {
-            Assert.True(false, "This test needs an implementation");
+            var a = new Vector3();
+            var m = new Matrix3().Set(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+            a.SetFromMatrix3Column(m, 0);
+            Assert.StrictEqual(a.X, 1);
+            Assert.StrictEqual(a.Y, 4);
+            Assert.StrictEqual(a.Z, 7);
+
+            a.SetFromMatrix3Column(m, 1);
+            Assert.StrictEqual(a.X, 2);
+            Assert.StrictEqual(a.Y, 5);
+            Assert.StrictEqual(a.Z, 8);
+
+            a.SetFromMatrix3Column(m, 2);
+            Assert.StrictEqual(a.X, 3);
+            Assert.StrictEqual(a.Y, 6);
+            Assert.StrictEqual(a.Z, 9);
         }
 
         [Fact()]
