@@ -52,11 +52,11 @@ namespace ThreeJs4Net.Geometries
             // options
             var curveSegments = _options.ContainsKey("curveSegments") ? (int) _options["curveSegments"] : 12;
             var steps = _options.ContainsKey("steps") ? (int) _options["steps"] : 1;
-            var depth = _options.ContainsKey("depth") ? (float) _options["depth"] : 100;
+            var depth = _options.ContainsKey("depth") ? Convert.ToSingle(_options["depth"]) : 100f;
             var bevelEnabled = _options.ContainsKey("bevelEnabled") ? (bool) _options["bevelEnabled"] : true;
-            var bevelThickness = _options.ContainsKey("bevelThickness") ? (float) _options["bevelThickness"] : 6;
-            var bevelSize = _options.ContainsKey("bevelSize") ? (float) _options["bevelSize"] : bevelThickness - 2;
-            var bevelOffset = _options.ContainsKey("bevelOffset") ? (float) _options["bevelOffset"] : 0;
+            var bevelThickness = _options.ContainsKey("bevelThickness") ? (float) _options["bevelThickness"] : 6f;
+            var bevelSize = _options.ContainsKey("bevelSize") ? (float) _options["bevelSize"] : bevelThickness - 2f;
+            var bevelOffset = _options.ContainsKey("bevelOffset") ? (float) _options["bevelOffset"] : 0f;
             var bevelSegments = _options.ContainsKey("bevelSegments") ? (int) _options["bevelSegments"] : 3;
 
             var extrudePath = _options["extrudePath"] as Curve<Vector3>;

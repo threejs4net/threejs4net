@@ -1,20 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="OpenTK" Version="3.3.1" />
     <PackageReference Include="OpenTK.GLControl" Version="3.1.0" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.410601">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="OpenTK" Version="4.7.5" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\ThreeJs4Net\ThreeJs4Net.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <None Update="examples\objs\male02\01_-_Default1noCulling.dds">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -125,5 +124,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
 </Project>
